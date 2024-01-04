@@ -2,7 +2,10 @@
 #include <vector>
 #include "Component.h"
 
-class Entity {
-	// Component list
-	std::vector<Component> components;
-};
+namespace SimpleECS
+{
+	class Entity {
+		// Component list
+		std::vector<Component> components;
+	};
+}
