@@ -42,6 +42,11 @@ void Game::init()
 	{
 		throw std::runtime_error("Failure to create window. SDL_Error: " + std::string(SDL_GetError()));
 	}
+
+	// Set white window surface
+	screenSurface = SDL_GetWindowSurface(window);
+	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));
+	SDL_UpdateWindowSurface(window);
 }
 
 void Game::mainLoop()
