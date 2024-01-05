@@ -22,6 +22,9 @@ void GameRenderer::initGameRenderer()
 		throw std::runtime_error("Failure to create window. SDL_Error: " + std::string(SDL_GetError()));
 	}
 
+	// Create renderer for window
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+
 	// Set white window surface
 	screenSurface = SDL_GetWindowSurface(window);
 	SDL_FillRect(screenSurface, NULL, SDL_MapRGB(screenSurface->format, 0xFF, 0xFF, 0xFF));

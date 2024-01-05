@@ -59,6 +59,10 @@ void Game::mainLoop()
 			}
 		}
 
+		//Clear screen
+		SDL_SetRenderDrawColor(GameRenderer::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		SDL_RenderClear(GameRenderer::renderer);
+
 		// Run update of first scene functions
 		for (auto entity : sceneList[0]->entities)
 		{
@@ -67,5 +71,7 @@ void Game::mainLoop()
 				component->update();
 			};
 		}
+
+		SDL_RenderPresent(GameRenderer::renderer);
 	}
 }

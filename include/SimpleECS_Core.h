@@ -3,3 +3,5 @@
 #include "Game.h"
 #include "Scene.h"
 #include "Component.h"
+
+#include "RectangleRenderer.h"

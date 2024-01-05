@@ -156,6 +156,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="include\GameRenderer.h" />
+    <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Entity.h" />
@@ -163,6 +164,7 @@
     <ClInclude Include="include\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\RectangleRenderer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="SimpleECS.cpp" />
