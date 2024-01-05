@@ -162,6 +162,7 @@
     <ClInclude Include="include\Scene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\Scene.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="SimpleECS.cpp" />
     <ClCompile Include="src\main.cpp" />

@@ -6,6 +6,6 @@ namespace SimpleECS
 {
 	class Entity {
 		// Component list
-		std::vector<Component> components;
+		std::vector<Component*> components;
 	};
 }

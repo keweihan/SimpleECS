@@ -1,8 +1,14 @@
 #include "Game.h"
+#include "Scene.h"
 #include <SDL.h>
 #include <iostream>
 
 using namespace SimpleECS;
+
+Game::Game()
+{
+
+}
 
 void Game::startGame()
 {
@@ -18,6 +24,12 @@ int Game::addScene(Scene scene)
 
 void Game::init()
 {
+	SDL_Window* window			= nullptr;
+	SDL_Surface* screenSurface	= nullptr;
+
+	const int SCREEN_WIDTH = 640;
+	const int SCREEN_HEIGHT = 480;
+
 	// Initialize SDL
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO))
 	{
