@@ -5,6 +5,7 @@
 namespace SimpleECS
 {
 	class Entity {
+	public:
 		// Component list
 		std::vector<Component*> components;
 	};

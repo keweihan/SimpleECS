@@ -8,14 +8,13 @@ namespace SimpleECS
 		/*
 		Called on every frame of rendering
 		*/
-		virtual void Update() = 0;
+		virtual void update() = 0;
 
 
 		/*
 		Called on instantiation of this component.
 		*/
-		virtual void Initialize() = 0;
-
+		virtual void initialize() = 0;
 
 	private:
 

@@ -34,18 +34,12 @@ namespace SimpleECS
 		 *
 		 * @param scene: Scene to be added.
 		 */
-		SIMPLEECS_API int addScene(Scene scene);
+		SIMPLEECS_API int addScene(Scene* scene);
 
 	private:
+		std::vector<Scene*> sceneList;
 
-		std::vector<Scene> sceneList;
-
-		// TODO: consider forward declaration and pImpl. SDL dependency cannot be exposed in header.
-		//SDL_Window* window			= nullptr;
-		//SDL_Surface* screenSurface	= nullptr;
-
-		//const int SCREEN_WIDTH	= 640;
-		//const int SCREEN_HEIGHT = 480;
+		int activeSceneIndex = 0;
 
 		/**
 		 * Call initialization functions
