@@ -4,6 +4,9 @@
 
 namespace SimpleECS
 {
+	/**
+	 * Globally available SDL window references for internal use.
+	 */
 	class GameRenderer {
 	public:
 		/**
@@ -11,7 +14,6 @@ namespace SimpleECS
 		 */
 		static void initGameRenderer();
 
-	protected:
 		/**
 		 * SDL Renderer access
 		 */
