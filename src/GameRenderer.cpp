@@ -6,30 +6,8 @@
 
 using namespace SimpleECS;
 
-class GameRenderer::GameRendererImpl
-{
-public:
-	GameRendererImpl();
-	~GameRendererImpl();
-
-	const int SCREEN_WIDTH = 640;
-	const int SCREEN_HEIGHT = 480;
-
-	SDL_Window* window = nullptr;
-	SDL_Renderer* renderer = nullptr;
-	SDL_Surface* screenSurface = nullptr;
-};
-
 // ---------------- GameRenderer definitions ----------------//
 void GameRenderer::initGameRenderer()
-{
-	pImpl = std::make_unique<GameRendererImpl>();
-}
-
-std::unique_ptr<GameRenderer::GameRendererImpl> GameRenderer::pImpl = nullptr;
-
-// ---------------- GameRendererImpl definitions ----------------//
-GameRenderer::GameRendererImpl::GameRendererImpl()
 {
 	// Initialize SDL
 	if (SDL_InitSubSystem(SDL_INIT_VIDEO))
@@ -50,9 +28,6 @@ GameRenderer::GameRendererImpl::GameRendererImpl()
 	SDL_UpdateWindowSurface(window);
 }
 
-GameRenderer::GameRendererImpl::~GameRendererImpl()
-{
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
-	SDL_FreeSurface(screenSurface);
-}
+SDL_Window* GameRenderer::window			= nullptr;
+SDL_Renderer* GameRenderer::renderer		= nullptr;
+SDL_Surface* GameRenderer::screenSurface	= nullptr;

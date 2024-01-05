@@ -1,5 +1,6 @@
 #pragma once
 #include <memory>
+#include <SDL.h>
 
 namespace SimpleECS
 {
@@ -9,13 +10,16 @@ namespace SimpleECS
 		 * Initializes game window and renderer
 		 */
 		static void initGameRenderer();
+
 	protected:
 		/**
-		 * Forward declaration to hide SDL implementation details.
-		 * Note: introduces minor performance tradeoffs. See
-		 * https://en.cppreference.com/w/cpp/language/pimpl
+		 * SDL Renderer access
 		 */
-		class GameRendererImpl;
-		static std::unique_ptr<GameRendererImpl> pImpl;
+		static const int SCREEN_WIDTH = 640;
+		static const int SCREEN_HEIGHT = 480;
+
+		static SDL_Window* window;
+		static SDL_Renderer* renderer;
+		static SDL_Surface* screenSurface;
 	};
 }
