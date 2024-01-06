@@ -9,11 +9,14 @@
 
 namespace SimpleECS
 {
-	class RectangleRenderer : public Component
+	class SIMPLEECS_API RectangleRenderer : public Component
 	{
 	public:
+		RectangleRenderer() : width(40), height(40) {}
+		RectangleRenderer(int w, int h) : width(w), height(h) {}
+
 		int width, height;
-		void SIMPLEECS_API update() override;
-		void SIMPLEECS_API initialize() override;
+		void update() override;
+		void initialize() override;
 	};
 }

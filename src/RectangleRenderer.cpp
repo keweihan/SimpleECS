@@ -14,16 +14,8 @@ void RectangleRenderer::initialize()
 
 void RectangleRenderer::update()
 {
-    //Temp
-    entity->transform.posX += 0.01;
-    entity->transform.posY += 0.01;
-
     // Get transform coordinate
     std::pair<int, int> screenCoord = TransformUtil::worldToScreenSpace(entity->transform.posX, entity->transform.posY);
-
-    // Get rectangle dimensions
-    int width = GameRenderer::SCREEN_WIDTH / 2;
-    int height = GameRenderer::SCREEN_HEIGHT / 2;
 
     // Rectangle renders from top left corner. Center.
     int xPos = screenCoord.first - width/2;

@@ -23,7 +23,7 @@ void GameRenderer::initGameRenderer()
 	}
 
 	// Create renderer for window
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	// Set white window surface
 	screenSurface = SDL_GetWindowSurface(window);
