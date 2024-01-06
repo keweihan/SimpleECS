@@ -155,6 +155,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\Transform.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />
@@ -165,11 +166,12 @@
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Component.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
     <ClCompile Include="src\RectangleRenderer.cpp" />
     <ClCompile Include="src\Scene.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="SimpleECS.cpp" />
-    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameRenderer.cpp" />
     <ClCompile Include="src\TransformUtil.cpp" />
   </ItemGroup>

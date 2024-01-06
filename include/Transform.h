@@ -4,8 +4,10 @@ namespace SimpleECS
 	class Transform
 	{
 	public:
-		int posX = 0;
-		int posY = 0;
+		double posX = 0;
+		double posY = 0;
+
+		// TODO: unused
 		double rotation = 0;
 
 	private:
