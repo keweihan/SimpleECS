@@ -155,13 +155,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\GameRenderer.h" />
+    <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />
     <ClInclude Include="include\Component.h" />
     <ClInclude Include="include\Entity.h" />
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Scene.h" />
+    <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\RectangleRenderer.cpp" />
@@ -170,6 +171,7 @@
     <ClCompile Include="SimpleECS.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\GameRenderer.cpp" />
+    <ClCompile Include="src\TransformUtil.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

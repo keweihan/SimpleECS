@@ -2,7 +2,7 @@
 #include <memory>
 #include <SDL.h>
 
-namespace SimpleECS
+namespace UtilSimpleECS
 {
 	/**
 	 * Globally available SDL window references for internal use.

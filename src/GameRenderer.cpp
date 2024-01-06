@@ -4,7 +4,7 @@
 #include <memory>
 #include <utility>
 
-using namespace SimpleECS;
+using namespace UtilSimpleECS;
 
 // ---------------- GameRenderer definitions ----------------//
 void GameRenderer::initGameRenderer()

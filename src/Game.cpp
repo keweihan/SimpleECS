@@ -6,6 +6,7 @@
 #include <iostream>
 
 using namespace SimpleECS;
+using namespace UtilSimpleECS;
 
 Game::Game()
 {
