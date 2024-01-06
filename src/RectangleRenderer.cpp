@@ -14,8 +14,11 @@ void RectangleRenderer::initialize()
 
 void RectangleRenderer::update()
 {
+    //Temp
+    entity->transform.posX += 0.01;
+
     // Get transform coordinate
-    std::pair<int, int> worldCoord = TransformUtil::screenToWorldSpace(0, 0);
+    std::pair<int, int> worldCoord = TransformUtil::screenToWorldSpace(entity->transform.posX, entity->transform.posY);
 
     // Get rectangle dimensions
     int width = GameRenderer::SCREEN_WIDTH / 2;

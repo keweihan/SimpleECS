@@ -8,7 +8,7 @@ namespace SimpleECS
 
 	// Component class
 	class Component {
-		//friend class Entity;
+		friend class Entity;
 
 	public:
 		/*

@@ -6,7 +6,7 @@ using namespace SimpleECS;
 
 void Entity::addComponent(Component* component)
 {
-	//component->setEntity(this);
+	component->setEntity(this);
 	components.push_back(component);
 }
 
