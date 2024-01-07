@@ -17,6 +17,6 @@ namespace SimpleECS
 
 		int width, height;
 		void update() override;
-		void initialize() override;
+		void initialize() override; 
 	};
 }

@@ -1,6 +1,13 @@
 #ifndef COMPONENT_H
 #define COMPONENT_H
 
+
+#ifdef SIMPLEECS_EXPORTS
+#define SIMPLEECS_API __declspec(dllexport)
+#else
+#define SIMPLEECS_API __declspec(dllimport)
+#endif
+
 namespace SimpleECS 
 {
 	// Forward declaration of Entity
@@ -8,7 +15,7 @@ namespace SimpleECS
 	class Collider;
 
 	// Component class
-	class Component {
+	class SIMPLEECS_API Component {
 		friend class Entity;
 
 	public:

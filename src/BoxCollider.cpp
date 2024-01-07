@@ -10,8 +10,8 @@ bool BoxCollider::isColliding(Collider* other)
     if (otherBox != nullptr)
     {
         // AABB Collision resolution 
-        int aLeft, aRight, aTop, aBottom;
-        int bLeft, bRight, bTop, bBottom;
+        double aLeft, aRight, aTop, aBottom;
+        double bLeft, bRight, bTop, bBottom;
 
         aLeft = this->entity->transform.posX - width / 2;
         aRight = this->entity->transform.posX + width / 2;
