@@ -32,7 +32,7 @@ void SimpleECS::ColliderSystem::resolveCollisions()
 	// O(n^2) basic implementation. See quad trees for performance improvement.
 	for (int i = 0; i < colliderList.size(); ++i)
 	{
-		for (int j = 0; j < colliderList.size(); ++j)
+		for (int j = i + 1; j < colliderList.size(); ++j)
 		{
 			if (colliderList[i]->isColliding(colliderList[j]))
 			{

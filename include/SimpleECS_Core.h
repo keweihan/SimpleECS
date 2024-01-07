@@ -3,6 +3,8 @@
 #include "Game.h"
 #include "Scene.h"
 #include "Component.h"
+#include "Collider.h"
 #include "Input.h"
 
 #include "RectangleRenderer.h"
+#include "BoxCollider.h"

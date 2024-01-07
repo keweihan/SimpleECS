@@ -1,5 +1,6 @@
-#ifndef COLLIDER_H
-#define COLLIDER_H
+#pragma once
+#ifndef BOX_COLLIDER_H
+#define BOX_COLLIDER_H
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -8,20 +9,22 @@
 #endif
 
 #include "Component.h"
+#include "Collider.h"
 #include <vector>
 
 namespace SimpleECS
 {
 	// Collider class
-	class SIMPLEECS_API Collider : public Component {
+	class SIMPLEECS_API BoxCollider : public Collider {
 
 	public:
+		BoxCollider() : Collider(), width(40), height(40) {}
+		BoxCollider(int w, int h) : Collider(), width(w), height(h) {}
+
 		/**
-		 * Register and deregister collider against ColliderSystem
-		 * on construction/deconstruction
+		 * Collider size, centered around transform center. 
 		 */
-		Collider();
-		~Collider();
+		int width, height;
 
 		void update() override {}
 		void initialize() override {}
@@ -29,8 +32,7 @@ namespace SimpleECS
 		/**
 		 * Returns whether this collider is colliding with another collider
 		 */
-		virtual bool isColliding(Collider* other) = 0;
-
+		bool isColliding(Collider* other) override;
 	};
 }
 
