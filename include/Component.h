@@ -5,6 +5,7 @@ namespace SimpleECS
 {
 	// Forward declaration of Entity
 	class Entity;
+	class Collider;
 
 	// Component class
 	class Component {
@@ -20,6 +21,11 @@ namespace SimpleECS
 		Called on instantiation of this component.
 		*/
 		virtual void initialize() = 0;
+
+		/*
+		Called on collision with another entity
+		*/
+		virtual void onCollide(const Collider& collide) {}
 
 		/*
 		The entity this component is attached to
