@@ -6,8 +6,6 @@
 #define SIMPLEECS_API __declspec(dllimport)
 #endif
 
-#include <SDL.h>
-
 namespace SimpleECS
 {
 	enum class KeyCode
@@ -27,6 +25,7 @@ namespace SimpleECS
 	* Class containing methods for handling player input
 	*/
 	class SIMPLEECS_API Input {
+	public:
 		/**
 		* Returns the current status of a key
 		*
