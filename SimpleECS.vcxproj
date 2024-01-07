@@ -157,7 +157,9 @@
   <ItemGroup>
     <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\Transform.h" />
+    <ClInclude Include="include\Vector.h" />
     <ClInclude Include="src\ColliderSystem.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />

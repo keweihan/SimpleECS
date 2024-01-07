@@ -76,7 +76,7 @@ void Game::mainLoop()
 		}
 		
 		// Run collision functions
-		ColliderSystem::resolveCollisions();
+		ColliderSystem::invokeCollisions();
 
 		SDL_RenderPresent(GameRenderer::renderer);
 	}

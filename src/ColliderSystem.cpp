@@ -27,7 +27,7 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 	}
 }
 
-void SimpleECS::ColliderSystem::resolveCollisions()
+void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	// O(n^2) basic implementation. See quad trees for performance improvement.
 	for (int i = 0; i < colliderList.size(); ++i)

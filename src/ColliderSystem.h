@@ -22,7 +22,7 @@ namespace SimpleECS
 		* Checks for collisions between all active colliders and invoke
 		* collided entities "onCollision" methods.
 		*/
-		static void resolveCollisions();
+		static void invokeCollisions();
 
 	private:
 		/*
