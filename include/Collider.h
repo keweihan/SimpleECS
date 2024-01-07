@@ -20,7 +20,6 @@ namespace SimpleECS
 		void update() override {};
 		void initialize() override {};
 
-	protected:
 		/**
 		 * Returns whether this collider is colliding with another collider
 		 */

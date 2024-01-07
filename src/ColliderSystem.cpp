@@ -1,5 +1,6 @@
 #include "ColliderSystem.h"
 #include "Collider.h"
+#include "Entity.h"
 #include <vector>
 using namespace SimpleECS;
 
@@ -29,4 +30,24 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 void SimpleECS::ColliderSystem::resolveCollisions()
 {
 	// O(n^2) basic implementation. See quad trees for performance improvement.
+	for (int i = 0; i < colliderList.size(); ++i)
+	{
+		for (int j = 0; j < colliderList.size(); ++j)
+		{
+			if (colliderList[i]->isColliding(colliderList[j]))
+			{
+				// Invoke onCollide of colliding entity components
+				for (auto component : colliderList[i]->entity->getComponents())
+				{
+					component->onCollide(*colliderList[j]);
+				}
+
+				for (auto component : colliderList[j]->entity->getComponents())
+				{
+					component->onCollide(*colliderList[i]);
+				}
+			}
+		}
+	}
+
 }

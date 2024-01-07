@@ -2,6 +2,7 @@
 #include "Scene.h"
 #include "GameRenderer.h"
 #include "Entity.h"
+#include "ColliderSystem.h"
 #include <SDL.h>
 #include <iostream>
 
@@ -73,6 +74,9 @@ void Game::mainLoop()
 				component->update();
 			};
 		}
+		
+		// Run collision functions
+		ColliderSystem::resolveCollisions();
 
 		SDL_RenderPresent(GameRenderer::renderer);
 	}
