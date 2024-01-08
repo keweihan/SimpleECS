@@ -1,5 +1,6 @@
 #pragma once
-#include <SimpleECS_Core.h>
+#include <Component.h>
+#include <Color.h>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -14,8 +15,11 @@ namespace SimpleECS
 	public:
 		RectangleRenderer() : width(40), height(40) {}
 		RectangleRenderer(int w, int h) : width(w), height(h) {}
+		RectangleRenderer(int w, int h, Color color) : width(w), height(h), renderColor(color){}
 
 		int width, height;
+		Color renderColor;
+
 		void update() override;
 		void initialize() override; 
 	};

@@ -1,6 +1,7 @@
 #include "RectangleRenderer.h"
 #include "GameRenderer.h"
 #include "TransformUtil.h"
+#include "Entity.h"
 #include <tuple>
 #include <SDL.h>
 
@@ -22,6 +23,6 @@ void RectangleRenderer::update()
     int yPos = screenCoord.second - height/2;
 
     SDL_Rect fillRect = { xPos, yPos, width, height };
-    SDL_SetRenderDrawColor(GameRenderer::renderer, 0xFF, 0x00, 0x00, 0xFF);
+    SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, 0xFF);
     SDL_RenderFillRect(GameRenderer::renderer, &fillRect);
 }

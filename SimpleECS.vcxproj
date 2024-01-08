@@ -157,6 +157,7 @@
   <ItemGroup>
     <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Collider.h" />
+    <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vector.h" />
