@@ -160,7 +160,7 @@
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vector.h" />
-    <ClInclude Include="include\ColliderSystem.h" />
+    <ClInclude Include="src\ColliderSystem.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />

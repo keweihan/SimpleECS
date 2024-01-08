@@ -48,7 +48,7 @@
     <ClInclude Include="include\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ColliderSystem.h">
+    <ClInclude Include="src\ColliderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BoxCollider.h">

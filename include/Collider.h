@@ -8,6 +8,7 @@
 #endif
 
 #include "Component.h"
+#include "Vector.h"
 #include <vector>
 
 namespace SimpleECS
@@ -30,6 +31,17 @@ namespace SimpleECS
 		 * Returns whether this collider is colliding with another collider
 		 */
 		virtual bool isColliding(Collider* other) = 0;
+	};
+
+	/**
+	* Data container for collision information
+	*/
+	class SIMPLEECS_API Collision {
+	public:
+		Collider* a = nullptr;
+		Collider* b = nullptr;
+		double penetration = 0;
+		Vector normal;
 	};
 }
 
