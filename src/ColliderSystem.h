@@ -36,11 +36,15 @@ namespace SimpleECS
 		static void invokeCollisions();
 
 		/**
-		 * Returns collision information between this and another collider.
-		 *
-		 * @returns nullptr if no collision is present.
+		 * Retrieves collision information between this and another collider.
+		 * Populates collide with collision information if there is a collision
+		 * between collide.a and collide.b 
+		 * 
+		 * Normal is calculated with respect to a colliding with b. 
+		 * 
+		 * @returns false if no collision is present, true otherwise
 		 */
-		static Collision* getCollisionInfo(Collider* a, Collider *b);
+		static bool getCollisionInfo(Collision* collide);
 
 	private:
 		/*

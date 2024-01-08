@@ -7,5 +7,7 @@ using namespace SimpleECS;
 
 bool BoxCollider::isColliding(Collider* other)
 {
-    return ColliderSystem::getCollisionInfo(this, other) != nullptr;
+    // STUB
+    //return ColliderSystem::getCollisionInfo(new Collide);
+    return false;
 }
