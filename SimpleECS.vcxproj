@@ -172,6 +172,7 @@
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\PhysicsBody.cpp" />
     <ClCompile Include="src\BoxCollider.cpp" />
     <ClCompile Include="src\Collider.cpp" />
     <ClCompile Include="src\ColliderSystem.cpp" />

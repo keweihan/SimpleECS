@@ -12,6 +12,8 @@
 
 namespace SimpleECS
 {
+	struct Collision; // forward declaration
+
 	// Collider class
 	class SIMPLEECS_API Collider : public Component {
 
@@ -30,7 +32,6 @@ namespace SimpleECS
 		 * Returns whether this collider is colliding with another collider
 		 */
 		virtual bool isColliding(Collider* other) = 0;
-
 	};
 }
 

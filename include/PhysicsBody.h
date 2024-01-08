@@ -16,7 +16,7 @@ namespace SimpleECS
 
 		Vector velocity;
 
-		void update() override {};
+		void update() override;
 		void initialize() override {};
 
 		void onCollide(const Collider& other) override;
