@@ -53,21 +53,21 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	}
 }
 
-bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
+bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
 {
 	if (collide->a == nullptr || collide->b == nullptr) return false;
 
 	Transform aTransform = collide->a->entity->transform;
 	Transform bTransform = collide->b->entity->transform;
 
-    BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide->a);
-    BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide->b);
+	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide->a);
+	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide->b);
 
-    if (bBox != nullptr && aBox != nullptr)
-    {
-        // AABB Collision 
-        double aLeft, aRight, aTop, aBottom;
-        double bLeft, bRight, bTop, bBottom;
+	if (bBox != nullptr && aBox != nullptr)
+	{
+		// AABB Collision 
+		double aLeft, aRight, aTop, aBottom;
+		double bLeft, bRight, bTop, bBottom;
 
 		double aExtentX = aBox->width / 2;
 		double bExtentX = bBox->width / 2;
@@ -75,21 +75,21 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
 		double bExtentY = bBox->height / 2;
 
 
-        aLeft = aBox->entity->transform.posX - aExtentX;
-        aRight = aBox->entity->transform.posX + aExtentX;
-        aBottom = aBox->entity->transform.posY - aExtentY;
-        aTop = aBox->entity->transform.posY + aExtentY;
+		aLeft = aBox->entity->transform.posX - aExtentX;
+		aRight = aBox->entity->transform.posX + aExtentX;
+		aBottom = aBox->entity->transform.posY - aExtentY;
+		aTop = aBox->entity->transform.posY + aExtentY;
 
-        bLeft = bBox->entity->transform.posX - bExtentX;
-        bRight = bBox->entity->transform.posX + bExtentX;
-        bBottom = bBox->entity->transform.posY - bExtentY;
-        bTop = bBox->entity->transform.posY + bExtentY;
+		bLeft = bBox->entity->transform.posX - bExtentX;
+		bRight = bBox->entity->transform.posX + bExtentX;
+		bBottom = bBox->entity->transform.posY - bExtentY;
+		bTop = bBox->entity->transform.posY + bExtentY;
 
-        //If any of the sides from A are outside of B, no collision occuring.
-        if (aBottom >= bTop || aTop <= bBottom || aRight <= bLeft || aLeft >= bRight)
-        {
-            return false;
-        }
+		//If any of the sides from A are outside of B, no collision occuring.
+		if (aBottom >= bTop || aTop <= bBottom || aRight <= bLeft || aLeft >= bRight)
+		{
+			return false;
+		}
 
 		// Boxes are colliding. Find axis of least penetration
 		double xDistance = std::abs(collide->a->entity->transform.posX - collide->b->entity->transform.posX);
@@ -122,9 +122,28 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
 				collide->normal = Vector(1, 0);
 			}
 		}
-    }
-    // Other collider types here
-	// else if(...)
+	}
 
-    return true;
+
+	return true;
 }
+
+
+bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
+{
+	if (collide->a == nullptr || collide->b == nullptr) return false;
+
+	// Breaking principles of polymorphism (likely) necessary. 
+	// Different collider collisions (i.e. sphere-sphere, sphere-box, box-box) 
+	// require different implementation.
+    if (dynamic_cast<BoxCollider*>(collide->a) != nullptr && 
+		dynamic_cast<BoxCollider*>(collide->b) != nullptr)
+    {
+		return getCollisionBoxBox(collide);
+    }
+	// Other collider types here
+	// else if(sphere-sphere...)
+
+    return false;
+}
+

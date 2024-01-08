@@ -6,6 +6,8 @@
 
 namespace SimpleECS
 {
+	// TODO: Class containing only static classes can be considered bad practice.
+	// Consider alternatives.
 	class ColliderSystem
 	{
 	public:
@@ -41,6 +43,11 @@ namespace SimpleECS
 		* Maintains list of all active colliders in scene. 
 		*/
 		static std::vector<Collider*> colliderList;
+
+		/*
+		* If collide contains two AABB box containers. Populate with collision data
+		*/
+		static bool getCollisionBoxBox(Collision* collide);
 	};
 
 
