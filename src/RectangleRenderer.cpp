@@ -23,6 +23,6 @@ void RectangleRenderer::update()
     int yPos = screenCoord.second - height/2;
 
     SDL_Rect fillRect = { xPos, yPos, width, height };
-    SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, 0xFF);
+    SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, renderColor.a);
     SDL_RenderFillRect(GameRenderer::renderer, &fillRect);
 }
