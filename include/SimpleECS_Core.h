@@ -8,6 +8,7 @@
 #include "Vector.h"
 #include "Color.h"
 #include "Timer.h"
+#include "PhysicsBody.h"
 
 #include "RectangleRenderer.h"
 #include "BoxCollider.h"

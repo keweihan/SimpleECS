@@ -20,10 +20,28 @@ namespace SimpleECS
 
 		void SIMPLEECS_API addComponent(Component* component);
 
+		template <typename T>
+		T* getComponent();
+
 		std::vector<Component*>& getComponents();
 		
 		// Component list
 		std::vector<Component*> components;
 	};
+	template<typename T>
+	
+	inline T* Entity::getComponent()
+	{
+		T* foundComponent = nullptr;
+		for (auto component : components)
+		{
+			foundComponent = dynamic_cast<T*>(component);
+			if (foundComponent != nullptr)
+			{
+				return foundComponent;
+			}
+		}
+		return foundComponent;
+	}
 }
 #endif
