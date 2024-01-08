@@ -10,9 +10,10 @@
 
 namespace SimpleECS 
 {
-	// Forward declaration of Entity
+	// Forward declarations
 	class Entity;
 	class Collider;
+	class Collision;
 
 	// Component class
 	class SIMPLEECS_API Component {
@@ -33,6 +34,11 @@ namespace SimpleECS
 		Called on collision with another entity
 		*/
 		virtual void onCollide(const Collider& collide) {}
+
+		/*
+		Called on collision with another entity. Gets collision information.
+		*/
+		virtual void onCollide(const Collision& collide) {}
 
 		/*
 		The entity this component is attached to

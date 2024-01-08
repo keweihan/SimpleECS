@@ -12,8 +12,6 @@
 
 namespace SimpleECS
 {
-	struct Collision; // forward declaration
-
 	// Collider class
 	class SIMPLEECS_API Collider : public Component {
 

@@ -1,5 +1,6 @@
 #include "ColliderSystem.h"
 #include "Collider.h"
+#include "Component.h"
 #include "Entity.h"
 #include <vector>
 using namespace SimpleECS;
@@ -32,8 +33,10 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	// O(n^2) basic implementation. See quad trees for performance improvement.
 	for (int i = 0; i < colliderList.size(); ++i)
 	{
-		for (int j = i + 1; j < colliderList.size(); ++j)
+		for (int j = 0; j < colliderList.size(); ++j)
 		{
+			if (j == i) continue;
+
 			// TODO: constructors need not be called for every possible collision.
 			Collision* collide = new Collision{ colliderList[i], colliderList[j], 0, Vector()};
 
@@ -43,16 +46,11 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 				for (auto component : colliderList[i]->entity->getComponents())
 				{
 					component->onCollide(*colliderList[j]);
-				}
-
-				for (auto component : colliderList[j]->entity->getComponents())
-				{
-					component->onCollide(*colliderList[i]);
+					component->onCollide(*collide);
 				}
 			}
 		}
 	}
-
 }
 
 bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)

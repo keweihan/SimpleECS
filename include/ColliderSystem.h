@@ -7,12 +7,12 @@
 namespace SimpleECS
 {
 	/**
-	 * Data container for collision information
-	 */
+	* Data container for collision information
+	*/
 	struct SIMPLEECS_API Collision {
 		Collider* a = nullptr;
 		Collider* b = nullptr;
-		double penetration;
+		double penetration = 0;
 		Vector normal;
 	};
 
