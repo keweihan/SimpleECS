@@ -3,6 +3,7 @@
 #include "GameRenderer.h"
 #include "Entity.h"
 #include "ColliderSystem.h"
+#include "Timer.h"
 #include <SDL.h>
 #include <iostream>
 
@@ -77,6 +78,9 @@ void Game::mainLoop()
 		
 		// Run collision functions
 		ColliderSystem::invokeCollisions();
+
+		// Mark end of frame
+		Timer::endFrame();
 
 		SDL_RenderPresent(GameRenderer::renderer);
 	}

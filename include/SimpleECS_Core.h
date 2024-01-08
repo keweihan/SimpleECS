@@ -7,6 +7,7 @@
 #include "Input.h"
 #include "Vector.h"
 #include "Color.h"
+#include "Timer.h"
 
 #include "RectangleRenderer.h"
 #include "BoxCollider.h"
