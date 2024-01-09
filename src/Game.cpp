@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "ColliderSystem.h"
 #include "Timer.h"
+#include "Color.h"
 #include <SDL.h>
 #include <iostream>
 
@@ -64,7 +65,8 @@ void Game::mainLoop()
 		}
 
 		//Clear screen
-		SDL_SetRenderDrawColor(GameRenderer::renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+		Color sceneColor = sceneList[0]->backgroundColor;
+		SDL_SetRenderDrawColor(GameRenderer::renderer, sceneColor.r, sceneColor.g, sceneColor.b, sceneColor.a);
 		SDL_RenderClear(GameRenderer::renderer);
 
 		// Run update of first scene functions

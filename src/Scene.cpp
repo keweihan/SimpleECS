@@ -10,3 +10,9 @@ void Scene::AddEntity(Entity* entity)
 {
 	entities.push_back(entity);
 }
+
+bool Scene::DestroyEntity(Entity* entity)
+{
+
+	return false;
+}
