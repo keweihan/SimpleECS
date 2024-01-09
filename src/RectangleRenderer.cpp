@@ -16,7 +16,7 @@ void RectangleRenderer::initialize()
 void RectangleRenderer::update()
 {
     // Get transform coordinate
-    std::pair<int, int> screenCoord = TransformUtil::worldToScreenSpace(entity->transform.posX, entity->transform.posY);
+    std::pair<int, int> screenCoord = TransformUtil::worldToScreenSpace(entity->transform.position.x, entity->transform.position.y);
 
     // Rectangle renders from top left corner. Center.
     int xPos = screenCoord.first - width/2;
