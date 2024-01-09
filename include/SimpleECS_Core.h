@@ -11,4 +11,5 @@
 #include "PhysicsBody.h"
 
 #include "RectangleRenderer.h"
+#include "LineRenderer.h"
 #include "BoxCollider.h"

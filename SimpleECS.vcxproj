@@ -158,6 +158,7 @@
     <ClInclude Include="include\BoxCollider.h" />
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\Color.h" />
+    <ClInclude Include="include\LineRenderer.h" />
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\Transform.h" />
@@ -174,6 +175,7 @@
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\LineRenderer.cpp" />
     <ClCompile Include="src\Vector.cpp" />
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\PhysicsBody.cpp" />

@@ -18,6 +18,10 @@ namespace SimpleECS
 		Vector(double x, double y) : x(x), y(y) {}
 
 		double dotProduct(const Vector& other) const;
+		Vector orthogonalVec() const;
+		void normalize();
+		double getMagnitude() const;
+		double distance(const Vector& other) const;
 
 		Vector operator+(const Vector& other) const;
 		Vector operator-(const Vector& other) const;
