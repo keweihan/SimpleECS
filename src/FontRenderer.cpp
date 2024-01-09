@@ -4,6 +4,8 @@
 #include "GameRenderer.h"
 #include "TransformUtil.h"
 #include "Vector.h"
+#include "Entity.h"
+#include <tuple>
 
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
@@ -49,11 +51,11 @@ void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, V
         else
         {
             //Get image dimensions
-            int mWidth = textSurface->w;
-            int mHeight = textSurface->h;
+            int textWidth = textSurface->w;
+            int textHeight = textSurface->h;
             
             auto screenPos = UtilSimpleECS::TransformUtil::worldToScreenSpace(position.x, position.y);
-            SDL_Rect renderQuad = { screenPos.first, screenPos.second, textSurface->w, textSurface->h };
+            SDL_Rect renderQuad = { screenPos.first - textWidth/2, screenPos.second - textHeight/2, textWidth, textHeight };
             SDL_RenderCopy(GameRenderer::renderer, textTexture, NULL, &renderQuad);
         }
 
@@ -62,19 +64,41 @@ void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, V
     }
 }
 
+SimpleECS::FontRenderer::FontRenderer(std::string text, std::string pathToFont, uint16_t size)
+{
+    this->text = text;
+    this->path = pathToFont;
+    this->size = size;
+
+    pImpl = std::make_unique<FontRendererImpl>();
+}
+
 FontRenderer::FontRenderer(std::string text, std::string pathToFont)
 {
     this->text = text;
     this->path = pathToFont;
+
+    pImpl = std::make_unique<FontRendererImpl>();
 }
 
 // Font renderer implementation
 void FontRenderer::initialize()
 {
-	pImpl->font = TTF_OpenFont(path.c_str(), 28);
+    if (TTF_Init() == -1)
+    {
+        printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+    }
+
+	pImpl->font = TTF_OpenFont(path.c_str(), size);
+    if (pImpl->font == NULL)
+    {
+        printf("Unable to open font! SDL_ttf Error: %s\n", TTF_GetError());
+    }
+
+    pImpl->renderText(text, color, Vector(entity->transform.posX, entity->transform.posY));
 }
 
 void SimpleECS::FontRenderer::update()
 {
-
+    pImpl->renderText(text, color, Vector(entity->transform.posX, entity->transform.posY));
 }

@@ -16,11 +16,14 @@ namespace SimpleECS
 	class FontRenderer : public Component
 	{
 	public:
+		SIMPLEECS_API FontRenderer(std::string text, std::string pathToFont, uint16_t size);
 		SIMPLEECS_API FontRenderer(std::string text, std::string pathToFont);
 
-		std::string text;
+		Color color		= Color(0,0,0,1);
+		uint16_t size	= 24;
+		std::string text = "FontRenderer Default Text";
 		std::string path;
-
+		
 		void SIMPLEECS_API initialize() override;
 		void SIMPLEECS_API update() override;
 	private:
