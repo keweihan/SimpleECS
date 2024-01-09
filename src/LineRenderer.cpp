@@ -47,6 +47,6 @@ void SimpleECS::LineRenderer::drawECSLine(Vector startPoint, Vector endPoint)
 		auto startCoord = TransformUtil::worldToScreenSpace(startPoint.x + xOffset, startPoint.y + yOffset);
 		auto endCoord = TransformUtil::worldToScreenSpace(endPoint.x + xOffset, endPoint.y + yOffset);
 		SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, renderColor.a);
-		SDL_RenderDrawLine(GameRenderer::renderer, startCoord.first, startCoord.second, endCoord.first, endCoord.second);
+		SDL_RenderDrawLine(GameRenderer::renderer, startCoord.x, startCoord.y, endCoord.x, endCoord.y);
 	}
 }

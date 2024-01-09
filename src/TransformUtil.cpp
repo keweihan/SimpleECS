@@ -1,28 +1,24 @@
 #include "TransformUtil.h"
 #include "GameRenderer.h"
+#include "Vector.h"
 #include <tuple>
 #include <cmath>
 
 using namespace UtilSimpleECS;
 
 
-std::pair<double, double> TransformUtil::screenToWorldSpace(int x, int y)
+SimpleECS::Vector TransformUtil::screenToWorldSpace(int x, int y)
 {
-	// TODO: custom coordinate data structure may be needed
-	std::pair<double, double> value;
+	double worldX = x - (GameRenderer::SCREEN_WIDTH / 2);
+	double worldY = y - GameRenderer::SCREEN_HEIGHT / 2;
 
-	value.first = x - (GameRenderer::SCREEN_WIDTH / 2);
-	value.second = y - GameRenderer::SCREEN_HEIGHT / 2;
-
-	return value;
+	return SimpleECS::Vector(worldX, worldY);
 }
 
-std::pair<int, int> TransformUtil::worldToScreenSpace(double x, double y)
+SimpleECS::Vector TransformUtil::worldToScreenSpace(double x, double y)
 {
-	std::pair<int, int> value;
+	int screenX	= static_cast<int>(round(x + GameRenderer::SCREEN_WIDTH / 2));
+	int screenY	= static_cast<int>(round(-y + GameRenderer::SCREEN_HEIGHT / 2));
 
-	value.first		= static_cast<int>(round(x + GameRenderer::SCREEN_WIDTH / 2));
-	value.second	= static_cast<int>(round(-y + GameRenderer::SCREEN_HEIGHT / 2));
-
-	return value;
+	return SimpleECS::Vector(screenX, screenY);
 }
