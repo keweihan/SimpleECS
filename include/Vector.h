@@ -17,6 +17,13 @@ namespace SimpleECS
 		Vector() : x(0), y(0) {}
 		Vector(double x, double y) : x(x), y(y) {}
 
+		double dotProduct(const Vector& other) const;
+
+		Vector operator+(const Vector& other) const;
+		Vector operator-(const Vector& other) const;
+		Vector operator*(const double& other) const;
+		Vector operator*(const int& other) const;
+
 		double x, y;
 	};
 }

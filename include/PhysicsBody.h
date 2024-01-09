@@ -20,5 +20,6 @@ namespace SimpleECS
 		void initialize() override {};
 
 		void onCollide(const Collider& other) override;
+		void onCollide(const Collision& collide) override;
 	};
 }
