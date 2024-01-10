@@ -31,6 +31,9 @@ void GameRenderer::initGameRenderer()
 	SDL_UpdateWindowSurface(window);
 }
 
+int GameRenderer::SCREEN_WIDTH  = 640;
+int GameRenderer::SCREEN_HEIGHT = 480;
+
 SDL_Window* GameRenderer::window			= nullptr;
 SDL_Renderer* GameRenderer::renderer		= nullptr;
 SDL_Surface* GameRenderer::screenSurface	= nullptr;

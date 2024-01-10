@@ -23,6 +23,12 @@ namespace SimpleECS
 		SIMPLEECS_API Game();
 
 		/**
+		 * Game constructor. Creates an empty game with custom dimensions
+		 *
+		 */
+		SIMPLEECS_API Game(int width, int height);
+
+		/**
 		 * Start the main game loop. Game must have at least one scene.
 		 *
 		 * @throws Exception: If no scenes exist in game

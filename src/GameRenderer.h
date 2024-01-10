@@ -17,8 +17,8 @@ namespace UtilSimpleECS
 		/**
 		 * SDL Renderer access
 		 */
-		static const int SCREEN_WIDTH = 640;
-		static const int SCREEN_HEIGHT = 480;
+		static int SCREEN_WIDTH;
+		static int SCREEN_HEIGHT;
 
 		static SDL_Window* window;
 		static SDL_Renderer* renderer;

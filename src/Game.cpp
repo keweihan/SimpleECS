@@ -13,7 +13,14 @@ using namespace UtilSimpleECS;
 
 Game::Game()
 {
+	GameRenderer::SCREEN_WIDTH = 640;
+	GameRenderer::SCREEN_HEIGHT = 480;
+}
 
+SimpleECS::Game::Game(int width, int height)
+{
+	GameRenderer::SCREEN_WIDTH = width;
+	GameRenderer::SCREEN_HEIGHT = height;
 }
 
 void Game::startGame()
