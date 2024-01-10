@@ -55,7 +55,9 @@ void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, V
             int textHeight = textSurface->h;
             
             auto screenPos = UtilSimpleECS::TransformUtil::worldToScreenSpace(position.x, position.y);
-            SDL_Rect renderQuad = { screenPos.x - textWidth/2, screenPos.y - textHeight/2, textWidth, textHeight };
+            SDL_Rect renderQuad = { static_cast<int>(screenPos.x - textWidth/2), 
+                                    static_cast<int>(screenPos.y - textHeight/2),
+                                    textWidth, textHeight };
             SDL_RenderCopy(GameRenderer::renderer, textTexture, NULL, &renderQuad);
         }
 

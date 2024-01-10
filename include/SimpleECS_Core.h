@@ -10,7 +10,6 @@
 #include "Timer.h"
 #include "PhysicsBody.h"
 #include "FontRenderer.h"
-
 #include "RectangleRenderer.h"
 #include "LineRenderer.h"
 #include "BoxCollider.h"

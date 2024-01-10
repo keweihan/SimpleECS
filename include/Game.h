@@ -14,27 +14,27 @@ namespace SimpleECS
 	* A game instance represents the main game controller.
 	* Sets up initialization and runs the main game loop. 
 	*/
-	class SIMPLEECS_API Game {
+	class Game {
 	public:
 		/**
 		 * Game constructor. Creates an empty game.
 		 *
 		 */
-		Game();
+		SIMPLEECS_API Game();
 
 		/**
 		 * Start the main game loop. Game must have at least one scene.
 		 *
 		 * @throws Exception: If no scenes exist in game
 		 */
-		void startGame();
+		void SIMPLEECS_API startGame();
 
 		/**
 		 * Adds a scene containing entities to game instance.
 		 *
 		 * @param scene: Scene to be added.
 		 */
-		int addScene(Scene* scene);
+		int SIMPLEECS_API addScene(Scene* scene);
 
 	private:
 		std::vector<Scene*> sceneList;
