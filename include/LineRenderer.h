@@ -11,6 +11,9 @@
 
 namespace SimpleECS
 {
+	/**
+	Renders a line with variable thickness from defined startPoint to endPoint. 
+	*/
 	class SIMPLEECS_API LineRenderer : public Component
 	{
 	public:

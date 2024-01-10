@@ -14,7 +14,9 @@ namespace SimpleECS
 {
 	class Game;
 
-	// Timer class
+	/**
+	Provides time related information
+	*/
 	class SIMPLEECS_API Timer {
 	public:
 		// Game has access to endFrame()

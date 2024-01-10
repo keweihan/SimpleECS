@@ -6,38 +6,27 @@
 
 using namespace SimpleECS;
 
-void Scene::AddEntity(Entity* entity)
+bool Scene::AddEntity(Entity* entity)
 {
-	//for (auto entityPtr : entities)
-	//{
-	//	// Find entity reference
-	//	if (entityPtr == entityToDelete)
-	//	{
-	//		// Free all components attached to entity
-	//		for (auto component : entityToDelete->getComponents())
-	//		{
-	//			delete component;
-	//			return true;
-	//		}
-	//	}
-	//}
-	entities.push_back(entity);
+	// Scene cannot contain two instances of the same entity
+	if (entities.find(entity) == entities.end())
+	{
+		entities.insert(entity);
+		return true;
+	}
+
+	return false;
 }
 
 bool Scene::DestroyEntity(Entity* entityToDelete)
 {
-	for (auto entityPtr : entities)
+	// Scene can only delete an entity it contains
+	if (entities.find(entityToDelete) != entities.end())
 	{
-		// Find entity reference
-		if (entityPtr == entityToDelete)
-		{
-			// Free all components attached to entity
-			for (auto component : entityToDelete->getComponents())
-			{
-				delete component;
-				return true;
-			}
-		}
+		entities.erase(entityToDelete);
+		delete entityToDelete;
+
+		return true;
 	}
 
 	return false;

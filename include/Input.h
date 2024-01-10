@@ -8,6 +8,9 @@
 
 namespace SimpleECS
 {
+	/**
+	Defined keycodes for input
+	*/
 	enum class KeyCode
 	{
 		KEY_UP_ARROW = 82,

@@ -22,18 +22,30 @@ namespace SimpleECS
 
 		/**
 		* Add Entity to this scene.
+		* 
+		* @returns false if entity is already contained by the scene and was not added. 
+		* Otherwise returns true if successfully added.
 		*/
-		void SIMPLEECS_API AddEntity(Entity* entity);
+		bool SIMPLEECS_API AddEntity(Entity* entity);
 
 		/**
-		* Destroy entity from this scene. Will call entity and component destructors.
+		* Destroy entity contained by this scene. Will call entity and component destructors
+		* and entityToDelete will be deleted.
 		* 
-		* @returns true if entity was found and deleted, false otherwise
+		* @returns false if entity is not contained by the scene and was not deleted. 
+		* Otherwise returns true if successfuly removed.
+		* 
 		*/
 		bool SIMPLEECS_API DestroyEntity(Entity* entityToDelete);
 
+		/*
+		* Main background render color.
+		*/
 		Color backgroundColor;
-		//std::unordered_set<Entity*> entities;
-		std::vector<Entity*> entities;
+
+		/*
+		* Main background render color.
+		*/
+		std::unordered_set<Entity*> entities;
 	};
 }

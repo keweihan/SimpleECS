@@ -10,6 +10,9 @@
 
 namespace SimpleECS
 {
+	/**
+	Provides rectangle rendering to an entity. 
+	*/
 	class SIMPLEECS_API RectangleRenderer : public Component
 	{
 	public:

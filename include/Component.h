@@ -21,36 +21,36 @@ namespace SimpleECS
 
 	public:
 		/*
-		Called on every frame of rendering
+		* Called on every frame of rendering
 		*/
 		virtual void update() = 0;
 
 		/*
-		Called on instantiation of this component.
+		* Called during start of game loop.
+		* Call on instantiation if game loop running.
 		*/
 		virtual void initialize() = 0;
 
 		/*
-		Called on collision with another entity
+		* Called on collision with another entity
 		*/
 		virtual void onCollide(const Collider& collide) {}
 
 		/*
-		Called on collision with another entity. Gets collision information.
+		* Called on collision with another entity. Gets collision information.
 		*/
 		virtual void onCollide(const Collision& collide) {}
 
 		/*
-		The entity this component is attached to
+		* The entity this component is attached to
 		*/
 		Entity* entity = nullptr;
 
 	private:
 		/*
-		Called on instantiation of this component.
+		* Called on adding this component to an entity.
 		*/
 		void setEntity(Entity* entity);
-
 	};
 }
 

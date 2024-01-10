@@ -1,5 +1,4 @@
-#ifndef COLLIDER_H
-#define COLLIDER_H
+#pragma once
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -44,5 +43,3 @@ namespace SimpleECS
 		Vector normal;
 	};
 }
-
-#endif

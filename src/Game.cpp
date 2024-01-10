@@ -45,7 +45,6 @@ void Game::mainLoop()
 	// Run initialize of first scene components
 	for (auto entity : sceneList[0]->entities)
 	{
-
 		for (auto component : entity->getComponents())
 		{
 			component->initialize();

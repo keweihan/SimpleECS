@@ -1,5 +1,4 @@
-#ifndef COLOR_H
-#define COLOR_H
+#pragma once
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -9,7 +8,9 @@
 
 namespace SimpleECS
 {
-	// Color class
+	/**
+	 * Representation of color with rgba values.
+	 */
 	class SIMPLEECS_API Color {
 
 	public:
@@ -21,5 +22,3 @@ namespace SimpleECS
 		int r, g, b, a;
 	};
 }
-
-#endif

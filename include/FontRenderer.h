@@ -13,6 +13,9 @@
 
 namespace SimpleECS
 {
+	/**
+	Renders text when provided a .ttf font. Positioned at associated entity world position.
+	*/
 	class FontRenderer : public Component
 	{
 	public:

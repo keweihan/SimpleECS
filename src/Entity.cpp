@@ -4,6 +4,15 @@
 
 using namespace SimpleECS;
 
+SimpleECS::Entity::~Entity()
+{
+	// Free all components attached to entity
+	for (auto component : components)
+	{
+		delete component;
+	}
+}
+
 void Entity::addComponent(Component* component)
 {
 	component->setEntity(this);
