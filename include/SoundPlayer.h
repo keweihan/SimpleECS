@@ -20,12 +20,12 @@ namespace SimpleECS
 	{
 	public:
 		SIMPLEECS_API SoundPlayer(std::string pathToAudio);
-
+		SIMPLEECS_API ~SoundPlayer();
 		/**
 		Plays associated audio clip once.
 		*/
-		void playAudio();
-		std::string path;
+		SIMPLEECS_API void playAudio();
+		std::string path = "";
 
 		void SIMPLEECS_API initialize() override;
 		void SIMPLEECS_API update() override;

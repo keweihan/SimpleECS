@@ -1,5 +1,6 @@
 #include "SoundPlayer.h"
 #include "SDL_mixer.h"
+#include <memory>
 
 using namespace SimpleECS;
 
@@ -32,7 +33,12 @@ SoundPlayer::SoundPlayerImpl::~SoundPlayerImpl()
 
 SoundPlayer::SoundPlayer(std::string pathToAudio)
 {
+	pImpl = std::make_unique<SoundPlayerImpl>();
 	pImpl->loadedAudio = Mix_LoadWAV(pathToAudio.c_str());
+}
+
+SimpleECS::SoundPlayer::~SoundPlayer()
+{
 }
 
 void SoundPlayer::playAudio()
