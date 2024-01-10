@@ -20,6 +20,8 @@ namespace SimpleECS
 		friend class Entity;
 
 	public:
+		virtual ~Component() {};
+
 		/*
 		* Called on every frame of rendering
 		*/
@@ -27,7 +29,6 @@ namespace SimpleECS
 
 		/*
 		* Called during start of game loop.
-		* Call on instantiation if game loop running.
 		*/
 		virtual void initialize() = 0;
 

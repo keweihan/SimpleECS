@@ -4,6 +4,7 @@
 #include <vector>
 #include "Component.h"
 #include "Transform.h"
+#include <string>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -19,6 +20,8 @@ namespace SimpleECS
 	*/
 	class Entity {
 	public:
+		Entity() {};
+		Entity(std::string tag) : tag(tag) {};
 		~Entity();
 
 		/**
@@ -44,6 +47,11 @@ namespace SimpleECS
 		* Entity position in world space.
 		*/
 		Transform transform;
+
+		/**
+		* Optional identifier for this entity
+		*/
+		std::string tag;
 		
 	private:
 		/**
