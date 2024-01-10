@@ -29,6 +29,8 @@ FontRenderer::FontRendererImpl::FontRendererImpl()
 FontRenderer::FontRendererImpl::~FontRendererImpl()
 {
     SDL_DestroyTexture(textTexture);
+    TTF_CloseFont(font);
+    TTF_Quit();
 }
 
 void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, Vector position)

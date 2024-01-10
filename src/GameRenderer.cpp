@@ -10,7 +10,7 @@ using namespace UtilSimpleECS;
 void GameRenderer::initGameRenderer()
 {
 	// Initialize SDL
-	if (SDL_InitSubSystem(SDL_INIT_VIDEO))
+	if (SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_AUDIO))
 	{
 		throw std::runtime_error("Failure to initialize SDL. SDL_Error: " + std::string(SDL_GetError()));
 	}
