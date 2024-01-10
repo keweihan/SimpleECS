@@ -35,9 +35,15 @@ int Game::addScene(Scene* scene)
 	return static_cast<int>(sceneList.size() - 1);
 }
 
+void SimpleECS::Game::setName(std::string name)
+{
+	gameName = name;
+}
+
 void Game::init()
 {
 	GameRenderer::initGameRenderer();
+	SDL_SetWindowTitle(GameRenderer::window, gameName.c_str());
 }
 
 void Game::mainLoop()

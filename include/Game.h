@@ -42,10 +42,17 @@ namespace SimpleECS
 		 */
 		int SIMPLEECS_API addScene(Scene* scene);
 
+		/**
+		 * Sets name of window associated with this game.
+		 */
+		void SIMPLEECS_API setName(std::string name);
+
 	private:
 		std::vector<Scene*> sceneList;
 
 		int activeSceneIndex = 0;
+
+		std::string gameName = "";
 
 		/**
 		 * Call initialization functions
