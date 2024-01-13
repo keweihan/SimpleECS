@@ -73,12 +73,12 @@ namespace SimpleECS
 		/*
 		* Add a collider to this grid
 		*/
-		void addCollider(const Collider*);
+		void addCollider(Collider*);
 
 		/*
 		* Remove a collider this grid
 		*/
-		void removeCollider(const Collider*&);
+		void removeCollider(Collider*);
 
 		/*
 		* Update collider grid positions
@@ -99,6 +99,11 @@ namespace SimpleECS
 		* Get the colliders populating a given cell
 		*/
 		const std::unordered_set<Collider*>& const getCellContents(const int index);
+
+		/*
+		* Get the bounds of a given cell
+		*/
+		void getCellBounds(Collider::AABB& output, const int& index);
 
 	private:
 		int cellWidth, cellHeight;

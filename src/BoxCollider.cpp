@@ -12,7 +12,7 @@ bool BoxCollider::isColliding(Collider* other)
     return false;
 }
 
-void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds)
+void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
 {
     Vector position = entity->transform.position;
 

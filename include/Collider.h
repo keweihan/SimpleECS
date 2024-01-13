@@ -39,7 +39,7 @@ namespace SimpleECS
 		/**
 		 * Gets AABB bounds of this collider
 		 */
-		virtual void getBounds(AABB& bounds) = 0;
+		virtual void getBounds(AABB& bounds) const = 0;
 	};
 
 	/**

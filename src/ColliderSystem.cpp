@@ -3,6 +3,7 @@
 #include "Component.h"
 #include "Entity.h"
 #include "GameRenderer.h"
+#include "TransformUtil.h"
 #include <vector>
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
@@ -149,6 +150,9 @@ ColliderGrid::ColliderGrid(const int r, const int c)
 	cellWidth	= ceil(GameRenderer::SCREEN_HEIGHT/ c);
 	cellHeight	= ceil(GameRenderer::SCREEN_WIDTH / r);
 
+	numColumn = c;
+	numRow = r;
+
 	grid.resize(r * c);
 }
 
@@ -160,17 +164,75 @@ void SimpleECS::ColliderGrid::populateGrid(const std::vector<Collider*>& list)
 	}
 }
 
-void SimpleECS::ColliderGrid::addCollider(const Collider*)
+void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 {
+	Collider::AABB bound;
+	collider->getBounds(bound);
 
+	// Get SDL space coordinates
+	Vector minBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMin, bound.yMin);
+	Vector maxBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMax, bound.yMax);
+
+	// Get the left most column index this collider exists in, rightMost, etc.
+	int columnLeft = minBound.x / cellWidth;
+	int columnRight = maxBound.x / cellWidth;
+	int rowTop = maxBound.y / cellHeight;
+	int rowBottom = minBound.y / cellHeight;
+
+	// Add to cells this object resides in
+	for (int c = columnLeft; c < columnRight; ++c)
+	{
+		for (int r = rowTop; r < rowBottom; ++r)
+		{
+			// Get effective index
+			int index = r * numColumn + c;
+			grid[index].insert(collider);
+		}
+	}
 }
 
-void SimpleECS::ColliderGrid::removeCollider(const Collider*&)
+void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 {
+	// Search grid for references to collider and delete
+	for (int i = 0; i < grid.size(); ++i)
+	{
+		if (grid[i].find(collider) != grid[i].end())
+		{
+			grid[i].erase(collider);
+		}
+	}
 }
 
 void SimpleECS::ColliderGrid::updateGrid()
 {
+	// Add to cells this object resides in
+	Collider::AABB cellBound;
+	Collider::AABB colliderBound;
+
+	for (int c = 0; c < numColumn; ++c)
+	{
+		for (int r = 0; r < numRow; ++r)
+		{
+			// Get effective index
+			int index = r * numRow + c;
+			getCellBounds(cellBound, index);
+			for (auto colliderIter = grid[index].begin(); colliderIter != grid[index].end(); ++colliderIter)
+			{
+				// If not in this cell, remove reference
+				(*colliderIter)->getBounds(colliderBound);
+				if (colliderBound.xMin > cellBound.xMax || colliderBound.xMax < cellBound.xMin
+					|| colliderBound.yMax < cellBound.yMin || colliderBound.yMin > colliderBound.yMax)
+				{
+					colliderIter = grid[index].erase(colliderIter);
+				}
+
+				// TODO: only one call to this per unique collider is necessary. Currently potentially
+				// calls more. 
+				addCollider(*colliderIter);
+			}
+		}
+	}
+
 }
 
 void SimpleECS::ColliderGrid::gridSize()
@@ -185,6 +247,19 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getCellContents(const int index)
 {
 	return grid[index];
+}
+
+void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)
+{
+	// index = row * numColumn + c
+	int column = index % numColumn;
+	int row = (index - column) / numColumn;
+	
+	output.xMin = -GameRenderer::SCREEN_WIDTH + column * cellWidth;
+	output.xMax = output.xMin + cellWidth;
+
+	output.yMax = GameRenderer::SCREEN_HEIGHT - row * cellHeight;
+	output.yMin = output.yMax - cellHeight;
 }
 
 
