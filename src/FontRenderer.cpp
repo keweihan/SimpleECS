@@ -35,6 +35,8 @@ FontRenderer::FontRendererImpl::~FontRendererImpl()
 
 void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, Vector position)
 {
+    SDL_DestroyTexture(textTexture);
+
 	// Create temporary surface
 	SDL_Color renderColor = { color.r, color.g, color.b, color.a };
 	SDL_Surface* textSurface = TTF_RenderText_Solid(font, text.c_str(), renderColor);
@@ -68,21 +70,24 @@ void FontRenderer::FontRendererImpl::renderText(std::string text, Color color, V
     }
 }
 
-SimpleECS::FontRenderer::FontRenderer(std::string text, std::string pathToFont, uint16_t size)
+SimpleECS::FontRenderer::FontRenderer(std::string text, std::string pathToFont, uint16_t size, Color color)
 {
     this->text = text;
     this->path = pathToFont;
     this->size = size;
+    this->color = color;
 
     pImpl = std::make_unique<FontRendererImpl>();
 }
 
-FontRenderer::FontRenderer(std::string text, std::string pathToFont)
+Vector SimpleECS::FontRenderer::getSize()
 {
-    this->text = text;
-    this->path = pathToFont;
+    int width;
+    int height;
 
-    pImpl = std::make_unique<FontRendererImpl>();
+    SDL_QueryTexture(pImpl->textTexture, NULL, NULL, &width, &height);
+
+    return Vector(width, height);
 }
 
 // Font renderer implementation
