@@ -58,7 +58,7 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	//}
 
 	colliderGrid.updateGrid();
-	Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
+	Collision collision = { NULL, NULL, 0, Vector() };
 
 	for (int i = 0; i < colliderGrid.gridSize(); ++i)
 	{
@@ -67,15 +67,15 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 			for (auto colliderB : colliderGrid.getCellContents(i))
 			{
 				if (colliderA == colliderB) continue;
-				collide->a = colliderA;
-				collide->b = colliderB;
-				if (getCollisionInfo(collide))
+				collision.a = colliderA;
+				collision.b = colliderB;
+				if (getCollisionInfo(collision))
 				{
 					// Invoke onCollide of colliding entity components
 					for (auto component : colliderA->entity->getComponents())
 					{
 						component->onCollide(*colliderB);
-						component->onCollide(*collide);
+						component->onCollide(collision);
 					}
 				}
 			}
@@ -87,30 +87,30 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 		for (auto colliderB : colliderGrid.getOutBoundContent())
 		{
 			if (colliderA == colliderB) continue;
-			collide->a = colliderA;
-			collide->b = colliderB;
-			if (getCollisionInfo(collide))
+			collision.a = colliderA;
+			collision.b = colliderB;
+			if (getCollisionInfo(collision))
 			{
 				// Invoke onCollide of colliding entity components
 				for (auto component : colliderA->entity->getComponents())
 				{
 					component->onCollide(*colliderB);
-					component->onCollide(*collide);
+					component->onCollide(collision);
 				}
 			}
 		}
 	}
 }
 
-bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
+bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
 {
-	if (collide->a == nullptr || collide->b == nullptr) return false;
+	if (collide.a == nullptr || collide.b == nullptr) return false;
 
-	Transform aTransform = collide->a->entity->transform;
-	Transform bTransform = collide->b->entity->transform;
+	Transform aTransform = collide.a->entity->transform;
+	Transform bTransform = collide.b->entity->transform;
 
-	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide->a);
-	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide->b);
+	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
+	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
 
 	if (bBox != nullptr && aBox != nullptr)
 	{
@@ -133,36 +133,36 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
 		double aExtentY = aBox->height / 2;
 		double bExtentY = bBox->height / 2;
 
-		double xDistance = std::abs(collide->a->entity->transform.position.x - collide->b->entity->transform.position.x);
+		double xDistance = std::abs(collide.a->entity->transform.position.x - collide.b->entity->transform.position.x);
 		double xOverlap = (aExtentX + bExtentX) - xDistance;
 
-		double yDistance = std::abs(collide->a->entity->transform.position.y - collide->b->entity->transform.position.y);
+		double yDistance = std::abs(collide.a->entity->transform.position.y - collide.b->entity->transform.position.y);
 		double yOverlap = (aExtentY + bExtentY) - yDistance;
 
 		// Least penetration is on y-axis
 		if (yOverlap < xOverlap)
 		{
-			collide->penetration = yOverlap;
+			collide.penetration = yOverlap;
 			if (aTransform.position.y < bTransform.position.y)
 			{
-				collide->normal = Vector(0, -1);
+				collide.normal = Vector(0, -1);
 			}
 			else
 			{
-				collide->normal = Vector(0, 1);
+				collide.normal = Vector(0, 1);
 			}
 		}
 		// Least penetration is on x-axis
 		else
 		{
-			collide->penetration = xOverlap;
+			collide.penetration = xOverlap;
 			if (aTransform.position.x < bTransform.position.x)
 			{
-				collide->normal = Vector(-1, 0);
+				collide.normal = Vector(-1, 0);
 			}
 			else
 			{
-				collide->normal = Vector(1, 0);
+				collide.normal = Vector(1, 0);
 			}
 		}
 	}
@@ -172,15 +172,15 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
 }
 
 
-bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
+bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 {
-	if (collide->a == nullptr || collide->b == nullptr) return false;
+	if (collide.a == nullptr || collide.b == nullptr) return false;
 
 	// Breaking principles of polymorphism (likely) necessary. 
 	// Different collider collisions (i.e. sphere-sphere, sphere-box, box-box) 
 	// require different implementation.
-    if (dynamic_cast<BoxCollider*>(collide->a) != nullptr && 
-		dynamic_cast<BoxCollider*>(collide->b) != nullptr)
+    if (dynamic_cast<BoxCollider*>(collide.a) != nullptr && 
+		dynamic_cast<BoxCollider*>(collide.b) != nullptr)
     {
 		return getCollisionBoxBox(collide);
     }
@@ -274,6 +274,7 @@ void SimpleECS::ColliderGrid::updateGrid()
 	Collider::AABB cellBound;
 	Collider::AABB colliderBound;
 
+	// Remove collider reference in each cell if collider no longer inhabits cell
 	for (int r = 0; r < numRow; ++r)
 	{
 		for (int c = 0; c < numColumn; ++c)
@@ -302,6 +303,7 @@ void SimpleECS::ColliderGrid::updateGrid()
 		}
 	}
 
+	// Remove collider reference in outbounds if collider is no longer out of screen bounds.
 	for (auto colliderIter = outbounds.begin(); colliderIter != outbounds.end();)
 	{
 		(*colliderIter)->getBounds(colliderBound);
@@ -329,12 +331,12 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 	return 0;
 }
 
-const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getCellContents(const int index)
+const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(const int index)
 {
 	return grid[index];
 }
 
-const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
+const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getOutBoundContent()
 {
 	return outbounds;
 }
