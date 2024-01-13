@@ -6,6 +6,8 @@
 
 namespace SimpleECS
 {
+	class ColliderGrid;
+
 	// TODO: Class containing only static classes can be considered bad practice.
 	// Consider alternatives.
 
@@ -13,6 +15,12 @@ namespace SimpleECS
 	class ColliderSystem
 	{
 	public:
+		/*
+		* Constants for grid size
+		*/
+		static const int GRID_COLUMNS = 30;
+		static const int GRID_ROWS = 50;
+
 		/*
 		* Register to list of colliders to check collisions for
 		*/
@@ -46,6 +54,10 @@ namespace SimpleECS
 		*/
 		static std::vector<Collider*> colliderList;
 
+		/*
+		*
+ 		*/
+		static ColliderGrid colliderGrid;
 
 		/*
 		* If collide contains two AABB box containers. Populate with collision data
@@ -54,9 +66,9 @@ namespace SimpleECS
 	};
 
 
-	///*
-	//* Define a spacial grid to segment possible colliding objects
-	//*/
+	/*
+	* Define a spacial grid to segment possible colliding objects
+	*/
 	class ColliderGrid
 	{
 	public: 
@@ -66,9 +78,9 @@ namespace SimpleECS
 		ColliderGrid(const int r, const int c);
 
 		/*
-		* Populate grid based on a given list of colliders.
+		* Populate grid based on internal list of colliders.
 		*/
-		void populateGrid(const std::vector<Collider*>& list);
+		void populateGrid();
 
 		/*
 		* Add a collider to this grid
@@ -88,7 +100,7 @@ namespace SimpleECS
 		/*
 		* Get number of cells
 		*/
-		void gridSize();
+		int gridSize();
 
 		/*
 		* Get the number of colliders in a given cell
@@ -111,5 +123,10 @@ namespace SimpleECS
 
 		// index x = c + r * numColumn;
 		std::vector<std::unordered_set<Collider*>> grid;
+
+		std::unordered_set<Collider*> outbounds;
+
+		// list of all colliders
+		std::unordered_set<Collider*> colliderList;
 	};
 }

@@ -9,10 +9,12 @@ using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
 std::vector<Collider*> ColliderSystem::colliderList;
+ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::GRID_ROWS, ColliderSystem::GRID_COLUMNS);
 
 void ColliderSystem::registerCollider(Collider* collider)
 {
 	colliderList.push_back(collider);
+	colliderGrid.addCollider(collider);
 }
 
 void ColliderSystem::deregisterCollider(Collider* collider)
@@ -34,23 +36,46 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	// O(n^2) basic implementation. See quad trees for performance improvement.
-	Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
+	//Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
 
-	for (int i = 0; i < colliderList.size(); ++i)
+	//for (int i = 0; i < colliderList.size(); ++i)
+	//{
+	//	for (int j = 0; j < colliderList.size(); ++j)
+	//	{
+	//		if (j == i) continue;
+	//		collide->a = colliderList[i];
+	//		collide->b = colliderList[j];
+	//		if (getCollisionInfo(collide))
+	//		{
+	//			// Invoke onCollide of colliding entity components
+	//			for (auto component : colliderList[i]->entity->getComponents())
+	//			{
+	//				component->onCollide(*colliderList[j]);
+	//				component->onCollide(*collide);
+	//			}
+	//		}
+	//	}
+	//}
+
+	colliderGrid.updateGrid();
+	Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
+	for (int i = 0; i < colliderGrid.gridSize(); ++i)
 	{
-		for (int j = 0; j < colliderList.size(); ++j)
+		for (auto colliderA : colliderGrid.getCellContents(i))
 		{
-			if (j == i) continue;
-			collide->a = colliderList[i];
-			collide->b = colliderList[j];
-			if (getCollisionInfo(collide))
+			for (auto colliderB : colliderGrid.getCellContents(i))
 			{
-				Collision* collideInfo = new Collision{ colliderList[i], colliderList[j], 0, Vector() };
-				// Invoke onCollide of colliding entity components
-				for (auto component : colliderList[i]->entity->getComponents())
+				if (colliderA == colliderB) continue;
+				collide->a = colliderA;
+				collide->b = colliderB;
+				if (getCollisionInfo(collide))
 				{
-					component->onCollide(*colliderList[j]);
-					component->onCollide(*collide);
+					// Invoke onCollide of colliding entity components
+					for (auto component : colliderA->entity->getComponents())
+					{
+						component->onCollide(*colliderB);
+						component->onCollide(*collide);
+					}
 				}
 			}
 		}
@@ -156,9 +181,9 @@ ColliderGrid::ColliderGrid(const int r, const int c)
 	grid.resize(r * c);
 }
 
-void SimpleECS::ColliderGrid::populateGrid(const std::vector<Collider*>& list)
+void SimpleECS::ColliderGrid::populateGrid()
 {
-	for (auto collide : list)
+	for (auto collide : colliderList)
 	{
 		addCollider(collide);
 	}
@@ -166,6 +191,9 @@ void SimpleECS::ColliderGrid::populateGrid(const std::vector<Collider*>& list)
 
 void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 {
+	colliderList.insert(collider);
+	if (collider->entity == NULL) return;
+
 	Collider::AABB bound;
 	collider->getBounds(bound);
 
@@ -174,15 +202,15 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 	Vector maxBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMax, bound.yMax);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft = minBound.x / cellWidth;
+	int columnLeft	= minBound.x / cellWidth;
 	int columnRight = maxBound.x / cellWidth;
-	int rowTop = maxBound.y / cellHeight;
-	int rowBottom = minBound.y / cellHeight;
+	int rowTop		= maxBound.y / cellHeight;
+	int rowBottom	= minBound.y / cellHeight;
 
 	// Add to cells this object resides in
-	for (int c = columnLeft; c < columnRight; ++c)
+	for (int c = std::max(columnLeft, 0); c <= std::min(columnRight, numColumn - 1); ++c)
 	{
-		for (int r = rowTop; r < rowBottom; ++r)
+		for (int r = std::max(rowTop, 0); r <= std::min(rowBottom, numRow - 1); ++r)
 		{
 			// Get effective index
 			int index = r * numColumn + c;
@@ -193,6 +221,11 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 
 void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 {
+	if (colliderList.find(collider) != colliderList.end())
+	{
+		colliderList.erase(collider);
+	}
+
 	// Search grid for references to collider and delete
 	for (int i = 0; i < grid.size(); ++i)
 	{
@@ -209,14 +242,14 @@ void SimpleECS::ColliderGrid::updateGrid()
 	Collider::AABB cellBound;
 	Collider::AABB colliderBound;
 
-	for (int c = 0; c < numColumn; ++c)
+	for (int r = 0; r < numRow; ++r)
 	{
-		for (int r = 0; r < numRow; ++r)
+		for (int c = 0; c < numColumn; ++c)
 		{
 			// Get effective index
-			int index = r * numRow + c;
+			int index = r * numColumn + c;
 			getCellBounds(cellBound, index);
-			for (auto colliderIter = grid[index].begin(); colliderIter != grid[index].end(); ++colliderIter)
+			for (auto colliderIter = grid[index].begin(); colliderIter != grid[index].end();)
 			{
 				// If not in this cell, remove reference
 				(*colliderIter)->getBounds(colliderBound);
@@ -225,18 +258,24 @@ void SimpleECS::ColliderGrid::updateGrid()
 				{
 					colliderIter = grid[index].erase(colliderIter);
 				}
+				else
+				{
+					colliderIter++;
+				}
 
 				// TODO: only one call to this per unique collider is necessary. Currently potentially
 				// calls more. 
-				addCollider(*colliderIter);
+				//addCollider(*colliderIter);
 			}
 		}
 	}
 
+	populateGrid();
 }
 
-void SimpleECS::ColliderGrid::gridSize()
+int SimpleECS::ColliderGrid::gridSize()
 {
+	return grid.size();
 }
 
 int SimpleECS::ColliderGrid::cellSize(int index)
