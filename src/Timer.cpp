@@ -1,19 +1,23 @@
 #include "Timer.h"
 #include <SDL.h>
 
-int64_t SimpleECS::Timer::frameFinishTime;
+uint64_t SimpleECS::Timer::frameFinishTime;
+uint16_t SimpleECS::Timer::previousFrameLength;
 
-int64_t SimpleECS::Timer::getDeltaTime()
+uint64_t SimpleECS::Timer::getDeltaTime()
 {
-	return SDL_GetTicks64() - frameFinishTime;
+	return previousFrameLength;
 }
 
-int64_t SimpleECS::Timer::getProgramLifetime()
+uint64_t SimpleECS::Timer::getProgramLifetime()
 {
 	return SDL_GetTicks64();
 }
 
 void SimpleECS::Timer::endFrame()
 {
-	frameFinishTime = SDL_GetTicks64();
+	int currTicks = SDL_GetTicks64();
+	previousFrameLength = currTicks - frameFinishTime;
+
+	frameFinishTime = currTicks;
 }

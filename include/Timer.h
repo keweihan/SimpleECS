@@ -26,16 +26,19 @@ namespace SimpleECS
 		* Milliseconds since last frame execution finish 
 		* (frame 'finish' time excludes time to render).
 		*/
-		static int64_t getDeltaTime();
+		static uint64_t getDeltaTime();
 
 		/*
 		* Milliseconds since program started
 		*/
-		static int64_t getProgramLifetime();
+		static uint64_t getProgramLifetime();
 
 	private:
 		// Time of previous frame finish in ms
-		static int64_t frameFinishTime;
+		static uint64_t frameFinishTime;
+
+		// Duration of previous frame
+		static uint16_t previousFrameLength; 
 
 		/*
 		* Call at end of every game loop to indicate end
