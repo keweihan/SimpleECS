@@ -16,6 +16,11 @@ namespace SimpleECS
 	class SIMPLEECS_API Collider : public Component {
 
 	public:
+		struct AABB {
+			int xMin, yMin;
+			int xMax, yMax;
+		};
+
 		/**
 		 * Register and deregister collider against ColliderSystem
 		 * on construction/deconstruction
@@ -30,6 +35,11 @@ namespace SimpleECS
 		 * Returns whether this collider is colliding with another collider
 		 */
 		virtual bool isColliding(Collider* other) = 0;
+
+		/**
+		 * Gets AABB bounds of this collider
+		 */
+		virtual void getBounds(AABB& bounds) = 0;
 	};
 
 	/**

@@ -11,3 +11,14 @@ bool BoxCollider::isColliding(Collider* other)
     //return ColliderSystem::getCollisionInfo(new Collide);
     return false;
 }
+
+void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds)
+{
+    Vector position = entity->transform.position;
+
+    bounds.xMin = position.x - width / 2;
+    bounds.xMax = position.x + width / 2;
+
+    bounds.yMin = position.y - height / 2;
+    bounds.yMax = position.y + height / 2;
+}

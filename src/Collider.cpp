@@ -3,6 +3,7 @@
 
 SimpleECS::Collider::Collider()
 {
+	// TODO: should be responsibillity of scene load
 	ColliderSystem::registerCollider(this);
 }
 

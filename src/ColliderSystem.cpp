@@ -2,8 +2,10 @@
 #include "Collider.h"
 #include "Component.h"
 #include "Entity.h"
+#include "GameRenderer.h"
 #include <vector>
 using namespace SimpleECS;
+using namespace UtilSimpleECS;
 
 std::vector<Collider*> ColliderSystem::colliderList;
 
@@ -67,38 +69,31 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
 	if (bBox != nullptr && aBox != nullptr)
 	{
 		// AABB Collision 
-		double aLeft, aRight, aTop, aBottom;
-		double bLeft, bRight, bTop, bBottom;
-
-		double aExtentX = aBox->width / 2;
-		double bExtentX = bBox->width / 2;
-		double aExtentY = aBox->height / 2;
-		double bExtentY = bBox->height / 2;
-
-
-		aLeft = aBox->entity->transform.position.x - aExtentX;
-		aRight = aBox->entity->transform.position.x + aExtentX;
-		aBottom = aBox->entity->transform.position.y - aExtentY;
-		aTop = aBox->entity->transform.position.y + aExtentY;
-
-		bLeft = bBox->entity->transform.position.x - bExtentX;
-		bRight = bBox->entity->transform.position.x + bExtentX;
-		bBottom = bBox->entity->transform.position.y - bExtentY;
-		bTop = bBox->entity->transform.position.y + bExtentY;
+		Collider::AABB aBounds;
+		Collider::AABB bBounds;
+		aBox->getBounds(aBounds);
+		bBox->getBounds(bBounds);
 
 		//If any of the sides from A are outside of B, no collision occuring.
-		if (aBottom >= bTop || aTop <= bBottom || aRight <= bLeft || aLeft >= bRight)
+		if (aBounds.yMin >= bBounds.yMax || aBounds.yMax <= bBounds.yMin 
+			|| aBounds.xMax <= bBounds.xMin || aBounds.xMin >= bBounds.xMax)
 		{
 			return false;
 		}
 
 		// Boxes are colliding. Find axis of least penetration
+		double aExtentX = aBox->width / 2;
+		double bExtentX = bBox->width / 2;
+		double aExtentY = aBox->height / 2;
+		double bExtentY = bBox->height / 2;
+
 		double xDistance = std::abs(collide->a->entity->transform.position.x - collide->b->entity->transform.position.x);
 		double xOverlap = (aExtentX + bExtentX) - xDistance;
 
 		double yDistance = std::abs(collide->a->entity->transform.position.y - collide->b->entity->transform.position.y);
 		double yOverlap = (aExtentY + bExtentY) - yDistance;
 
+		// Least penetration is on y-axis
 		if (yOverlap < xOverlap)
 		{
 			collide->penetration = yOverlap;
@@ -111,6 +106,7 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision* collide)
 				collide->normal = Vector(0, 1);
 			}
 		}
+		// Least penetration is on x-axis
 		else
 		{
 			collide->penetration = xOverlap;
@@ -147,4 +143,48 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
 
     return false;
 }
+
+ColliderGrid::ColliderGrid(const int r, const int c)
+{
+	cellWidth	= ceil(GameRenderer::SCREEN_HEIGHT/ c);
+	cellHeight	= ceil(GameRenderer::SCREEN_WIDTH / r);
+
+	grid.resize(r * c);
+}
+
+void SimpleECS::ColliderGrid::populateGrid(const std::vector<Collider*>& list)
+{
+	for (auto collide : list)
+	{
+		addCollider(collide);
+	}
+}
+
+void SimpleECS::ColliderGrid::addCollider(const Collider*)
+{
+
+}
+
+void SimpleECS::ColliderGrid::removeCollider(const Collider*&)
+{
+}
+
+void SimpleECS::ColliderGrid::updateGrid()
+{
+}
+
+void SimpleECS::ColliderGrid::gridSize()
+{
+}
+
+int SimpleECS::ColliderGrid::cellSize(int index)
+{
+	return 0;
+}
+
+const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getCellContents(const int index)
+{
+	return grid[index];
+}
+
 
