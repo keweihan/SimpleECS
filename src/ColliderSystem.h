@@ -113,6 +113,11 @@ namespace SimpleECS
 		const std::unordered_set<Collider*>& const getCellContents(const int index);
 
 		/*
+		* Get the colliders populating single out of bounds cell
+		*/
+		const std::unordered_set<Collider*>& const getOutBoundContent();
+
+		/*
 		* Get the bounds of a given cell
 		*/
 		void getCellBounds(Collider::AABB& output, const int& index);

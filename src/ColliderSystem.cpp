@@ -59,6 +59,7 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 
 	colliderGrid.updateGrid();
 	Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
+
 	for (int i = 0; i < colliderGrid.gridSize(); ++i)
 	{
 		for (auto colliderA : colliderGrid.getCellContents(i))
@@ -76,6 +77,25 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 						component->onCollide(*colliderB);
 						component->onCollide(*collide);
 					}
+				}
+			}
+		}
+	}
+
+	for (auto colliderA : colliderGrid.getOutBoundContent())
+	{
+		for (auto colliderB : colliderGrid.getOutBoundContent())
+		{
+			if (colliderA == colliderB) continue;
+			collide->a = colliderA;
+			collide->b = colliderB;
+			if (getCollisionInfo(collide))
+			{
+				// Invoke onCollide of colliding entity components
+				for (auto component : colliderA->entity->getComponents())
+				{
+					component->onCollide(*colliderB);
+					component->onCollide(*collide);
 				}
 			}
 		}
@@ -172,8 +192,8 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision* collide)
 
 ColliderGrid::ColliderGrid(const int r, const int c)
 {
-	cellWidth	= ceil(GameRenderer::SCREEN_HEIGHT/ c);
-	cellHeight	= ceil(GameRenderer::SCREEN_WIDTH / r);
+	cellWidth	= ceil(GameRenderer::SCREEN_WIDTH / c);
+	cellHeight	= ceil(GameRenderer::SCREEN_HEIGHT / r);
 
 	numColumn = c;
 	numRow = r;
@@ -197,30 +217,36 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 	Collider::AABB bound;
 	collider->getBounds(bound);
 
-	// Get SDL space coordinates
+	// Get SDL space coordinates of this collider
 	Vector minBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMin, bound.yMin);
 	Vector maxBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMax, bound.yMax);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft	= minBound.x / cellWidth;
-	int columnRight = maxBound.x / cellWidth;
-	int rowTop		= maxBound.y / cellHeight;
-	int rowBottom	= minBound.y / cellHeight;
+	int columnLeft = (bound.xMin + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
+	int columnRight = (bound.xMax + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
+	int rowTop = maxBound.y / cellHeight;
+	int rowBottom = minBound.y / cellHeight;
 
 	// Add to cells this object resides in
-	for (int c = std::max(columnLeft, 0); c <= std::min(columnRight, numColumn - 1); ++c)
+	for (int r = std::max(rowTop, 0); r <= std::min(rowBottom, numRow - 1); ++r)
 	{
-		for (int r = std::max(rowTop, 0); r <= std::min(rowBottom, numRow - 1); ++r)
+		for (int c = std::max(columnLeft, 0); c <= std::min(columnRight, numColumn - 1); ++c)
 		{
 			// Get effective index
 			int index = r * numColumn + c;
 			grid[index].insert(collider);
 		}
 	}
+
+	if (columnLeft < 0 || columnRight > numColumn || rowTop < 0 || rowBottom > numRow)
+	{
+		outbounds.insert(collider);
+	}
 }
 
 void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 {
+	// Remove from general list
 	if (colliderList.find(collider) != colliderList.end())
 	{
 		colliderList.erase(collider);
@@ -233,6 +259,12 @@ void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 		{
 			grid[i].erase(collider);
 		}
+	}
+
+	// Remove from outbounds list
+	if (outbounds.find(collider) != outbounds.end())
+	{
+		outbounds.erase(collider);
 	}
 }
 
@@ -270,6 +302,20 @@ void SimpleECS::ColliderGrid::updateGrid()
 		}
 	}
 
+	for (auto colliderIter = outbounds.begin(); colliderIter != outbounds.end();)
+	{
+		(*colliderIter)->getBounds(colliderBound);
+		if (colliderBound.xMin >= -GameRenderer::SCREEN_WIDTH / 2 && colliderBound.xMax <= GameRenderer::SCREEN_WIDTH / 2
+			&& colliderBound.yMax <= GameRenderer::SCREEN_HEIGHT / 2 && colliderBound.yMin >= -GameRenderer::SCREEN_HEIGHT / 2)
+		{
+			colliderIter = outbounds.erase(colliderIter);
+		}
+		else
+		{
+			colliderIter++;
+		}
+	}
+
 	populateGrid();
 }
 
@@ -286,6 +332,11 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getCellContents(const int index)
 {
 	return grid[index];
+}
+
+const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
+{
+	return outbounds;
 }
 
 void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)
