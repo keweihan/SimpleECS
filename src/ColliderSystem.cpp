@@ -31,17 +31,18 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	// O(n^2) basic implementation. See quad trees for performance improvement.
+	Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
+
 	for (int i = 0; i < colliderList.size(); ++i)
 	{
 		for (int j = 0; j < colliderList.size(); ++j)
 		{
 			if (j == i) continue;
-
-			// TODO: constructors need not be called for every possible collision.
-			Collision* collide = new Collision{ colliderList[i], colliderList[j], 0, Vector()};
-
+			collide->a = colliderList[i];
+			collide->b = colliderList[j];
 			if (getCollisionInfo(collide))
 			{
+				Collision* collideInfo = new Collision{ colliderList[i], colliderList[j], 0, Vector() };
 				// Invoke onCollide of colliding entity components
 				for (auto component : colliderList[i]->entity->getComponents())
 				{
