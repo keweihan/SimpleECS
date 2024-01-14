@@ -18,8 +18,8 @@ namespace SimpleECS
 		/*
 		* Constants for grid size
 		*/
-		static const int GRID_COLUMNS = 30;
-		static const int GRID_ROWS = 50;
+		static const int GRID_COLUMNS = 60;
+		static const int GRID_ROWS = 40;
 
 		/*
 		* Register to list of colliders to check collisions for

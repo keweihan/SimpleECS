@@ -5,6 +5,7 @@
 #include "GameRenderer.h"
 #include "TransformUtil.h"
 #include <vector>
+
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
@@ -209,6 +210,13 @@ void SimpleECS::ColliderGrid::populateGrid()
 	}
 }
 
+constexpr const int& clamp(const int& v, const int& lo, const int& hi)
+{
+	if (v < lo) { return lo; }
+	if (v > hi) { return hi; }
+	return v;
+}
+
 void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 {
 	colliderList.insert(collider);
@@ -217,20 +225,16 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 	Collider::AABB bound;
 	collider->getBounds(bound);
 
-	// Get SDL space coordinates of this collider
-	Vector minBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMin, bound.yMin);
-	Vector maxBound = UtilSimpleECS::TransformUtil::worldToScreenSpace(bound.xMax, bound.yMax);
-
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft = (bound.xMin + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
+	int columnLeft	= (bound.xMin + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
 	int columnRight = (bound.xMax + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
-	int rowTop = maxBound.y / cellHeight;
-	int rowBottom = minBound.y / cellHeight;
+	int rowTop		= (-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
+	int rowBottom	= (-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
 
 	// Add to cells this object resides in
-	for (int r = std::max(rowTop, 0); r <= std::min(rowBottom, numRow - 1); ++r)
+	for (int r = clamp(rowBottom, 0, numRow -1); r <= clamp(rowTop, 0, numRow - 1); ++r)
 	{
-		for (int c = std::max(columnLeft, 0); c <= std::min(columnRight, numColumn - 1); ++c)
+		for (int c = clamp(columnLeft, 0, numColumn -1); c <= clamp(columnRight, 0, numColumn - 1); ++c)
 		{
 			// Get effective index
 			int index = r * numColumn + c;
@@ -238,6 +242,7 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 		}
 	}
 
+	// If resides in no cells, add to out of bounds
 	if (columnLeft < 0 || columnRight > numColumn || rowTop < 0 || rowBottom > numRow)
 	{
 		outbounds.insert(collider);
@@ -336,7 +341,7 @@ const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(co
 	return grid[index];
 }
 
-const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getOutBoundContent()
+const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
 {
 	return outbounds;
 }
