@@ -78,17 +78,12 @@ namespace SimpleECS
 		ColliderGrid(const int r, const int c);
 
 		/*
-		* Populate grid based on internal list of colliders.
-		*/
-		void populateGrid();
-
-		/*
 		* Add a collider to this grid
 		*/
-		void addCollider(Collider*);
+		void registerCollider(Collider*);
 
 		/*
-		* Remove a collider this grid
+		* Remove a collider from this grid
 		*/
 		void removeCollider(Collider*);
 
@@ -100,7 +95,7 @@ namespace SimpleECS
 		/*
 		* Get number of cells
 		*/
-		int gridSize();
+		int size();
 
 		/*
 		* Get the number of colliders in a given cell
@@ -123,6 +118,16 @@ namespace SimpleECS
 		void getCellBounds(Collider::AABB& output, const int& index);
 
 	private:
+		/*
+		* Add a collider to this grid
+		*/
+		void insertToGrid(Collider*);
+
+		/*
+		* Populate grid based on internal list of colliders.
+		*/
+		void populateGrid();
+
 		int cellWidth, cellHeight;
 		int numRow, numColumn;
 

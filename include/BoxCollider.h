@@ -21,7 +21,7 @@ namespace SimpleECS
 		BoxCollider() : Collider(), width(40), height(40) {}
 		BoxCollider(int w, int h) : Collider(), width(w), height(h) {}
 
-		void update() override {}
+		void update() override;
 		void initialize() override {}
 
 		/**
@@ -35,5 +35,7 @@ namespace SimpleECS
 		 * Collider boundaries, centered around transform center.
 		 */
 		int width, height;
+	private:
+		AABB bound = {};
 	};
 }

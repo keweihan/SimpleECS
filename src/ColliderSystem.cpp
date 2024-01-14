@@ -15,7 +15,7 @@ ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::GRID_ROWS, ColliderSys
 void ColliderSystem::registerCollider(Collider* collider)
 {
 	colliderList.push_back(collider);
-	colliderGrid.addCollider(collider);
+	colliderGrid.registerCollider(collider);
 }
 
 void ColliderSystem::deregisterCollider(Collider* collider)
@@ -37,9 +37,9 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	colliderGrid.updateGrid();
-	Collision collision = { NULL, NULL, 0, Vector() };
+	Collision collision = {};
 
-	for (int i = 0; i < colliderGrid.gridSize(); ++i)
+	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
 		for (auto& colliderA : colliderGrid.getCellContents(i))
 		{
@@ -184,8 +184,13 @@ void SimpleECS::ColliderGrid::populateGrid()
 {
 	for (auto collide : colliderList)
 	{
-		addCollider(collide);
+		insertToGrid(collide);
 	}
+}
+
+void SimpleECS::ColliderGrid::registerCollider(Collider* collider)
+{
+	colliderList.insert(collider);
 }
 
 constexpr const int& clamp(const int& v, const int& lo, const int& hi)
@@ -195,9 +200,8 @@ constexpr const int& clamp(const int& v, const int& lo, const int& hi)
 	return v;
 }
 
-void SimpleECS::ColliderGrid::addCollider(Collider* collider)
+void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 {
-	colliderList.insert(collider);
 	if (collider->entity == NULL) return;
 
 	Collider::AABB bound;
@@ -302,7 +306,7 @@ void SimpleECS::ColliderGrid::updateGrid()
 	populateGrid();
 }
 
-int SimpleECS::ColliderGrid::gridSize()
+int SimpleECS::ColliderGrid::size()
 {
 	return grid.size();
 }

@@ -5,6 +5,17 @@
 
 using namespace SimpleECS;
 
+void SimpleECS::BoxCollider::update()
+{
+    Vector position = entity->transform.position;
+
+    bound.xMin = position.x - width / 2;
+    bound.xMax = position.x + width / 2;
+
+    bound.yMin = position.y - height / 2;
+    bound.yMax = position.y + height / 2;
+}
+
 bool BoxCollider::isColliding(Collider* other)
 {
     // STUB
@@ -14,11 +25,5 @@ bool BoxCollider::isColliding(Collider* other)
 
 void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
 {
-    Vector position = entity->transform.position;
-
-    bounds.xMin = position.x - width / 2;
-    bounds.xMax = position.x + width / 2;
-
-    bounds.yMin = position.y - height / 2;
-    bounds.yMax = position.y + height / 2;
+    bounds = bound;
 }
