@@ -36,36 +36,14 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
-	// O(n^2) basic implementation. See quad trees for performance improvement.
-	//Collision* collide = new Collision{ NULL, NULL, 0, Vector() };
-
-	//for (int i = 0; i < colliderList.size(); ++i)
-	//{
-	//	for (int j = 0; j < colliderList.size(); ++j)
-	//	{
-	//		if (j == i) continue;
-	//		collide->a = colliderList[i];
-	//		collide->b = colliderList[j];
-	//		if (getCollisionInfo(collide))
-	//		{
-	//			// Invoke onCollide of colliding entity components
-	//			for (auto component : colliderList[i]->entity->getComponents())
-	//			{
-	//				component->onCollide(*colliderList[j]);
-	//				component->onCollide(*collide);
-	//			}
-	//		}
-	//	}
-	//}
-
 	colliderGrid.updateGrid();
 	Collision collision = { NULL, NULL, 0, Vector() };
 
 	for (int i = 0; i < colliderGrid.gridSize(); ++i)
 	{
-		for (auto colliderA : colliderGrid.getCellContents(i))
+		for (auto& colliderA : colliderGrid.getCellContents(i))
 		{
-			for (auto colliderB : colliderGrid.getCellContents(i))
+			for (auto& colliderB : colliderGrid.getCellContents(i))
 			{
 				if (colliderA == colliderB) continue;
 				collision.a = colliderA;
@@ -83,9 +61,9 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 		}
 	}
 
-	for (auto colliderA : colliderGrid.getOutBoundContent())
+	for (auto& colliderA : colliderGrid.getOutBoundContent())
 	{
-		for (auto colliderB : colliderGrid.getOutBoundContent())
+		for (auto& colliderB : colliderGrid.getOutBoundContent())
 		{
 			if (colliderA == colliderB) continue;
 			collision.a = colliderA;
@@ -134,10 +112,10 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
 		double aExtentY = aBox->height / 2;
 		double bExtentY = bBox->height / 2;
 
-		double xDistance = std::abs(collide.a->entity->transform.position.x - collide.b->entity->transform.position.x);
+		double xDistance = std::abs(aTransform.position.x - bTransform.position.x);
 		double xOverlap = (aExtentX + bExtentX) - xDistance;
 
-		double yDistance = std::abs(collide.a->entity->transform.position.y - collide.b->entity->transform.position.y);
+		double yDistance = std::abs(aTransform.position.y - bTransform.position.y);
 		double yOverlap = (aExtentY + bExtentY) - yDistance;
 
 		// Least penetration is on y-axis
@@ -231,10 +209,15 @@ void SimpleECS::ColliderGrid::addCollider(Collider* collider)
 	int rowTop		= (-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
 	int rowBottom	= (-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
 
+	int colLeftClamped = clamp(columnLeft, 0, numColumn - 1);
+	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
+	int rowBotClamped = clamp(rowBottom, 0, numRow - 1);
+	int rowTopClamped = clamp(rowTop, 0, numRow - 1);
+
 	// Add to cells this object resides in
-	for (int r = clamp(rowBottom, 0, numRow -1); r <= clamp(rowTop, 0, numRow - 1); ++r)
+	for (int r = rowBotClamped; r <= rowTopClamped; ++r)
 	{
-		for (int c = clamp(columnLeft, 0, numColumn -1); c <= clamp(columnRight, 0, numColumn - 1); ++c)
+		for (int c = colLeftClamped; c <= colRightClamped; ++c)
 		{
 			// Get effective index
 			int index = r * numColumn + c;
@@ -280,30 +263,23 @@ void SimpleECS::ColliderGrid::updateGrid()
 	Collider::AABB colliderBound;
 
 	// Remove collider reference in each cell if collider no longer inhabits cell
-	for (int r = 0; r < numRow; ++r)
+	for (int i = 0; i < grid.size(); ++i)
 	{
-		for (int c = 0; c < numColumn; ++c)
-		{
-			// Get effective index
-			int index = r * numColumn + c;
-			getCellBounds(cellBound, index);
-			for (auto colliderIter = grid[index].begin(); colliderIter != grid[index].end();)
-			{
-				// If not in this cell, remove reference
-				(*colliderIter)->getBounds(colliderBound);
-				if (colliderBound.xMin > cellBound.xMax || colliderBound.xMax < cellBound.xMin
-					|| colliderBound.yMax < cellBound.yMin || colliderBound.yMin > colliderBound.yMax)
-				{
-					colliderIter = grid[index].erase(colliderIter);
-				}
-				else
-				{
-					colliderIter++;
-				}
+		if (grid[i].size() == 0) continue;
+		getCellBounds(cellBound, i);
 
-				// TODO: only one call to this per unique collider is necessary. Currently potentially
-				// calls more. 
-				//addCollider(*colliderIter);
+		for (auto colliderIter = grid[i].begin(); colliderIter != grid[i].end();)
+		{
+			// If not in this cell, remove reference
+			(*colliderIter)->getBounds(colliderBound);
+			if (colliderBound.xMin > cellBound.xMax || colliderBound.xMax < cellBound.xMin
+				|| colliderBound.yMax < cellBound.yMin || colliderBound.yMin > colliderBound.yMax)
+			{
+				colliderIter = grid[i].erase(colliderIter);
+			}
+			else
+			{
+				colliderIter++;
 			}
 		}
 	}
