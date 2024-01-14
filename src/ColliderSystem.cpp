@@ -107,16 +107,20 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
 		}
 
 		// Boxes are colliding. Find axis of least penetration
-		double aExtentX = aBox->width / 2;
-		double bExtentX = bBox->width / 2;
-		double aExtentY = aBox->height / 2;
-		double bExtentY = bBox->height / 2;
+		double aExtentX = aBox->width / 2.0;
+		double bExtentX = bBox->width / 2.0;
+		double aExtentY = aBox->height / 2.0;
+		double bExtentY = bBox->height / 2.0;
 
 		double xDistance = std::abs(aTransform.position.x - bTransform.position.x);
 		double xOverlap = (aExtentX + bExtentX) - xDistance;
 
 		double yDistance = std::abs(aTransform.position.y - bTransform.position.y);
 		double yOverlap = (aExtentY + bExtentY) - yDistance;
+
+		//if ((yOverlap < xOverlap ? yOverlap : xOverlap) == 0) {
+		//	return false;
+		//}
 
 		// Least penetration is on y-axis
 		if (yOverlap < xOverlap)
@@ -171,8 +175,8 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 
 ColliderGrid::ColliderGrid(const int r, const int c)
 {
-	cellWidth	= ceil(GameRenderer::SCREEN_WIDTH / c);
-	cellHeight	= ceil(GameRenderer::SCREEN_HEIGHT / r);
+	cellWidth	= ceil(GameRenderer::SCREEN_WIDTH / (double)c);
+	cellHeight	= ceil(GameRenderer::SCREEN_HEIGHT / (double)r);
 
 	numColumn = c;
 	numRow = r;
@@ -208,10 +212,10 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	collider->getBounds(bound);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft	= (bound.xMin + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
-	int columnRight = (bound.xMax + GameRenderer::SCREEN_WIDTH / 2) / cellWidth;
-	int rowTop		= (-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
-	int rowBottom	= (-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2) / cellHeight;
+	int columnLeft	= ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
+	int columnRight = ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
+	int rowTop		= ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
+	int rowBottom	= ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
 
 	int colLeftClamped = clamp(columnLeft, 0, numColumn - 1);
 	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
@@ -230,7 +234,8 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	}
 
 	// If resides in no cells, add to out of bounds
-	if (columnLeft < 0 || columnRight > numColumn || rowTop < 0 || rowBottom > numRow)
+	if (columnLeft != colLeftClamped || columnRight != colRightClamped 
+		|| rowTop != rowTopClamped || rowBottom != rowBotClamped)
 	{
 		outbounds.insert(collider);
 	}
@@ -292,8 +297,8 @@ void SimpleECS::ColliderGrid::updateGrid()
 	for (auto colliderIter = outbounds.begin(); colliderIter != outbounds.end();)
 	{
 		(*colliderIter)->getBounds(colliderBound);
-		if (colliderBound.xMin >= -GameRenderer::SCREEN_WIDTH / 2 && colliderBound.xMax <= GameRenderer::SCREEN_WIDTH / 2
-			&& colliderBound.yMax <= GameRenderer::SCREEN_HEIGHT / 2 && colliderBound.yMin >= -GameRenderer::SCREEN_HEIGHT / 2)
+		if (colliderBound.xMin >= -GameRenderer::SCREEN_WIDTH / 2.0 && colliderBound.xMax <= GameRenderer::SCREEN_WIDTH / 2.0
+			&& colliderBound.yMax <= GameRenderer::SCREEN_HEIGHT / 2.0 && colliderBound.yMin >= -GameRenderer::SCREEN_HEIGHT / 2.0)
 		{
 			colliderIter = outbounds.erase(colliderIter);
 		}
