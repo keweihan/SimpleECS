@@ -32,48 +32,80 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 			++iter;
 		}
 	}
+
+	colliderGrid.removeCollider(collider);
 }
+
+//------------------- Collision invocation ---------------------//
+
+// Custom hash functions for pair of colliders
+template<typename T>
+void hashCombine(std::size_t& seed, T const& key) {
+	// TODO: somewhat arbitrary from stackoverflow. 
+	// https://stackoverflow.com/questions/28367913/how-to-stdhash-an-unordered-stdpair
+	// Run testing for potential better hashing?
+	std::hash<T> hasher;
+	seed ^= hasher(key) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+template<typename T1, typename T2>
+struct PairHash {
+	std::size_t operator()(std::pair<T1, T2> const& p) const {
+		std::size_t seed(0);
+		::hashCombine(seed, p.first);
+		::hashCombine(seed, p.second);
+
+		return seed;
+	}
+};
 
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	colliderGrid.updateGrid();
 	Collision collision = {};
 
+	// Set of potential collision pairs
+	// NOTE: This is populated by potential pairs to collider INTENTIONALLY WITH ORDERING
+	// I.e. (c1, c2) and (c2, c1) are considered different pairs as "onCollision" calls
+	// themselves are ordered and resolved in the perspective of the object itself.
+	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
+		potentialPairs;
+
+	// Populate with potential pairs from main scene
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
-		for (auto& colliderA : colliderGrid.getCellContents(i))
+		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
+		// by order so iteration will only insert unique ordered pairs.
+		for (const auto& colliderA : colliderGrid.getCellContents(i))
 		{
-			for (auto& colliderB : colliderGrid.getCellContents(i))
+			for (const auto& colliderB : colliderGrid.getCellContents(i))
 			{
-				if (colliderA == colliderB) continue;
-				collision.a = colliderA;
-				collision.b = colliderB;
-				if (getCollisionInfo(collision))
-				{
-					// Invoke onCollide of colliding entity components
-					for (auto component : colliderA->entity->getComponents())
-					{
-						component->onCollide(*colliderB);
-						component->onCollide(collision);
-					}
-				}
+				potentialPairs.insert({ colliderA, colliderB });
 			}
 		}
 	}
 
-	for (auto& colliderA : colliderGrid.getOutBoundContent())
+	// Populate with potential pairs from out of bounds.
+	for (const auto& colliderA : colliderGrid.getOutBoundContent())
 	{
-		for (auto& colliderB : colliderGrid.getOutBoundContent())
+		for (const auto& colliderB : colliderGrid.getOutBoundContent())
 		{
-			if (colliderA == colliderB) continue;
-			collision.a = colliderA;
-			collision.b = colliderB;
-			if (getCollisionInfo(collision))
-			{
-				// Invoke onCollide of colliding entity components
-				for (auto component : colliderA->entity->getComponents())
+			potentialPairs.insert({ colliderA, colliderB });
+		}
+	}
+
+	// Invoke onCollide of colliding entity components
+	for (const auto& collisionPair : potentialPairs)
+	{
+		if (collisionPair.first != collisionPair.second) 
+		{
+			// Only invoke one sided, as potentialPairs has symmetric pairs.
+			collision.a = collisionPair.first;
+			collision.b = collisionPair.second;
+			if (getCollisionInfo(collision)) {
+				for (auto component : collision.a->entity->getComponents())
 				{
-					component->onCollide(*colliderB);
+					component->onCollide(*collision.b);
 					component->onCollide(collision);
 				}
 			}

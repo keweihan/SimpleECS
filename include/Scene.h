@@ -29,14 +29,29 @@ namespace SimpleECS
 		bool SIMPLEECS_API AddEntity(Entity* entity);
 
 		/**
-		* Destroy entity contained by this scene. Will call entity and component destructors
-		* and entityToDelete will be deleted.
+		* Destroy entity contained by this scene IMMEDIATELY. Proceed with caution, as
+		* references can be broken 
 		* 
 		* @returns false if entity is not contained by the scene and was not deleted. 
 		* Otherwise returns true if successfuly removed.
 		* 
 		*/
+		bool SIMPLEECS_API DestroyEntityImmediate(Entity* entityToDelete);
+
+		/**
+		* Mark entity to be deleted at end of frame. Will call entity and component destructors
+		* and entityToDelete will be deleted.
+		*
+		* @returns false if entity is not contained by the scene and was not deleted.
+		* Otherwise returns true if successfuly removed.
+		*
+		*/
 		bool SIMPLEECS_API DestroyEntity(Entity* entityToDelete);
+
+		/**
+		*  Immediately destroys all entities marked for destruction (i.e. in toDestroyEntities)/
+		*/
+		void DestroyAllMarkedEntities();
 
 		/*
 		* Main background render color.
@@ -47,5 +62,12 @@ namespace SimpleECS
 		* Main background render color.
 		*/
 		std::unordered_set<Entity*> entities;
+
+		private:
+		
+		/*
+		* Entities marked for destruction. Cleared at end of every frame to be deleted.
+		*/
+		std::unordered_set<Entity*> toDestroyEntities;
 	};
 }

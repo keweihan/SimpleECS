@@ -18,7 +18,7 @@ bool Scene::AddEntity(Entity* entity)
 	return false;
 }
 
-bool Scene::DestroyEntity(Entity* entityToDelete)
+bool Scene::DestroyEntityImmediate(Entity* entityToDelete)
 {
 	// Scene can only delete an entity it contains
 	if (entities.find(entityToDelete) != entities.end())
@@ -30,4 +30,26 @@ bool Scene::DestroyEntity(Entity* entityToDelete)
 	}
 
 	return false;
+}
+
+bool SIMPLEECS_API SimpleECS::Scene::DestroyEntity(Entity* entityToDelete)
+{
+	// Scene can only delete an entity it contains
+	if (entities.find(entityToDelete) != entities.end())
+	{
+		entities.erase(entityToDelete);
+		toDestroyEntities.insert(entityToDelete);
+
+		return true;
+	}
+	return false;
+}
+
+void SimpleECS::Scene::DestroyAllMarkedEntities()
+{
+	for (auto it = toDestroyEntities.begin(); it != toDestroyEntities.end();)
+	{
+		delete (*it);
+		it = toDestroyEntities.erase(it);
+	}
 }
