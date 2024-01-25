@@ -74,37 +74,40 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	// Populate with potential pairs from main scene
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
-		for (auto& colliderA : colliderGrid.getCellContents(i))
+		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
+		// by order so iteration will only insert unique ordered pairs.
+		for (const auto& colliderA : colliderGrid.getCellContents(i))
 		{
-			for (auto& colliderB : colliderGrid.getCellContents(i))
+			for (const auto& colliderB : colliderGrid.getCellContents(i))
 			{
-				if (colliderA == colliderB) { continue; }
 				potentialPairs.insert({ colliderA, colliderB });
 			}
 		}
 	}
 
 	// Populate with potential pairs from out of bounds.
-	for (auto& colliderA : colliderGrid.getOutBoundContent())
+	for (const auto& colliderA : colliderGrid.getOutBoundContent())
 	{
-		for (auto& colliderB : colliderGrid.getOutBoundContent())
+		for (const auto& colliderB : colliderGrid.getOutBoundContent())
 		{
-			if (colliderA == colliderB) { continue; }
 			potentialPairs.insert({ colliderA, colliderB });
 		}
 	}
 
 	// Invoke onCollide of colliding entity components
-	for (auto collisionPair : potentialPairs)
+	for (const auto& collisionPair : potentialPairs)
 	{
-		// Only invoke one sided, as potentialPairs has symmetric pairs.
-		collision.a = collisionPair.first;
-		collision.b = collisionPair.second;
-		if (getCollisionInfo(collision)) {
-			for (auto component : collision.a->entity->getComponents())
-			{
-				component->onCollide(*collision.b);
-				component->onCollide(collision);
+		if (collisionPair.first != collisionPair.second) 
+		{
+			// Only invoke one sided, as potentialPairs has symmetric pairs.
+			collision.a = collisionPair.first;
+			collision.b = collisionPair.second;
+			if (getCollisionInfo(collision)) {
+				for (auto component : collision.a->entity->getComponents())
+				{
+					component->onCollide(*collision.b);
+					component->onCollide(collision);
+				}
 			}
 		}
 	}
