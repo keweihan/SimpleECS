@@ -32,6 +32,8 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 			++iter;
 		}
 	}
+
+	colliderGrid.removeCollider(collider);
 }
 
 void SimpleECS::ColliderSystem::invokeCollisions()
@@ -39,6 +41,8 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	colliderGrid.updateGrid();
 	Collision collision = {};
 
+	// TODO: Repeats collision calculations. More repeats if objects span more than one
+	// grid.
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
 		for (auto& colliderA : colliderGrid.getCellContents(i))

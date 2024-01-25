@@ -89,9 +89,12 @@ void Game::mainLoop()
 				component->update();
 			};
 		}
-		
+
 		// Run collision functions
 		ColliderSystem::invokeCollisions();
+
+		// Delete objects
+		sceneList[0]->DestroyAllMarkedEntities();
 
 		// Mark end of frame
 		Timer::endFrame();
