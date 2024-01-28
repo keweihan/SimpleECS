@@ -65,7 +65,7 @@ namespace SimpleECS
 		static bool getCollisionBoxBox(Collision& collide);
 	};
 
-
+	
 	/*
 	* Define a spacial grid to segment possible colliding objects
 	*/
@@ -131,6 +131,7 @@ namespace SimpleECS
 		int cellWidth, cellHeight;
 		int numRow, numColumn;
 
+		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
 		// index x = c + r * numColumn;
 		std::vector<std::unordered_set<Collider*>> grid;
 

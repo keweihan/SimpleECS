@@ -75,7 +75,9 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
 		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
-		// by order so iteration will only insert unique ordered pairs.
+		// by order so iteration will only insert unique ordered pairs. This needs getCellContents
+		// to return an ORDERED data structure. This also has benefits of using a structure that 
+		// iterates in contiguous memory.
 		for (const auto& colliderA : colliderGrid.getCellContents(i))
 		{
 			for (const auto& colliderB : colliderGrid.getCellContents(i))
