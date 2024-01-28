@@ -75,6 +75,9 @@
     <ClInclude Include="include\SoundPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\ColliderGrid.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
@@ -126,6 +129,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\SoundPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColliderGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -163,6 +163,7 @@
     <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vector.h" />
+    <ClInclude Include="src\ColliderGrid.h" />
     <ClInclude Include="src\ColliderSystem.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\SoundPlayer.cpp" />
     <ClCompile Include="src\FontRenderer.cpp" />
     <ClCompile Include="src\LineRenderer.cpp" />
+    <ClCompile Include="src\ColliderGrid.cpp" />
     <ClCompile Include="src\Vector.cpp" />
     <ClCompile Include="src\Timer.cpp" />
     <ClCompile Include="src\PhysicsBody.cpp" />
