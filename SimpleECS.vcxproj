@@ -165,6 +165,7 @@
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="src\ColliderGrid.h" />
     <ClInclude Include="src\ColliderSystem.h" />
+    <ClInclude Include="src\EcsCell.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />

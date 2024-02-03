@@ -78,6 +78,9 @@
     <ClInclude Include="src\ColliderGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\EcsCell.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">
