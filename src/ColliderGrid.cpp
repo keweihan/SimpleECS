@@ -5,7 +5,7 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
-ColliderGrid::ColliderGrid(const int r, const int c)
+ColliderGrid::ColliderGrid(const int r, const int c) : outbounds(EcsCell(10))
 {
 	cellWidth = ceil(GameRenderer::SCREEN_WIDTH / (double)c);
 	cellHeight = ceil(GameRenderer::SCREEN_HEIGHT / (double)r);
@@ -13,7 +13,7 @@ ColliderGrid::ColliderGrid(const int r, const int c)
 	numColumn = c;
 	numRow = r;
 
-	grid.resize(r * c);
+	grid.resize(r * c, EcsCell(10));
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
@@ -153,12 +153,12 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 	return 0;
 }
 
-const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(const int index)
+const EcsCell& SimpleECS::ColliderGrid::getCellContents(const int index)
 {
 	return grid[index];
 }
 
-const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
+const EcsCell& const SimpleECS::ColliderGrid::getOutBoundContent()
 {
 	return outbounds;
 }

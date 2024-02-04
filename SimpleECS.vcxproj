@@ -177,6 +177,7 @@
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\EcsCell.cpp" />
     <ClCompile Include="src\SoundPlayer.cpp" />
     <ClCompile Include="src\FontRenderer.cpp" />
     <ClCompile Include="src\LineRenderer.cpp" />
