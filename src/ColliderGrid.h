@@ -3,6 +3,7 @@
 #include "EcsCell.h"
 #include <vector>
 #include <unordered_set>
+#include "boost/container/flat_set.hpp"
 
 namespace SimpleECS
 {
@@ -35,7 +36,7 @@ namespace SimpleECS
 		/*
 		* Get number of cells
 		*/
-		int size();
+		int size() const;
 
 		/*
 		* Get the number of colliders in a given cell
@@ -43,7 +44,7 @@ namespace SimpleECS
 		int cellSize(int index);
 
 		/*
-		* Get the colliders populating a given cell
+		* Get the colliders populating a given cell. Input grid.size() - 1 to get out of bounds.
 		*/
 		const EcsCell* getCellContents(const int index) const;
 
@@ -74,8 +75,6 @@ namespace SimpleECS
 		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
 		// index x = c + r * numColumn;
 		std::vector<EcsCell> grid;
-
-		EcsCell outbounds;
 
 		// list of all colliders
 		std::unordered_set<Collider*> colliderList;

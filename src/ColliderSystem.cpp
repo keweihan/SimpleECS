@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "GameRenderer.h"
 #include "TransformUtil.h"
+#include "boost/functional/hash.hpp"
 #include <vector>
 
 using namespace SimpleECS;
@@ -38,26 +39,28 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 
 //------------------- Collision invocation ---------------------//
 
-// Custom hash functions for pair of colliders
-template<typename T>
-void hashCombine(std::size_t& seed, T const& key) {
-	// TODO: somewhat arbitrary from stackoverflow. 
-	// https://stackoverflow.com/questions/28367913/how-to-stdhash-an-unordered-stdpair
-	// Run testing for potential better hashing?
-	std::hash<T> hasher;
-	seed ^= hasher(key) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
-
 template<typename T1, typename T2>
 struct PairHash {
-	std::size_t operator()(std::pair<T1, T2> const& p) const {
-		std::size_t seed(0);
-		::hashCombine(seed, p.first);
-		::hashCombine(seed, p.second);
-
+	std::size_t operator()(const std::pair<T1, T2>& p) const {
+		std::size_t seed = 0;
+		boost::hash_combine(seed, boost::hash<T1>()(p.first));
+		boost::hash_combine(seed, boost::hash<T2>()(p.second));
 		return seed;
 	}
 };
+
+inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
+{
+	collision.a = a;
+	collision.b = b;
+	if (ColliderSystem::getCollisionInfo(collision)) {
+		for (auto component : collision.a->entity->getComponents())
+		{
+			component->onCollide(*collision.b);
+			component->onCollide(collision);
+		}
+	}
+}
 
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
@@ -65,36 +68,19 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	Collision collision = {};
 
 	// Set of potential collision pairs
-	// NOTE: This is populated by potential pairs to collider INTENTIONALLY WITH ORDERING
-	// I.e. (c1, c2) and (c2, c1) are considered different pairs as "onCollision" calls
-	// themselves are ordered and resolved in the perspective of the object itself.
 	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
 		potentialPairs;
 
-	// Populate with potential pairs from main scene
+	// Populate with potential pairs
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
-		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
-		// by order so iteration will only insert unique ordered pairs. This needs getCellContents
-		// to return an ORDERED data structure. This also has benefits of using a structure that 
-		// iterates in contiguous memory.
-
-		auto cell = colliderGrid.getCellContents(i);
-		for (auto iterA = cell->begin(); iterA != cell->end(); ++iterA)
+		auto cell = *colliderGrid.getCellContents(i);
+		for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 		{
-			for ( auto iterB = iterA; iterB != cell->end(); ++iterB )
+			for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
 			{
 				potentialPairs.insert({ *iterA, *iterB });
 			}
-		}
-	}
-
-	// Populate with potential pairs from out of bounds.
-	for (const auto& colliderA : *colliderGrid.getOutBoundContent())
-	{
-		for (const auto& colliderB : *colliderGrid.getOutBoundContent())
-		{
-			potentialPairs.insert({ colliderA, colliderB });
 		}
 	}
 
@@ -103,16 +89,9 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	{
 		if (collisionPair.first != collisionPair.second) 
 		{
-			// Only invoke one sided, as potentialPairs has symmetric pairs.
-			collision.a = collisionPair.first;
-			collision.b = collisionPair.second;
-			if (getCollisionInfo(collision)) {
-				for (auto component : collision.a->entity->getComponents())
-				{
-					component->onCollide(*collision.b);
-					component->onCollide(collision);
-				}
-			}
+			// Invoke from both sides
+			_invokeCollision(collision, collisionPair.first, collisionPair.second);
+			_invokeCollision(collision, collisionPair.second, collisionPair.first);
 		}
 	}
 }
@@ -124,6 +103,7 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
 	Transform aTransform = collide.a->entity->transform;
 	Transform bTransform = collide.b->entity->transform;
 
+	// TODO: dynamic casts are expensive. Figure out a better way.
 	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
 	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
 
