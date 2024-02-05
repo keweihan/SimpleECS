@@ -5,7 +5,7 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
-ColliderGrid::ColliderGrid(const int r, const int c) : outbounds(EcsCell(10))
+ColliderGrid::ColliderGrid(const int r, const int c)
 {
 	cellWidth = ceil(GameRenderer::SCREEN_WIDTH / (double)c);
 	cellHeight = ceil(GameRenderer::SCREEN_HEIGHT / (double)r);
@@ -153,14 +153,14 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 	return 0;
 }
 
-const EcsCell& SimpleECS::ColliderGrid::getCellContents(const int index)
+const EcsCell* ColliderGrid::getCellContents(const int index) const
 {
-	return grid[index];
+	return &grid[index];
 }
 
-const EcsCell& const SimpleECS::ColliderGrid::getOutBoundContent()
+const EcsCell* ColliderGrid::getOutBoundContent() const
 {
-	return outbounds;
+	return &outbounds;
 }
 
 void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)

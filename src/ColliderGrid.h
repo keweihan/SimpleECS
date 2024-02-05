@@ -45,12 +45,12 @@ namespace SimpleECS
 		/*
 		* Get the colliders populating a given cell
 		*/
-		const EcsCell& const getCellContents(const int index);
+		const EcsCell* getCellContents(const int index) const;
 
 		/*
 		* Get the colliders populating single out of bounds cell
 		*/
-		const EcsCell& const getOutBoundContent();
+		const EcsCell* getOutBoundContent() const;
 
 		/*
 		* Get the bounds of a given cell

@@ -80,9 +80,9 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 		// iterates in contiguous memory.
 
 		auto cell = colliderGrid.getCellContents(i);
-		for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
+		for (auto iterA = cell->begin(); iterA != cell->end(); ++iterA)
 		{
-			for ( auto iterB = iterA; iterB != cell.end(); ++iterB )
+			for ( auto iterB = iterA; iterB != cell->end(); ++iterB )
 			{
 				potentialPairs.insert({ *iterA, *iterB });
 			}
@@ -90,9 +90,9 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	}
 
 	// Populate with potential pairs from out of bounds.
-	for (const auto& colliderA : colliderGrid.getOutBoundContent())
+	for (const auto& colliderA : *colliderGrid.getOutBoundContent())
 	{
-		for (const auto& colliderB : colliderGrid.getOutBoundContent())
+		for (const auto& colliderB : *colliderGrid.getOutBoundContent())
 		{
 			potentialPairs.insert({ colliderA, colliderB });
 		}

@@ -2,6 +2,7 @@
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
+#include <memory>
 #include "Collider.h"
 
 #ifdef _TESTING
@@ -16,7 +17,7 @@
 
 namespace SimpleECS
 {
-	class EcsCellIterator;
+	class SIMPLEECS_API EcsCellIterator;
 
 	/*
 	An list Collider storing structure providing the following:
@@ -30,7 +31,12 @@ namespace SimpleECS
 	public:
 		friend EcsCellIterator;
 
+		EcsCell(const EcsCell& other);
 		EcsCell(int defaultSize);
+		EcsCell();
+		~EcsCell();
+
+		EcsCell& operator=(const EcsCell& other);
 
 		EcsCellIterator find(Collider* col);
 
@@ -53,23 +59,8 @@ namespace SimpleECS
 		void insert(Collider* col);
 
 	private:
-		// index of rightmost populated in colList
-		int backIndex = 0;
-
-		// first cell with value
-		int beginIndex = 0;
-		
-		// sparse list of colliders in this cell 
-		std::vector<Collider*> colList;
-
-		// map of collider to index position in colList
-		std::unordered_map<Collider*, int> colMap;
-
-		// set of empty indices in colList 
-		std::unordered_set<int> openIndices;
-
-		int insertions = 0;
-		int erasures = 0;
+		class EcsCellImpl;
+		std::shared_ptr<EcsCellImpl> pImpl;
 	};
 
 	class SIMPLEECS_API EcsCellIterator

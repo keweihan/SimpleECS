@@ -1,44 +1,99 @@
 #include "EcsCell.h"
 
 using namespace SimpleECS;
+
+class EcsCell::EcsCellImpl
+{
+public:
+    EcsCellImpl(){}
+    ~EcsCellImpl(){}
+
+    // index of rightmost populated in colList
+    int backIndex = 0;
+
+    // first cell with value
+    int beginIndex = 0;
+
+    // sparse list of colliders in this cell 
+    std::vector<Collider*> colList;
+
+    // map of collider to index position in colList
+    std::unordered_map<Collider*, int> colMap;
+
+    // set of empty indices in colList 
+    std::unordered_set<int> openIndices;
+};
+
+SimpleECS::EcsCell::EcsCell(const EcsCell& other)
+{
+    pImpl = std::make_unique<EcsCellImpl>();
+
+    pImpl->backIndex    = other.pImpl->backIndex;
+    pImpl->beginIndex   = other.pImpl->beginIndex;
+    pImpl->colList      = other.pImpl->colList;
+    pImpl->colMap       = other.pImpl->colMap;
+    pImpl->openIndices  = other.pImpl->openIndices;
+}
+
+
+
 EcsCell::EcsCell(int defaultSize)
 {
-    colList.reserve(defaultSize);
+    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl->colList.reserve(defaultSize);
+}
+
+EcsCell::EcsCell()
+{
+    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl->colList.reserve(10);
+}
+
+EcsCell::~EcsCell() {}
+
+EcsCell& SimpleECS::EcsCell::operator=(const EcsCell& other)
+{
+    pImpl = std::make_unique<EcsCellImpl>();
+
+    pImpl->backIndex = other.pImpl->backIndex;
+    pImpl->beginIndex = other.pImpl->beginIndex;
+    pImpl->colList = other.pImpl->colList;
+    pImpl->colMap = other.pImpl->colMap;
+    pImpl->openIndices = other.pImpl->openIndices;
 }
 
 int EcsCell::size()
 {
-    return colMap.size();
+    return pImpl->colMap.size();
 }
 
 void EcsCell::insert(Collider* col)
 {
     if (find(col) != end()) return;
-    ++insertions;
 
     // Check if there is an index available to insert to
     int insertIndex;
-    if (openIndices.size() > 0)
+    if (pImpl->openIndices.size() > 0)
     {
         // retrieve a random available index to insert to
-        insertIndex = *openIndices.begin();
-        openIndices.erase(openIndices.begin());
+        insertIndex = *pImpl->openIndices.begin();
+        pImpl->openIndices.erase(pImpl->openIndices.begin());
 
         // Insert
-        colMap.insert({ col, insertIndex });
-        colList[insertIndex] = col;
+        pImpl->colMap.insert({ col, insertIndex });
+        pImpl->colList[insertIndex] = col;
     }
     else
     {
         // Insert to the end
-        colList.push_back(col);
-        insertIndex = colList.size() - 1;
-        colMap.insert({ col, insertIndex });
+        pImpl->colList.push_back(col);
+        insertIndex = pImpl->colList.size() - 1;
+        pImpl->colMap.insert({ col, insertIndex });
     }
 
     // Update begin and back trackers
-    beginIndex  = std::min(beginIndex, insertIndex);
-    backIndex   = std::max(backIndex, insertIndex);
+    pImpl->beginIndex  = std::min(pImpl->beginIndex, insertIndex);
+    pImpl->backIndex   = std::max(pImpl->backIndex, insertIndex);
 }
 
 EcsCellIterator EcsCell::begin()
@@ -49,19 +104,19 @@ EcsCellIterator EcsCell::begin()
 EcsCellIterator EcsCell::back()
 {
     EcsCellIterator back(this);
-    back.index = backIndex;
+    back.index = pImpl->backIndex;
     return back;
 }
 
 EcsCellIterator EcsCell::begin() const
 {
     EcsCellIterator begin(this);
-    if (colMap.size() == 0) {
+    if (pImpl->colMap.size() == 0) {
         return end();
     }
     else
     {
-        begin.index = beginIndex;
+        begin.index = pImpl->beginIndex;
     }
     return begin;
 }
@@ -74,47 +129,45 @@ EcsCellIterator EcsCell::end()
 EcsCellIterator EcsCell::end() const
 {
     EcsCellIterator end(this);
-    if (colMap.size() == 0) {
+    if (pImpl->colMap.size() == 0) {
         end.index = 1;
     }
     else
     {
-        end.index = backIndex + 1;
+        end.index = pImpl->backIndex + 1;
     }
     return end;
 }
 
 EcsCellIterator EcsCell::erase(EcsCellIterator o)
 {
-    ++erasures;
-
-    colMap.erase(colMap.find(colList[o.index]));
-    colList[o.index] = nullptr;
+    pImpl->colMap.erase(pImpl->colMap.find(pImpl->colList[o.index]));
+    pImpl->colList[o.index] = nullptr;
 
     // Re-add to list of available indices
-    openIndices.insert(o.index);
+    pImpl->openIndices.insert(o.index);
 
     // Case erase both begin and back (array size one)
-    if (colMap.size() == 0)
+    if (pImpl->colMap.size() == 0)
     {
-        beginIndex = colList.size();  // set to end
-        backIndex = -1;              // set to before beginning
+        pImpl->beginIndex = pImpl->colList.size();  // set to end
+        pImpl->backIndex = -1;              // set to before beginning
         return end();
     }
     // Case erasing back
-    else if (o.index == backIndex)
+    else if (o.index == pImpl->backIndex)
     {
-        backIndex = (o.index - 1) < 0 ? 0 : o.index - 1;
-        while (backIndex > 0 && colList[backIndex] == nullptr) {
-            --backIndex;
+        pImpl->backIndex = (o.index - 1) < 0 ? 0 : o.index - 1;
+        while (pImpl->backIndex > 0 && pImpl->colList[pImpl->backIndex] == nullptr) {
+            --pImpl->backIndex;
         }
         return end();
     }
     // Case erasing begin
-    else if (o.index == beginIndex)
+    else if (o.index == pImpl->beginIndex)
     {
         ++o;
-        beginIndex = o.index;
+        pImpl->beginIndex = o.index;
     }
     else
     {
@@ -132,8 +185,8 @@ EcsCellIterator EcsCell::erase(Collider* col)
 
 EcsCellIterator EcsCell::find(Collider* col)
 {
-    auto findRes = colMap.find(col);
-    if (findRes == colMap.end())
+    auto findRes = pImpl->colMap.find(col);
+    if (findRes == pImpl->colMap.end())
     {
         return this->end();
     }
@@ -155,7 +208,7 @@ EcsCellIterator EcsCellIterator::operator++(int)
 EcsCellIterator& EcsCellIterator::operator++()
 {
     int newIndex = index + 1;
-    while (newIndex <= cellPtr->backIndex && cellPtr->colList[newIndex] == nullptr)
+    while (newIndex <= cellPtr->pImpl->backIndex && cellPtr->pImpl->colList[newIndex] == nullptr)
     {
         ++newIndex;
     }
@@ -166,10 +219,10 @@ EcsCellIterator& EcsCellIterator::operator++()
 
 EcsCellIterator& EcsCellIterator::operator--()
 {
-    while (cellPtr->colList[index] == nullptr)
+    while (cellPtr->pImpl->colList[index] == nullptr)
     {
         --index;
-        if (cellPtr->colList[index] != nullptr)
+        if (cellPtr->pImpl->colList[index] != nullptr)
         {
             return *this;
         }
@@ -194,5 +247,5 @@ bool EcsCellIterator::operator<(const EcsCellIterator& other) const
 
 Collider* EcsCellIterator::operator*()
 {
-    return cellPtr->colList[index];
+    return cellPtr->pImpl->colList[index];
 }
