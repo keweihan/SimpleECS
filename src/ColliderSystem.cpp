@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include "GameRenderer.h"
 #include "TransformUtil.h"
+#include "boost/functional/hash.hpp"
 #include <vector>
 
 using namespace SimpleECS;
@@ -38,24 +39,12 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 
 //------------------- Collision invocation ---------------------//
 
-// Custom hash functions for pair of colliders
-// TODO: use boost.
-template<typename T>
-void hashCombine(std::size_t& seed, T const& key) {
-	// TODO: somewhat arbitrary from stackoverflow. 
-	// https://stackoverflow.com/questions/28367913/how-to-stdhash-an-unordered-stdpair
-	// Run testing for potential better hashing?
-	std::hash<T> hasher;
-	seed ^= hasher(key) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
-
 template<typename T1, typename T2>
 struct PairHash {
-	std::size_t operator()(std::pair<T1, T2> const& p) const {
-		std::size_t seed(0);
-		::hashCombine(seed, p.first);
-		::hashCombine(seed, p.second);
-
+	std::size_t operator()(const std::pair<T1, T2>& p) const {
+		std::size_t seed = 0;
+		boost::hash_combine(seed, boost::hash<T1>()(p.first));
+		boost::hash_combine(seed, boost::hash<T2>()(p.second));
 		return seed;
 	}
 };
