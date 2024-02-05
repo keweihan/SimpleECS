@@ -16,6 +16,8 @@
 
 namespace SimpleECS
 {
+	class EcsCellIterator;
+
 	/*
 	An list Collider storing structure providing the following:
 	- Contiguous data storage and access
@@ -25,47 +27,26 @@ namespace SimpleECS
 	*/
 	class SIMPLEECS_API EcsCell
 	{
-		class SIMPLEECS_API Iterator
-		{
-		public:
-			friend EcsCell;
-
-			Iterator(EcsCell* cell) : cellPtr(cell) {}
-			Iterator(const EcsCell* cell) : cellPtr(cell) {}
-
-			Iterator operator++(int);
-			Iterator& operator++();
-			Iterator& operator--();
-
-			bool operator!=(const Iterator& other) const;
-			bool operator==(const Iterator& other) const;
-			bool operator<(const Iterator& other) const;
-
-			Collider* operator*();
-
-		private:
-			const EcsCell* cellPtr;
-			int index = 0;
-		};
-
 	public:
+		friend EcsCellIterator;
+
 		EcsCell(int defaultSize);
 
-		Iterator find(Collider* col);
+		EcsCellIterator find(Collider* col);
 
-		Iterator begin();
+		EcsCellIterator begin();
 
-		Iterator back();
+		EcsCellIterator back();
 
-		Iterator end();
+		EcsCellIterator end();
 
-		Iterator begin() const;
+		EcsCellIterator begin() const;
 
-		Iterator end() const;
+		EcsCellIterator end() const;
 
-		Iterator erase(Iterator o);
+		EcsCellIterator erase(EcsCellIterator o);
 
-		Iterator erase(Collider* col);
+		EcsCellIterator erase(Collider* col);
 
 		int size();
 		
@@ -89,5 +70,28 @@ namespace SimpleECS
 
 		int insertions = 0;
 		int erasures = 0;
+	};
+
+	class SIMPLEECS_API EcsCellIterator
+	{
+	public:
+		friend EcsCell;
+
+		EcsCellIterator(EcsCell* cell) : cellPtr(cell) {}
+		EcsCellIterator(const EcsCell* cell) : cellPtr(cell) {}
+
+		EcsCellIterator operator++(int);
+		EcsCellIterator& operator++();
+		EcsCellIterator& operator--();
+
+		bool operator!=(const EcsCellIterator& other) const;
+		bool operator==(const EcsCellIterator& other) const;
+		bool operator<(const EcsCellIterator& other) const;
+
+		Collider* operator*();
+
+	private:
+		const EcsCell* cellPtr;
+		int index = 0;
 	};
 }
