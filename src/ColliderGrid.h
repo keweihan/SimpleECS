@@ -2,6 +2,7 @@
 #include "Collider.h"
 #include <vector>
 #include <unordered_set>
+#include "boost/container/flat_set.hpp"
 
 namespace SimpleECS
 {
@@ -44,12 +45,12 @@ namespace SimpleECS
 		/*
 		* Get the colliders populating a given cell
 		*/
-		const std::unordered_set<Collider*>& const getCellContents(const int index);
+		const boost::container::flat_set<Collider*>& const getCellContents(const int index);
 
 		/*
 		* Get the colliders populating single out of bounds cell
 		*/
-		const std::unordered_set<Collider*>& const getOutBoundContent();
+		const boost::container::flat_set<Collider*>& const getOutBoundContent();
 
 		/*
 		* Get the bounds of a given cell
@@ -72,9 +73,9 @@ namespace SimpleECS
 
 		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
 		// index x = c + r * numColumn;
-		std::vector<std::unordered_set<Collider*>> grid;
+		std::vector<boost::container::flat_set<Collider*>> grid;
 
-		std::unordered_set<Collider*> outbounds;
+		boost::container::flat_set<Collider*> outbounds;
 
 		// list of all colliders
 		std::unordered_set<Collider*> colliderList;

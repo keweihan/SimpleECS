@@ -153,12 +153,12 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 	return 0;
 }
 
-const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(const int index)
+const boost::container::flat_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(const int index)
 {
 	return grid[index];
 }
 
-const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
+const boost::container::flat_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
 {
 	return outbounds;
 }
