@@ -65,34 +65,29 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	Collision collision = {};
 
 	// Set of potential collision pairs
-	// NOTE: This is populated by potential pairs to collider INTENTIONALLY WITH ORDERING
-	// I.e. (c1, c2) and (c2, c1) are considered different pairs as "onCollision" calls
-	// themselves are ordered and resolved in the perspective of the object itself.
 	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
 		potentialPairs;
 
 	// Populate with potential pairs from main scene
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
-		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
-		// by order so iteration will only insert unique ordered pairs. This needs getCellContents
-		// to return an ORDERED data structure. This also has benefits of using a structure that 
-		// iterates in contiguous memory.
-		for (const auto& colliderA : colliderGrid.getCellContents(i))
+		auto cell = colliderGrid.getCellContents(i);
+		for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 		{
-			for (const auto& colliderB : colliderGrid.getCellContents(i))
+			for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
 			{
-				potentialPairs.insert({ colliderA, colliderB });
+				potentialPairs.insert({ *iterA, *iterB });
 			}
 		}
 	}
 
 	// Populate with potential pairs from out of bounds.
-	for (const auto& colliderA : colliderGrid.getOutBoundContent())
+	auto cell = colliderGrid.getOutBoundContent();
+	for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 	{
-		for (const auto& colliderB : colliderGrid.getOutBoundContent())
+		for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
 		{
-			potentialPairs.insert({ colliderA, colliderB });
+			potentialPairs.insert({ *iterA, *iterB });
 		}
 	}
 
@@ -101,9 +96,19 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	{
 		if (collisionPair.first != collisionPair.second) 
 		{
-			// Only invoke one sided, as potentialPairs has symmetric pairs.
+			// Invoke from both sides
 			collision.a = collisionPair.first;
 			collision.b = collisionPair.second;
+			if (getCollisionInfo(collision)) {
+				for (auto component : collision.a->entity->getComponents())
+				{
+					component->onCollide(*collision.b);
+					component->onCollide(collision);
+				}
+			}
+
+			collision.a = collisionPair.second;
+			collision.b = collisionPair.first;
 			if (getCollisionInfo(collision)) {
 				for (auto component : collision.a->entity->getComponents())
 				{
