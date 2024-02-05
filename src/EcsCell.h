@@ -17,11 +17,11 @@
 
 namespace SimpleECS
 {
-	class SIMPLEECS_API EcsCellIterator;
+	using EcsCellIterator = std::vector<Collider*>::iterator;
 
 	/*
 	An list Collider storing structure providing the following:
-	- Contiguous data storage and access
+	- Contiguous unordered data storage and traversal
 	- O(1) access
 	- O(1) element insert
 	- O(1) removal
@@ -29,8 +29,6 @@ namespace SimpleECS
 	class SIMPLEECS_API EcsCell
 	{
 	public:
-		friend EcsCellIterator;
-
 		EcsCell(const EcsCell& other);
 		EcsCell(int defaultSize);
 		EcsCell();
@@ -42,8 +40,6 @@ namespace SimpleECS
 
 		EcsCellIterator begin();
 
-		EcsCellIterator back();
-
 		EcsCellIterator end();
 
 		EcsCellIterator begin() const;
@@ -54,6 +50,8 @@ namespace SimpleECS
 
 		EcsCellIterator erase(Collider* col);
 
+		Collider* back();
+
 		int size();
 		
 		void insert(Collider* col);
@@ -61,28 +59,5 @@ namespace SimpleECS
 	private:
 		class EcsCellImpl;
 		std::shared_ptr<EcsCellImpl> pImpl;
-	};
-
-	class SIMPLEECS_API EcsCellIterator
-	{
-	public:
-		friend EcsCell;
-
-		EcsCellIterator(EcsCell* cell) : cellPtr(cell) {}
-		EcsCellIterator(const EcsCell* cell) : cellPtr(cell) {}
-
-		EcsCellIterator operator++(int);
-		EcsCellIterator& operator++();
-		EcsCellIterator& operator--();
-
-		bool operator!=(const EcsCellIterator& other) const;
-		bool operator==(const EcsCellIterator& other) const;
-		bool operator<(const EcsCellIterator& other) const;
-
-		Collider* operator*();
-
-	private:
-		const EcsCell* cellPtr;
-		int index = 0;
 	};
 }
