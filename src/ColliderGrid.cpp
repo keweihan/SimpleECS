@@ -136,7 +136,7 @@ void SimpleECS::ColliderGrid::updateGrid()
 		}
 		else
 		{
-			colliderIter++;
+			++colliderIter;
 		}
 	}
 

@@ -4,6 +4,16 @@
 #include <unordered_set>
 #include "Collider.h"
 
+#ifdef _TESTING
+	#ifdef SIMPLEECS_EXPORTS
+		#define SIMPLEECS_API __declspec(dllexport)
+	#else
+		#define SIMPLEECS_API __declspec(dllimport)
+	#endif
+#else
+	#define SIMPLEECS_API // Leave it blank in release mode
+#endif
+
 namespace SimpleECS
 {
 	/*
@@ -13,9 +23,9 @@ namespace SimpleECS
 	- O(1) element insert
 	- O(1) removal
 	*/
-	class EcsCell
+	class SIMPLEECS_API EcsCell
 	{
-		class Iterator
+		class SIMPLEECS_API Iterator
 		{
 		public:
 			friend EcsCell;
@@ -27,8 +37,9 @@ namespace SimpleECS
 			Iterator& operator++();
 			Iterator& operator--();
 
-			bool operator!=(const Iterator& other);
-			bool operator<(const Iterator& other);
+			bool operator!=(const Iterator& other) const;
+			bool operator==(const Iterator& other) const;
+			bool operator<(const Iterator& other) const;
 
 			Collider* operator*();
 
@@ -43,6 +54,8 @@ namespace SimpleECS
 		Iterator find(Collider* col);
 
 		Iterator begin();
+
+		Iterator back();
 
 		Iterator end();
 
@@ -73,5 +86,8 @@ namespace SimpleECS
 
 		// set of empty indices in colList 
 		std::unordered_set<int> openIndices;
+
+		int insertions = 0;
+		int erasures = 0;
 	};
 }

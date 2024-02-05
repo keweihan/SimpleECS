@@ -24,24 +24,19 @@ EcsCell::Iterator SimpleECS::EcsCell::find(Collider* col)
 EcsCell::Iterator SimpleECS::EcsCell::Iterator::operator++(int)
 {
     Iterator temp = *this;
-    this->index++; 
+    ++index;
     return temp;
 }
 
 EcsCell::Iterator& EcsCell::Iterator::operator++()
 {
     int newIndex = index +  1;
-    while (newIndex < cellPtr->colList.size() && cellPtr->colList[newIndex] == nullptr)
+    while (newIndex <= cellPtr->backIndex && cellPtr->colList[newIndex] == nullptr)
     {
-        if(cellPtr->colList[newIndex] != nullptr)
-        {
-            // Found new vallue.
-            index = newIndex;
-            return *this;
-        }
         ++newIndex;
     }
-    index = newIndex >= cellPtr->colList.size() ? index + 1 : newIndex;
+    index = newIndex;
+
     return *this;
 }
 
@@ -58,12 +53,17 @@ EcsCell::Iterator& SimpleECS::EcsCell::Iterator::operator--()
     return *this;
 }
 
-bool SimpleECS::EcsCell::Iterator::operator!=(const Iterator& other)
+bool SimpleECS::EcsCell::Iterator::operator!=(const Iterator& other) const
 {
     return this->index != other.index;
 }
 
-bool SimpleECS::EcsCell::Iterator::operator<(const Iterator& other)
+bool SimpleECS::EcsCell::Iterator::operator==(const Iterator& other) const
+{
+    return !(*this != other);
+}
+
+bool SimpleECS::EcsCell::Iterator::operator<(const Iterator& other) const
 {
     return this->index < other.index;
 }
@@ -76,6 +76,13 @@ Collider* SimpleECS::EcsCell::Iterator::operator*()
 EcsCell::Iterator SimpleECS::EcsCell::begin()
 {
     return const_cast<const EcsCell*>(this)->begin();
+}
+
+EcsCell::Iterator SimpleECS::EcsCell::back()
+{
+    Iterator back(this);
+    back.index = backIndex;
+    return back;
 }
 
 EcsCell::Iterator SimpleECS::EcsCell::begin() const
@@ -111,7 +118,8 @@ EcsCell::Iterator SimpleECS::EcsCell::end() const
 
 EcsCell::Iterator SimpleECS::EcsCell::erase(Iterator o)
 {
-    // Remove references
+    ++erasures;
+
     colMap.erase(colMap.find(colList[o.index]));
     colList[o.index] = nullptr;
 
@@ -161,6 +169,9 @@ int SimpleECS::EcsCell::size()
 
 void SimpleECS::EcsCell::insert(Collider* col)
 {
+    if (find(col) != end()) return;
+    ++insertions;
+
     // Check if there is an index available to insert to
     int insertIndex;
     if (openIndices.size() > 0)
