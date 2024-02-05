@@ -13,7 +13,7 @@ ColliderGrid::ColliderGrid(const int r, const int c)
 	numColumn = c;
 	numRow = r;
 
-	grid.resize(r * c);
+	grid.resize(r * c + 1); // Last index represents out of bounds cell
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
@@ -69,7 +69,7 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	if (columnLeft != colLeftClamped || columnRight != colRightClamped
 		|| rowTop != rowTopClamped || rowBottom != rowBotClamped)
 	{
-		outbounds.insert(collider);
+		grid.back().insert(collider);
 	}
 }
 
@@ -88,12 +88,6 @@ void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 		{
 			grid[i].erase(collider);
 		}
-	}
-
-	// Remove from outbounds list
-	if (outbounds.find(collider) != outbounds.end())
-	{
-		outbounds.erase(collider);
 	}
 }
 
@@ -124,22 +118,6 @@ void SimpleECS::ColliderGrid::updateGrid()
 			}
 		}
 	}
-
-	// Remove collider reference in outbounds if collider is no longer out of screen bounds.
-	for (auto colliderIter = outbounds.begin(); colliderIter != outbounds.end();)
-	{
-		(*colliderIter)->getBounds(colliderBound);
-		if (colliderBound.xMin >= -GameRenderer::SCREEN_WIDTH / 2.0 && colliderBound.xMax <= GameRenderer::SCREEN_WIDTH / 2.0
-			&& colliderBound.yMax <= GameRenderer::SCREEN_HEIGHT / 2.0 && colliderBound.yMin >= -GameRenderer::SCREEN_HEIGHT / 2.0)
-		{
-			colliderIter = outbounds.erase(colliderIter);
-		}
-		else
-		{
-			colliderIter++;
-		}
-	}
-
 	populateGrid();
 }
 
@@ -160,7 +138,7 @@ const EcsCell& SimpleECS::ColliderGrid::getCellContents(const int index)
 
 const EcsCell& const SimpleECS::ColliderGrid::getOutBoundContent()
 {
-	return outbounds;
+	return getCellContents(size() - 1);
 }
 
 void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)

@@ -64,7 +64,7 @@ namespace SimpleECS
 		int cellSize(int index);
 
 		/*
-		* Get the colliders populating a given cell
+		* Get the colliders populating a given cell. Input grid.size() - 1 to get out of bounds.
 		*/
 		const EcsCell& const getCellContents(const int index);
 
@@ -96,11 +96,6 @@ namespace SimpleECS
 		* Spatial grid of cells containing colliders
 		*/
 		std::vector<EcsCell> grid;
-
-		/*
-		* Single cell representing out of bounds colliders
-		*/
-		EcsCell outbounds;
 
 		// list of all colliders
 		std::unordered_set<Collider*> colliderList;

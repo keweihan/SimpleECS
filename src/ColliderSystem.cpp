@@ -49,6 +49,19 @@ struct PairHash {
 	}
 };
 
+inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
+{
+	collision.a = a;
+	collision.b = b;
+	if (ColliderSystem::getCollisionInfo(collision)) {
+		for (auto component : collision.a->entity->getComponents())
+		{
+			component->onCollide(*collision.b);
+			component->onCollide(collision);
+		}
+	}
+}
+
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
 	colliderGrid.updateGrid();
@@ -58,7 +71,7 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
 		potentialPairs;
 
-	// Populate with potential pairs from main scene
+	// Populate with potential pairs
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
 		auto cell = colliderGrid.getCellContents(i);
@@ -71,41 +84,14 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 		}
 	}
 
-	// Populate with potential pairs from out of bounds.
-	auto cell = colliderGrid.getOutBoundContent();
-	for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
-	{
-		for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
-		{
-			potentialPairs.insert({ *iterA, *iterB });
-		}
-	}
-
 	// Invoke onCollide of colliding entity components
 	for (const auto& collisionPair : potentialPairs)
 	{
 		if (collisionPair.first != collisionPair.second) 
 		{
 			// Invoke from both sides
-			collision.a = collisionPair.first;
-			collision.b = collisionPair.second;
-			if (getCollisionInfo(collision)) {
-				for (auto component : collision.a->entity->getComponents())
-				{
-					component->onCollide(*collision.b);
-					component->onCollide(collision);
-				}
-			}
-
-			collision.a = collisionPair.second;
-			collision.b = collisionPair.first;
-			if (getCollisionInfo(collision)) {
-				for (auto component : collision.a->entity->getComponents())
-				{
-					component->onCollide(*collision.b);
-					component->onCollide(collision);
-				}
-			}
+			_invokeCollision(collision, collisionPair.first, collisionPair.second);
+			_invokeCollision(collision, collisionPair.second, collisionPair.first);
 		}
 	}
 }
