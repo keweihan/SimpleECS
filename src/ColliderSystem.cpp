@@ -39,6 +39,7 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 //------------------- Collision invocation ---------------------//
 
 // Custom hash functions for pair of colliders
+// TODO: use boost.
 template<typename T>
 void hashCombine(std::size_t& seed, T const& key) {
 	// TODO: somewhat arbitrary from stackoverflow. 

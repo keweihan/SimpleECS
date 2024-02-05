@@ -3,9 +3,30 @@
 #include <vector>
 #include <unordered_set>
 #include "boost/container/flat_set.hpp"
+#include "boost/container/small_vector.hpp"
 
 namespace SimpleECS
 {
+	/*
+	* Boost structure for faster iteration.
+	* 
+	* Reduces bottleneck of collider iteration. Improvement over unordered_set due to
+	* contiguous memory storage, frequent traversal of colliders and usually small number
+	* of colliders per cell. 
+	* 
+	* Needs testing verification of performance benefits. 
+	* 
+	* Idea from: 
+	* https://stackoverflow.com/questions/24506789/set-vs-unordered-set-for-fastest-iteration
+	* Reference:
+	* https://www.boost.org/doc/libs/1_73_0/doc/html/boost/container/flat_set.html
+	*/
+	using EcsCell = boost::container::flat_set<
+		Collider*,
+		std::less<Collider*>,
+		boost::container::small_vector<Collider*, 10>
+	>;
+
 	/*
 	* Define a spacial grid to segment possible colliding objects
 	*/
@@ -45,12 +66,12 @@ namespace SimpleECS
 		/*
 		* Get the colliders populating a given cell
 		*/
-		const boost::container::flat_set<Collider*>& const getCellContents(const int index);
+		const EcsCell& const getCellContents(const int index);
 
 		/*
 		* Get the colliders populating single out of bounds cell
 		*/
-		const boost::container::flat_set<Collider*>& const getOutBoundContent();
+		const EcsCell& const getOutBoundContent();
 
 		/*
 		* Get the bounds of a given cell
@@ -71,11 +92,15 @@ namespace SimpleECS
 		int cellWidth, cellHeight;
 		int numRow, numColumn;
 
-		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
-		// index x = c + r * numColumn;
-		std::vector<boost::container::flat_set<Collider*>> grid;
+		/*
+		* Spatial grid of cells containing colliders
+		*/
+		std::vector<EcsCell> grid;
 
-		boost::container::flat_set<Collider*> outbounds;
+		/*
+		* Single cell representing out of bounds colliders
+		*/
+		EcsCell outbounds;
 
 		// list of all colliders
 		std::unordered_set<Collider*> colliderList;
