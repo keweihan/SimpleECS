@@ -78,11 +78,13 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 		// by order so iteration will only insert unique ordered pairs. This needs getCellContents
 		// to return an ORDERED data structure. This also has benefits of using a structure that 
 		// iterates in contiguous memory.
-		for (const auto& colliderA : colliderGrid.getCellContents(i))
+
+		auto cell = colliderGrid.getCellContents(i);
+		for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 		{
-			for (const auto& colliderB : colliderGrid.getCellContents(i))
+			for ( auto iterB = iterA; iterB != cell.end(); ++iterB )
 			{
-				potentialPairs.insert({ colliderA, colliderB });
+				potentialPairs.insert({ *iterA, *iterB });
 			}
 		}
 	}
