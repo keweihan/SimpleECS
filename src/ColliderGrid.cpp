@@ -44,17 +44,17 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	collider->getBounds(bound);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft = ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
+	int columnLeft	= ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
 	int columnRight = ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int rowTop = ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
-	int rowBottom = ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
+	int rowTop		= ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
+	int rowBottom	= ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
 
-	int colLeftClamped = clamp(columnLeft, 0, numColumn - 1);
+	int colLeftClamped	= clamp(columnLeft, 0, numColumn - 1);
 	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
-	int rowBotClamped = clamp(rowBottom, 0, numRow - 1);
-	int rowTopClamped = clamp(rowTop, 0, numRow - 1);
+	int rowBotClamped	= clamp(rowBottom, 0, numRow - 1);
+	int rowTopClamped	= clamp(rowTop, 0, numRow - 1);
 
-	// Add to cells this object resides in
+	// Add to cells this object potentially resides in
 	for (int r = rowBotClamped; r <= rowTopClamped; ++r)
 	{
 		for (int c = colLeftClamped; c <= colRightClamped; ++c)

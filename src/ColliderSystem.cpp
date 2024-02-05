@@ -103,6 +103,7 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
 	Transform aTransform = collide.a->entity->transform;
 	Transform bTransform = collide.b->entity->transform;
 
+	// TODO: dynamic casts are expensive. Figure out a better way.
 	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
 	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
 
