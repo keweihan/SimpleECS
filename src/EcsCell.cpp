@@ -10,11 +10,6 @@ public:
 
     // dense list of colliders in this cell 
     std::vector<Collider*> colList;
-
-    // map of collider to index position in colList
-    std::unordered_map<Collider*, int> colMap;
-
-    int backIndex = 0;
 };
 
 SimpleECS::EcsCell::EcsCell(const EcsCell& other)
@@ -22,9 +17,6 @@ SimpleECS::EcsCell::EcsCell(const EcsCell& other)
     pImpl = std::make_unique<EcsCellImpl>();
 
     pImpl->colList      = other.pImpl->colList;
-    pImpl->colMap       = other.pImpl->colMap;
-
-    pImpl->backIndex    = other.pImpl->backIndex;
 }
 
 
@@ -47,16 +39,12 @@ EcsCell& SimpleECS::EcsCell::operator=(const EcsCell& other)
     pImpl = std::make_unique<EcsCellImpl>();
 
     pImpl->colList = other.pImpl->colList;
-    pImpl->colMap = other.pImpl->colMap;
-
-    pImpl->backIndex = other.pImpl->backIndex;
-
     return *this;
 }
 
 int EcsCell::size()
 {
-    return pImpl->colMap.size();
+    return pImpl->colList.size();
 }
 
 void EcsCell::insert(Collider* col)
@@ -65,7 +53,6 @@ void EcsCell::insert(Collider* col)
     {
         // Insert to the end
         pImpl->colList.push_back(col);
-        pImpl->colMap.insert({ col, pImpl->colList.size() - 1 });
     }
 }
 
@@ -73,18 +60,15 @@ EcsCellIterator EcsCell::erase(EcsCellIterator o)
 {
     // Special case if last element
     if (o - pImpl->colList.begin() == pImpl->colList.size() - 1) {
-        pImpl->colMap.erase(*o);
         pImpl->colList.pop_back();
         return pImpl->colList.end();
     }
 
     // Overwrite with last element and pop_back
     int index = o - pImpl->colList.begin();
-    pImpl->colMap.erase(*o);
 
     // Replace element with back element and update back ele index
     *o = pImpl->colList.back();
-    pImpl->colMap[*o] = index;
 
     // Remove from back
     pImpl->colList.pop_back();
@@ -101,16 +85,12 @@ EcsCellIterator EcsCell::erase(Collider* col)
 
 EcsCellIterator EcsCell::find(Collider* col)
 {
-    auto findRes = pImpl->colMap.find(col);
-    if (findRes == pImpl->colMap.end())
+    auto res = pImpl->colList.end();
+    for (auto iter = pImpl->colList.begin(); iter != pImpl->colList.end(); ++iter)
     {
-        return pImpl->colList.end();
+        if (*iter == col) { return iter;  }
     }
-    else
-    {
-        EcsCellIterator found = pImpl->colList.begin() + (*findRes).second;
-        return found;
-    }
+    return res;
 }
 
 EcsCellIterator EcsCell::begin() const
