@@ -28,5 +28,5 @@ https://github.com/keweihan/SimpleECS/assets/55893673/2c8724b5-a8c4-4367-8d7e-cf
 
 _More to come_
 
-## Attribution
+## References
 Referenced [Lazy Foo](https://lazyfoo.net/tutorials/SDL/index.php) for SDL introduction.
