@@ -61,6 +61,6 @@ namespace SimpleECS
 		/*
 		* If collide contains two AABB box containers. Populate with collision data
 		*/
-		static bool getCollisionBoxBox(Collision& collide);
+		static bool getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b);
 	};
 }
