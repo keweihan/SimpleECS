@@ -15,10 +15,8 @@ public:
 SimpleECS::EcsCell::EcsCell(const EcsCell& other)
 {
     pImpl = std::make_unique<EcsCellImpl>();
-
     pImpl->colList      = other.pImpl->colList;
 }
-
 
 EcsCell::EcsCell(int defaultSize)
 {
@@ -64,17 +62,10 @@ EcsCellIterator EcsCell::erase(EcsCellIterator o)
         return pImpl->colList.end();
     }
 
-    // Overwrite with last element and pop_back
-    int index = o - pImpl->colList.begin();
-
-    // Replace element with back element and update back ele index
+    // Replace element with back element and remove from back
     *o = pImpl->colList.back();
-
-    // Remove from back
     pImpl->colList.pop_back();
 
-    // Get valid iterator
-    o = pImpl->colList.begin() + index;
     return o;
 }
 

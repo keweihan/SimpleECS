@@ -58,6 +58,6 @@ namespace SimpleECS
 
 	private:
 		class EcsCellImpl;
-		std::shared_ptr<EcsCellImpl> pImpl;
+		std::unique_ptr<EcsCellImpl> pImpl;
 	};
 }
