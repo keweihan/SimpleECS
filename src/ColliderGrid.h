@@ -1,6 +1,6 @@
 #pragma once
 #include "Collider.h"
-#include "EcsCell.h"
+#include "ColliderCell.h"
 #include <vector>
 #include <unordered_set>
 #include "boost/container/flat_set.hpp"
@@ -46,12 +46,12 @@ namespace SimpleECS
 		/*
 		* Get the colliders populating a given cell. Input grid.size() - 1 to get out of bounds.
 		*/
-		const EcsCell* getCellContents(const int index) const;
+		const ColliderCell* getCellContents(const int index) const;
 
 		/*
 		* Get the colliders populating single out of bounds cell
 		*/
-		const EcsCell* getOutBoundContent() const;
+		const ColliderCell* getOutBoundContent() const;
 
 		/*
 		* Get the bounds of a given cell
@@ -74,7 +74,7 @@ namespace SimpleECS
 
 		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
 		// index x = c + r * numColumn;
-		std::vector<EcsCell> grid;
+		std::vector<ColliderCell> grid;
 
 		// list of all colliders
 		std::unordered_set<Collider*> colliderList;

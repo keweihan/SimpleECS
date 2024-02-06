@@ -17,7 +17,7 @@
 
 namespace SimpleECS
 {
-	using EcsCellIterator = std::vector<Collider*>::iterator;
+	using ColliderCellIterator = std::vector<Collider*>::iterator;
 
 	/*
 	An list Collider storing structure providing the following:
@@ -26,29 +26,29 @@ namespace SimpleECS
 	- O(1) element insert
 	- O(1) removal
 	*/
-	class SIMPLEECS_API EcsCell
+	class SIMPLEECS_API ColliderCell
 	{
 	public:
-		EcsCell(const EcsCell& other);
-		EcsCell(int defaultSize);
-		EcsCell();
-		~EcsCell();
+		ColliderCell(const ColliderCell& other);
+		ColliderCell(int defaultSize);
+		ColliderCell();
+		~ColliderCell();
 
-		EcsCell& operator=(const EcsCell& other);
+		ColliderCell& operator=(const ColliderCell& other);
 
-		EcsCellIterator find(Collider* col);
+		ColliderCellIterator find(Collider* col);
 
-		EcsCellIterator begin();
+		ColliderCellIterator begin();
 
-		EcsCellIterator end();
+		ColliderCellIterator end();
 
-		EcsCellIterator begin() const;
+		ColliderCellIterator begin() const;
 
-		EcsCellIterator end() const;
+		ColliderCellIterator end() const;
 
-		EcsCellIterator erase(EcsCellIterator o);
+		ColliderCellIterator erase(ColliderCellIterator o);
 
-		EcsCellIterator erase(Collider* col);
+		ColliderCellIterator erase(Collider* col);
 
 		Collider* back();
 
@@ -57,7 +57,7 @@ namespace SimpleECS
 		void insert(Collider* col);
 
 	private:
-		class EcsCellImpl;
-		std::unique_ptr<EcsCellImpl> pImpl;
+		class ColliderCellImpl;
+		std::unique_ptr<ColliderCellImpl> pImpl;
 	};
 }

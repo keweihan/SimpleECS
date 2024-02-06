@@ -131,12 +131,12 @@ int SimpleECS::ColliderGrid::cellSize(int index)
 	return 0;
 }
 
-const EcsCell* ColliderGrid::getCellContents(const int index) const
+const ColliderCell* ColliderGrid::getCellContents(const int index) const
 {
 	return &grid[index];
 }
 
-const EcsCell* ColliderGrid::getOutBoundContent() const
+const ColliderCell* ColliderGrid::getOutBoundContent() const
 {
 	return getCellContents(size() - 1);
 }

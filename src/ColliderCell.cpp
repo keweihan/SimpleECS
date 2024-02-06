@@ -1,51 +1,53 @@
-#include "EcsCell.h"
+#include "ColliderCell.h"
+#include "boost/container/static_vector.hpp"
 
 using namespace SimpleECS;
 
-class EcsCell::EcsCellImpl
+class ColliderCell::ColliderCellImpl
 {
 public:
-    EcsCellImpl(){}
-    ~EcsCellImpl(){}
+    ColliderCellImpl(){}
+    ~ColliderCellImpl(){}
 
     // dense list of colliders in this cell 
+    // std::vector<Collider*> colList;
     std::vector<Collider*> colList;
 };
 
-SimpleECS::EcsCell::EcsCell(const EcsCell& other)
+SimpleECS::ColliderCell::ColliderCell(const ColliderCell& other)
 {
-    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl = std::make_unique<ColliderCellImpl>();
     pImpl->colList      = other.pImpl->colList;
 }
 
-EcsCell::EcsCell(int defaultSize)
+ColliderCell::ColliderCell(int defaultSize)
 {
-    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl = std::make_unique<ColliderCellImpl>();
     pImpl->colList.reserve(defaultSize);
 }
 
-EcsCell::EcsCell()
+ColliderCell::ColliderCell()
 {
-    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl = std::make_unique<ColliderCellImpl>();
     pImpl->colList.reserve(30);
 }
 
-EcsCell::~EcsCell() {}
+ColliderCell::~ColliderCell() {}
 
-EcsCell& SimpleECS::EcsCell::operator=(const EcsCell& other)
+ColliderCell& SimpleECS::ColliderCell::operator=(const ColliderCell& other)
 {
-    pImpl = std::make_unique<EcsCellImpl>();
+    pImpl = std::make_unique<ColliderCellImpl>();
 
     pImpl->colList = other.pImpl->colList;
     return *this;
 }
 
-int EcsCell::size()
+int ColliderCell::size()
 {
     return pImpl->colList.size();
 }
 
-void EcsCell::insert(Collider* col)
+void ColliderCell::insert(Collider* col)
 {
     if (find(col) == end()) 
     {
@@ -54,7 +56,7 @@ void EcsCell::insert(Collider* col)
     }
 }
 
-EcsCellIterator EcsCell::erase(EcsCellIterator o)
+ColliderCellIterator ColliderCell::erase(ColliderCellIterator o)
 {
     // Special case if last element
     if (o - pImpl->colList.begin() == pImpl->colList.size() - 1) {
@@ -69,12 +71,12 @@ EcsCellIterator EcsCell::erase(EcsCellIterator o)
     return o;
 }
 
-EcsCellIterator EcsCell::erase(Collider* col)
+ColliderCellIterator ColliderCell::erase(Collider* col)
 {
     return this->erase(find(col));
 }
 
-EcsCellIterator EcsCell::find(Collider* col)
+ColliderCellIterator ColliderCell::find(Collider* col)
 {
     auto res = pImpl->colList.end();
     for (auto iter = pImpl->colList.begin(); iter != pImpl->colList.end(); ++iter)
@@ -84,27 +86,27 @@ EcsCellIterator EcsCell::find(Collider* col)
     return res;
 }
 
-EcsCellIterator EcsCell::begin() const
+ColliderCellIterator ColliderCell::begin() const
 {
     return pImpl->colList.begin();
 }
 
-EcsCellIterator EcsCell::begin()
+ColliderCellIterator ColliderCell::begin()
 {
     return pImpl->colList.begin();
 }
 
-Collider* EcsCell::back()
+Collider* ColliderCell::back()
 {
     return pImpl->colList.back();
 }
 
-EcsCellIterator EcsCell::end()
+ColliderCellIterator ColliderCell::end()
 {
     return pImpl->colList.end();
 }
 
-EcsCellIterator EcsCell::end() const
+ColliderCellIterator ColliderCell::end() const
 {
     return pImpl->colList.end();
 }

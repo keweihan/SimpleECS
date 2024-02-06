@@ -165,7 +165,7 @@
     <ClInclude Include="include\Vector.h" />
     <ClInclude Include="src\ColliderGrid.h" />
     <ClInclude Include="src\ColliderSystem.h" />
-    <ClInclude Include="src\EcsCell.h" />
+    <ClInclude Include="src\ColliderCell.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />
@@ -177,7 +177,7 @@
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\EcsCell.cpp" />
+    <ClCompile Include="src\ColliderCell.cpp" />
     <ClCompile Include="src\SoundPlayer.cpp" />
     <ClCompile Include="src\FontRenderer.cpp" />
     <ClCompile Include="src\LineRenderer.cpp" />

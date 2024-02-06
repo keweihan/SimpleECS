@@ -78,7 +78,7 @@
     <ClInclude Include="src\ColliderGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\EcsCell.h">
+    <ClInclude Include="src\ColliderCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,7 +137,7 @@
     <ClCompile Include="src\ColliderGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\EcsCell.cpp">
+    <ClCompile Include="src\ColliderCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
