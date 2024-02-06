@@ -84,9 +84,10 @@ void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 	// Search grid for references to collider and delete
 	for (int i = 0; i < grid.size(); ++i)
 	{
-		if (grid[i].find(collider) != grid[i].end())
+		auto find = grid[i].find(collider);
+		if (find != grid[i].end())
 		{
-			grid[i].erase(collider);
+			grid[i].erase(find);
 		}
 	}
 }

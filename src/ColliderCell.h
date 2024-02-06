@@ -4,6 +4,7 @@
 #include <unordered_set>
 #include <memory>
 #include "Collider.h"
+#include "boost/container/small_vector.hpp"
 
 #ifdef _TESTING
 	#ifdef SIMPLEECS_EXPORTS
@@ -17,7 +18,8 @@
 
 namespace SimpleECS
 {
-	using ColliderCellIterator = std::vector<Collider*>::iterator;
+	using ColliderCellIterator = boost::container::small_vector<Collider*, 3>::iterator;
+	using ColliderConstCellIterator = boost::container::small_vector<Collider*, 3>::const_iterator;
 
 	/*
 	An list Collider storing structure providing the following:
@@ -42,9 +44,9 @@ namespace SimpleECS
 
 		ColliderCellIterator end();
 
-		ColliderCellIterator begin() const;
+		ColliderConstCellIterator begin() const;
 
-		ColliderCellIterator end() const;
+		ColliderConstCellIterator end() const;
 
 		ColliderCellIterator erase(ColliderCellIterator o);
 
@@ -57,7 +59,6 @@ namespace SimpleECS
 		void insert(Collider* col);
 
 	private:
-		class ColliderCellImpl;
-		std::unique_ptr<ColliderCellImpl> pImpl;
+		boost::container::small_vector<Collider*, 3> colList;
 	};
 }
