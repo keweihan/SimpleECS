@@ -13,7 +13,7 @@ using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
 std::vector<Collider*> ColliderSystem::colliderList;
-ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::GRID_ROWS, ColliderSystem::GRID_COLUMNS);
+ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
 
 void ColliderSystem::registerCollider(Collider* collider)
 {

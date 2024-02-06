@@ -5,15 +5,15 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
-ColliderGrid::ColliderGrid(const int r, const int c)
+ColliderGrid::ColliderGrid(const int w, const int h)
 {
-	cellWidth = ceil(GameRenderer::SCREEN_WIDTH / (double)c);
-	cellHeight = ceil(GameRenderer::SCREEN_HEIGHT / (double)r);
+	cellWidth = w;
+	cellHeight = h;
 
-	numColumn = c;
-	numRow = r;
+	numRow = ceil(GameRenderer::SCREEN_HEIGHT / (double)cellHeight);
+	numColumn = ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth);
 
-	grid.resize(r * c + 1); // Last index represents out of bounds cell
+	grid.resize(numRow * numColumn + 1); // Last index represents out of bounds cell
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
