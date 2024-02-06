@@ -6,6 +6,8 @@
 #include "TransformUtil.h"
 #include "boost/functional/hash.hpp"
 #include <vector>
+#include <thread>
+#include <iostream>
 
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
@@ -87,16 +89,13 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	// Invoke onCollide of colliding entity components
 	for (const auto& collisionPair : potentialPairs)
 	{
-		if (collisionPair.first != collisionPair.second) 
-		{
-			// Invoke from both sides
-			_invokeCollision(collision, collisionPair.first, collisionPair.second);
-			_invokeCollision(collision, collisionPair.second, collisionPair.first);
-		}
+		// Invoke from both sides
+		_invokeCollision(collision, collisionPair.first, collisionPair.second);
+		_invokeCollision(collision, collisionPair.second, collisionPair.first);
 	}
 }
 
-bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
+bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b)
 {
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 
@@ -178,10 +177,13 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	// Breaking principles of polymorphism (likely) necessary. 
 	// Different collider collisions (i.e. sphere-sphere, sphere-box, box-box) 
 	// require different implementation.
-    if (dynamic_cast<BoxCollider*>(collide.a) != nullptr && 
-		dynamic_cast<BoxCollider*>(collide.b) != nullptr)
+	BoxCollider* boxA = dynamic_cast<BoxCollider*>(collide.a);
+	BoxCollider* boxB = dynamic_cast<BoxCollider*>(collide.b);
+
+	// AABB collision
+    if (boxA != nullptr && boxB != nullptr)
     {
-		return getCollisionBoxBox(collide);
+		return getCollisionBoxBox(collide, boxA, boxB);
     }
 	// Other collider types here
 	// else if(sphere-sphere...)
