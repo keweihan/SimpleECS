@@ -4,13 +4,16 @@
 #include "Entity.h"
 #include "GameRenderer.h"
 #include "TransformUtil.h"
+#include "boost/functional/hash.hpp"
 #include <vector>
+#include <thread>
+#include <iostream>
 
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
 std::vector<Collider*> ColliderSystem::colliderList;
-ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::GRID_ROWS, ColliderSystem::GRID_COLUMNS);
+ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
 
 void ColliderSystem::registerCollider(Collider* collider)
 {
@@ -38,26 +41,28 @@ void ColliderSystem::deregisterCollider(Collider* collider)
 
 //------------------- Collision invocation ---------------------//
 
-// Custom hash functions for pair of colliders
-template<typename T>
-void hashCombine(std::size_t& seed, T const& key) {
-	// TODO: somewhat arbitrary from stackoverflow. 
-	// https://stackoverflow.com/questions/28367913/how-to-stdhash-an-unordered-stdpair
-	// Run testing for potential better hashing?
-	std::hash<T> hasher;
-	seed ^= hasher(key) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-}
-
 template<typename T1, typename T2>
 struct PairHash {
-	std::size_t operator()(std::pair<T1, T2> const& p) const {
-		std::size_t seed(0);
-		::hashCombine(seed, p.first);
-		::hashCombine(seed, p.second);
-
+	std::size_t operator()(const std::pair<T1, T2>& p) const {
+		std::size_t seed = 0;
+		boost::hash_combine(seed, boost::hash<T1>()(p.first));
+		boost::hash_combine(seed, boost::hash<T2>()(p.second));
 		return seed;
 	}
 };
+
+inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
+{
+	collision.a = a;
+	collision.b = b;
+	if (ColliderSystem::getCollisionInfo(collision)) {
+		for (auto component : collision.a->entity->getComponents())
+		{
+			component->onCollide(*collision.b);
+			component->onCollide(collision);
+		}
+	}
+}
 
 void SimpleECS::ColliderSystem::invokeCollisions()
 {
@@ -65,61 +70,39 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	Collision collision = {};
 
 	// Set of potential collision pairs
-	// NOTE: This is populated by potential pairs to collider INTENTIONALLY WITH ORDERING
-	// I.e. (c1, c2) and (c2, c1) are considered different pairs as "onCollision" calls
-	// themselves are ordered and resolved in the perspective of the object itself.
 	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
 		potentialPairs;
 
-	// Populate with potential pairs from main scene
+	// Populate with potential pairs
 	for (int i = 0; i < colliderGrid.size(); ++i)
 	{
-		// TODO: Idea - instead of iterating through all, change potentialPairs to be unique
-		// by order so iteration will only insert unique ordered pairs.
-		for (const auto& colliderA : colliderGrid.getCellContents(i))
+		auto cell = *colliderGrid.getCellContents(i);
+		for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 		{
-			for (const auto& colliderB : colliderGrid.getCellContents(i))
+			for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
 			{
-				potentialPairs.insert({ colliderA, colliderB });
+				potentialPairs.insert({ *iterA, *iterB });
 			}
-		}
-	}
-
-	// Populate with potential pairs from out of bounds.
-	for (const auto& colliderA : colliderGrid.getOutBoundContent())
-	{
-		for (const auto& colliderB : colliderGrid.getOutBoundContent())
-		{
-			potentialPairs.insert({ colliderA, colliderB });
 		}
 	}
 
 	// Invoke onCollide of colliding entity components
 	for (const auto& collisionPair : potentialPairs)
 	{
-		if (collisionPair.first != collisionPair.second) 
-		{
-			// Only invoke one sided, as potentialPairs has symmetric pairs.
-			collision.a = collisionPair.first;
-			collision.b = collisionPair.second;
-			if (getCollisionInfo(collision)) {
-				for (auto component : collision.a->entity->getComponents())
-				{
-					component->onCollide(*collision.b);
-					component->onCollide(collision);
-				}
-			}
-		}
+		// Invoke from both sides
+		_invokeCollision(collision, collisionPair.first, collisionPair.second);
+		_invokeCollision(collision, collisionPair.second, collisionPair.first);
 	}
 }
 
-bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide)
+bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b)
 {
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 
 	Transform aTransform = collide.a->entity->transform;
 	Transform bTransform = collide.b->entity->transform;
 
+	// TODO: dynamic casts are expensive. Figure out a better way.
 	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
 	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
 
@@ -194,186 +177,17 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	// Breaking principles of polymorphism (likely) necessary. 
 	// Different collider collisions (i.e. sphere-sphere, sphere-box, box-box) 
 	// require different implementation.
-    if (dynamic_cast<BoxCollider*>(collide.a) != nullptr && 
-		dynamic_cast<BoxCollider*>(collide.b) != nullptr)
+	BoxCollider* boxA = dynamic_cast<BoxCollider*>(collide.a);
+	BoxCollider* boxB = dynamic_cast<BoxCollider*>(collide.b);
+
+	// AABB collision
+    if (boxA != nullptr && boxB != nullptr)
     {
-		return getCollisionBoxBox(collide);
+		return getCollisionBoxBox(collide, boxA, boxB);
     }
 	// Other collider types here
 	// else if(sphere-sphere...)
 
     return false;
 }
-
-ColliderGrid::ColliderGrid(const int r, const int c)
-{
-	cellWidth	= ceil(GameRenderer::SCREEN_WIDTH / (double)c);
-	cellHeight	= ceil(GameRenderer::SCREEN_HEIGHT / (double)r);
-
-	numColumn = c;
-	numRow = r;
-
-	grid.resize(r * c);
-}
-
-void SimpleECS::ColliderGrid::populateGrid()
-{
-	for (auto collide : colliderList)
-	{
-		insertToGrid(collide);
-	}
-}
-
-void SimpleECS::ColliderGrid::registerCollider(Collider* collider)
-{
-	colliderList.insert(collider);
-}
-
-constexpr const int& clamp(const int& v, const int& lo, const int& hi)
-{
-	if (v < lo) { return lo; }
-	if (v > hi) { return hi; }
-	return v;
-}
-
-void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
-{
-	if (collider->entity == NULL) return;
-
-	Collider::AABB bound;
-	collider->getBounds(bound);
-
-	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft	= ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int columnRight = ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int rowTop		= ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
-	int rowBottom	= ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
-
-	int colLeftClamped = clamp(columnLeft, 0, numColumn - 1);
-	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
-	int rowBotClamped = clamp(rowBottom, 0, numRow - 1);
-	int rowTopClamped = clamp(rowTop, 0, numRow - 1);
-
-	// Add to cells this object resides in
-	for (int r = rowBotClamped; r <= rowTopClamped; ++r)
-	{
-		for (int c = colLeftClamped; c <= colRightClamped; ++c)
-		{
-			// Get effective index
-			int index = r * numColumn + c;
-			grid[index].insert(collider);
-		}
-	}
-
-	// If resides in no cells, add to out of bounds
-	if (columnLeft != colLeftClamped || columnRight != colRightClamped 
-		|| rowTop != rowTopClamped || rowBottom != rowBotClamped)
-	{
-		outbounds.insert(collider);
-	}
-}
-
-void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
-{
-	// Remove from general list
-	if (colliderList.find(collider) != colliderList.end())
-	{
-		colliderList.erase(collider);
-	}
-
-	// Search grid for references to collider and delete
-	for (int i = 0; i < grid.size(); ++i)
-	{
-		if (grid[i].find(collider) != grid[i].end())
-		{
-			grid[i].erase(collider);
-		}
-	}
-
-	// Remove from outbounds list
-	if (outbounds.find(collider) != outbounds.end())
-	{
-		outbounds.erase(collider);
-	}
-}
-
-void SimpleECS::ColliderGrid::updateGrid()
-{
-	// Add to cells this object resides in
-	Collider::AABB cellBound;
-	Collider::AABB colliderBound;
-
-	// Remove collider reference in each cell if collider no longer inhabits cell
-	for (int i = 0; i < grid.size(); ++i)
-	{
-		if (grid[i].size() == 0) continue;
-		getCellBounds(cellBound, i);
-
-		for (auto colliderIter = grid[i].begin(); colliderIter != grid[i].end();)
-		{
-			// If not in this cell, remove reference
-			(*colliderIter)->getBounds(colliderBound);
-			if (colliderBound.xMin > cellBound.xMax || colliderBound.xMax < cellBound.xMin
-				|| colliderBound.yMax < cellBound.yMin || colliderBound.yMin > colliderBound.yMax)
-			{
-				colliderIter = grid[i].erase(colliderIter);
-			}
-			else
-			{
-				colliderIter++;
-			}
-		}
-	}
-
-	// Remove collider reference in outbounds if collider is no longer out of screen bounds.
-	for (auto colliderIter = outbounds.begin(); colliderIter != outbounds.end();)
-	{
-		(*colliderIter)->getBounds(colliderBound);
-		if (colliderBound.xMin >= -GameRenderer::SCREEN_WIDTH / 2.0 && colliderBound.xMax <= GameRenderer::SCREEN_WIDTH / 2.0
-			&& colliderBound.yMax <= GameRenderer::SCREEN_HEIGHT / 2.0 && colliderBound.yMin >= -GameRenderer::SCREEN_HEIGHT / 2.0)
-		{
-			colliderIter = outbounds.erase(colliderIter);
-		}
-		else
-		{
-			colliderIter++;
-		}
-	}
-
-	populateGrid();
-}
-
-int SimpleECS::ColliderGrid::size()
-{
-	return grid.size();
-}
-
-int SimpleECS::ColliderGrid::cellSize(int index)
-{
-	return 0;
-}
-
-const std::unordered_set<Collider*>& SimpleECS::ColliderGrid::getCellContents(const int index)
-{
-	return grid[index];
-}
-
-const std::unordered_set<Collider*>& const SimpleECS::ColliderGrid::getOutBoundContent()
-{
-	return outbounds;
-}
-
-void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)
-{
-	// index = row * numColumn + c
-	int column = index % numColumn;
-	int row = (index - column) / numColumn;
-	
-	output.xMin = -GameRenderer::SCREEN_WIDTH + column * cellWidth;
-	output.xMax = output.xMin + cellWidth;
-
-	output.yMax = GameRenderer::SCREEN_HEIGHT - row * cellHeight;
-	output.yMin = output.yMax - cellHeight;
-}
-
 
