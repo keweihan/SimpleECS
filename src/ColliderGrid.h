@@ -2,8 +2,6 @@
 #include "Collider.h"
 #include "ColliderCell.h"
 #include <vector>
-#include <unordered_set>
-#include "boost/container/flat_set.hpp"
 
 namespace SimpleECS
 {
@@ -14,9 +12,9 @@ namespace SimpleECS
 	{
 	public:
 		/*
-		* Construct grid
+		* Construct grid with given cell dimensions
 		*/
-		ColliderGrid(const int r, const int c);
+		ColliderGrid(const int w, const int h);
 
 		/*
 		* Add a collider to this grid
@@ -69,14 +67,18 @@ namespace SimpleECS
 		*/
 		void populateGrid();
 
+		// Grid parameters
 		int cellWidth, cellHeight;
 		int numRow, numColumn;
 
-		// TODO: change to vector of CELLS. Define cells separately using contiguous memory.
-		// index x = c + r * numColumn;
+		/* 
+		* Spatial collider storage
+		* index x = c + r * numColumn
+		* (c * r + 1)th cell contains out of bounds colliders
+		*/
 		std::vector<ColliderCell> grid;
 
-		// list of all colliders
+		// list of all active colliders
 		std::unordered_set<Collider*> colliderList;
 	};
 }

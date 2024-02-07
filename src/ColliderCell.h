@@ -18,16 +18,23 @@
 
 namespace SimpleECS
 {
-	using ColliderCellIterator = boost::container::small_vector<Collider*, 3>::iterator;
-	using ColliderConstCellIterator = boost::container::small_vector<Collider*, 3>::const_iterator;
+	using ColliderCellIterator = boost::container::small_vector<Collider*, 5>::iterator;
+	using ColliderConstCellIterator = boost::container::small_vector<Collider*, 5>::const_iterator;
 
-	/*
-	An list Collider storing structure providing the following:
-	- Contiguous unordered data storage and traversal
-	- O(1) access
-	- O(1) element insert
-	- O(1) removal
-	*/
+	/**
+	 * A list Collider storage structure. Wrapper for boost::small_vector to store colliders.
+	 * Similar to boost::container::flat_set with boost::small_vector, but unsorted.
+	 * 
+	 * Best performing if less than 5 colliders stored.
+	 * 
+	 * Characteristics:
+	 * - Contiguous and unordered storage of Collider pointers.
+	 * - Small static stack storage.
+	 * - Set semantics - colliders are unique.
+	 * - Linear-time (O(n)) insertion to elements in container
+	 * - Linear-time (O(n)) removal to elements in container
+	 * 
+	 */
 	class SIMPLEECS_API ColliderCell
 	{
 	public:
@@ -40,13 +47,13 @@ namespace SimpleECS
 
 		ColliderCellIterator find(Collider* col);
 
-		ColliderCellIterator begin();
-
-		ColliderCellIterator end();
-
 		ColliderConstCellIterator begin() const;
 
+		ColliderCellIterator begin();
+
 		ColliderConstCellIterator end() const;
+
+		ColliderCellIterator end();
 
 		ColliderCellIterator erase(ColliderCellIterator o);
 
@@ -59,6 +66,6 @@ namespace SimpleECS
 		void insert(Collider* col);
 
 	private:
-		boost::container::small_vector<Collider*, 3> colList;
+		boost::container::small_vector<Collider*, 5> colList;
 	};
 }
