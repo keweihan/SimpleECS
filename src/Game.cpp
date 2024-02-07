@@ -44,6 +44,7 @@ void Game::init()
 {
 	GameRenderer::initGameRenderer();
 	SDL_SetWindowTitle(GameRenderer::window, gameName.c_str());
+	ColliderSystem::initialize();
 }
 
 void Game::mainLoop()

@@ -21,6 +21,11 @@ namespace SimpleECS
 		static const int CELL_WIDTH = 5;
 
 		/*
+		* Call at game loop start
+		*/
+		static void initialize();
+
+		/*
 		* Register to list of colliders to check collisions for
 		*/
 		static void registerCollider(Collider* collider);

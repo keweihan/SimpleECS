@@ -15,6 +15,17 @@ using namespace UtilSimpleECS;
 std::vector<Collider*> ColliderSystem::colliderList;
 ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
 
+void SimpleECS::ColliderSystem::initialize()
+{
+	// Reconstruct grid during runtime
+	// TODO: check copy assignment
+	colliderGrid = ColliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
+	for (auto col : colliderList)
+	{
+		colliderGrid.registerCollider(col);
+	}
+}
+
 void ColliderSystem::registerCollider(Collider* collider)
 {
 	colliderList.push_back(collider);
