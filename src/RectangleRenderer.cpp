@@ -16,7 +16,7 @@ void RectangleRenderer::initialize()
 void RectangleRenderer::update()
 {
     // Get transform coordinate
-    auto screenCoord = TransformUtil::worldToScreenSpace(entity->transform.position.x, entity->transform.position.y);
+    auto screenCoord = TransformUtil::worldToScreenSpace(entity->transform->position.x, entity->transform->position.y);
 
     // Rectangle renders from top left corner. Center.
     int xPos = screenCoord.x - width/2;

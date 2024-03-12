@@ -22,6 +22,9 @@ namespace SimpleECS
 	public:
 		virtual ~Component() {};
 
+		// TODO:
+		//virtual void configure(...) = 0;
+
 		/*
 		* Called on every frame of rendering
 		*/

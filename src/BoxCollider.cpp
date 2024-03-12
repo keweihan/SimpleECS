@@ -7,7 +7,7 @@ using namespace SimpleECS;
 
 void SimpleECS::BoxCollider::update()
 {
-    Vector position = entity->transform.position;
+    Vector position = entity->transform->position;
 
     bound.xMin = position.x - width / 2;
     bound.xMax = position.x + width / 2;

@@ -1,7 +1,7 @@
 #pragma once
-#include "Entity.h"
 #include "Color.h"
 #include <unordered_set>
+#include <memory>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -11,6 +11,9 @@
 
 namespace SimpleECS
 {
+	// Forward declare
+	class Entity;
+
 	/**
 	* Scene class represents a collection of Entities. A Game instance
 	* can only display one scene at a time.
@@ -26,17 +29,36 @@ namespace SimpleECS
 		* @returns false if entity is already contained by the scene and was not added. 
 		* Otherwise returns true if successfully added.
 		*/
-		bool SIMPLEECS_API AddEntity(Entity* entity);
+		Entity SIMPLEECS_API createEntity();
+
+		/*
+		* Given an entity contained in this scene
+		* create and attach component T to entity.
+		* 
+		* @throws if entity id is not contained in this scene. 
+		* @returns Original component attached to entity
+		*/
+		template<typename T>
+		T& addComponent(Entity e);
+
+		/*
+		* Return list of components of type T.
+		*
+		* @throws if type T is not a component
+		* @returns pointer original list of components
+		*/
+		template<typename T>
+		std::vector<T>* getComponents();
 
 		/**
-		* Destroy entity contained by this scene IMMEDIATELY. Proceed with caution, as
+		* IMMEDIATELY Destroy entity contained by this scene. Proceed with caution, as
 		* references can be broken 
 		* 
 		* @returns false if entity is not contained by the scene and was not deleted. 
 		* Otherwise returns true if successfuly removed.
 		* 
 		*/
-		bool SIMPLEECS_API DestroyEntityImmediate(Entity* entityToDelete);
+		bool SIMPLEECS_API destroyEntityImmediate(Entity entityToDelete);
 
 		/**
 		* Mark entity to be deleted at end of frame. Will call entity and component destructors
@@ -46,12 +68,13 @@ namespace SimpleECS
 		* Otherwise returns true if successfuly removed.
 		*
 		*/
-		bool SIMPLEECS_API DestroyEntity(Entity* entityToDelete);
+		bool SIMPLEECS_API destroyEntity(Entity entityToDelete);
 
 		/**
-		*  Immediately destroys all entities marked for destruction (i.e. in toDestroyEntities)/
+		*  IMMEDIATELY destroys all entities marked for destruction (i.e. in toDestroyEntities) 
+		*  Proceed with caution, as references can be broken.
 		*/
-		void DestroyAllMarkedEntities();
+		void destroyAllMarkedEntities();
 
 		/*
 		* Main background render color.
@@ -59,15 +82,17 @@ namespace SimpleECS
 		Color backgroundColor;
 
 		/*
-		* Main background render color.
+		* Entities contained by the scene
 		*/
-		std::unordered_set<Entity*> entities;
+		std::vector<Entity> entities;
 
-		private:
-		
+	private:
 		/*
-		* Entities marked for destruction. Cleared at end of every frame to be deleted.
+		* Hidden implementation class.
 		*/
-		std::unordered_set<Entity*> toDestroyEntities;
+		friend Entity;
+		class SceneImpl;
+		std::unique_ptr<SceneImpl> pImpl;
 	};
+
 }

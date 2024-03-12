@@ -94,7 +94,7 @@ void Game::mainLoop()
 		ColliderSystem::invokeCollisions();
 
 		// Delete objects
-		sceneList[0]->DestroyAllMarkedEntities();
+		sceneList[0]->destroyAllMarkedEntities();
 
 		// Mark end of frame
 		Timer::endFrame();

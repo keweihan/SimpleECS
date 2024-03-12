@@ -1,4 +1,5 @@
 #include "Entity.h"
+#include "Scene.h"
 #include "Component.h"
 #include <vector>
 
@@ -7,19 +8,23 @@ using namespace SimpleECS;
 SimpleECS::Entity::~Entity()
 {
 	// Free all components attached to entity
-	for (auto component : components)
-	{
-		delete component;
-	}
+	scene->destroyEntity(*this);
 }
 
-void Entity::addComponent(Component* component)
+template <typename T>
+T* Entity::addComponent()
 {
-	component->setEntity(this);
-	components.push_back(component);
+	// TODO: insert return statement here
 }
 
-std::vector<Component*>& Entity::getComponents()
+template<typename T>
+inline T* Entity::getComponent()
 {
-	return components;
+	// TODO: insert return statement here
+}
+
+template<typename T>
+std::vector<T*>& SimpleECS::Entity::getComponents()
+{
+	// TODO: insert return statement here
 }

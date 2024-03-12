@@ -104,10 +104,10 @@ void FontRenderer::initialize()
         printf("Unable to open font! SDL_ttf Error: %s\n", TTF_GetError());
     }
 
-    pImpl->renderText(text, color, Vector(entity->transform.position.x, entity->transform.position.y));
+    pImpl->renderText(text, color, Vector(entity->transform->position.x, entity->transform->position.y));
 }
 
 void SimpleECS::FontRenderer::update()
 {
-    pImpl->renderText(text, color, Vector(entity->transform.position.x, entity->transform.position.y));
+    pImpl->renderText(text, color, Vector(entity->transform->position.x, entity->transform->position.y));
 }

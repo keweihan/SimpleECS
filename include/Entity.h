@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "Component.h"
+#include "Scene.h"
 #include "Transform.h"
 #include <string>
 
@@ -13,67 +14,64 @@
 #endif
 
 namespace SimpleECS
-{
+{	
 	/**
 	An object/actor inside scenes. Has a container of components which dictate entity behavior.
 	and exists in world space.
 	*/
 	class Entity {
-	public:
-		Entity() {};
-		Entity(std::string tag) : tag(tag) {};
-		~Entity();
+	private:
+		friend Scene::SceneImpl;
+		Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
 
 		/**
-		* Add a component to this entity
-		* 
+		* Internal identifier for this entity. Instantiated on construction.
 		*/
-		void SIMPLEECS_API addComponent(Component* component);
+		uint32_t id;
+
+		/**
+		* Pointer to scene containing this entity.
+		*/
+		Scene* scene;
+
+	public:
+		/**
+		* Optional string identifier for this entity
+		*/
+		std::string tag;
+
+		/**
+		* Entity position in world space.
+		* TODO: redo...
+		*/
+		Transform* transform;
+
+		/**
+		* Add a component to this entity of type T
+		* 
+		* @returns Component* added to entity.
+		*/
+		template <typename T>
+		T* SIMPLEECS_API addComponent();
 
 		/**
 		* Retrieve a component attached to entity of type T.
 		* 
-		* @returns nullptr if no component of such type is attached to entity.
+		* @returns A single component of type T attached to entity.
+		* nullptr if no component of such type is attached to entity.
+		* 
 		*/
 		template <typename T>
-		T* getComponent();
+		T* SIMPLEECS_API getComponent();
 
 		/**
-		* Retrieve list of all components attached to this entity.
+		* Retrieve list of all components of type T attached to this entity.
+		* Use T as Component base class to return all components attached to entity. 
+		* 
+		* @throws Error if T is not of component type
 		*/
-		std::vector<Component*>& getComponents();
-		
-		/**
-		* Entity position in world space.
-		*/
-		Transform transform;
-
-		/**
-		* Optional identifier for this entity
-		*/
-		std::string tag;
-		
-	private:
-		/**
-		* List of components
-		*/
-		std::vector<Component*> components;
-
+		template <typename T>
+		std::vector<T*>& SIMPLEECS_API getComponents();
 	};
-
-	template<typename T>
-	inline T* Entity::getComponent()
-	{
-		T* foundComponent = nullptr;
-		for (auto component : components)
-		{
-			foundComponent = dynamic_cast<T*>(component);
-			if (foundComponent != nullptr)
-			{
-				return foundComponent;
-			}
-		}
-		return foundComponent;
-	}
 }
 #endif
