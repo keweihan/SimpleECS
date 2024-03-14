@@ -56,7 +56,7 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 	collision.a = a;
 	collision.b = b;
 	if (ColliderSystem::getCollisionInfo(collision)) {
-		for (auto component : collision.a->entity->getComponents())
+		for (auto component : collision.a->entity->getComponents<Component>())
 		{
 			component->onCollide(*collision.b);
 			component->onCollide(collision);
@@ -99,8 +99,8 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollid
 {
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 
-	Transform aTransform = collide.a->entity->transform;
-	Transform bTransform = collide.b->entity->transform;
+	Transform aTransform = *(collide.a->entity->transform);
+	Transform bTransform = *(collide.b->entity->transform);
 
 	// TODO: dynamic casts are expensive. Figure out a better way.
 	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);

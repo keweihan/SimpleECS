@@ -1,6 +1,9 @@
 #pragma once
 #include "Color.h"
 #include <unordered_set>
+#include "ComponentPool.h"
+#include "Entity.h"
+#include <vector>
 #include <memory>
 
 #ifdef SIMPLEECS_EXPORTS
@@ -11,8 +14,6 @@
 
 namespace SimpleECS
 {
-	// Forward declare
-	class Entity;
 
 	/**
 	* Scene class represents a collection of Entities. A Game instance
@@ -22,7 +23,7 @@ namespace SimpleECS
 	public:
 		Scene() : backgroundColor(Color(255,255,255,255)) {};
 		Scene(Color backgrundColor) : backgroundColor(backgrundColor) {};
-
+		~Scene();
 		/**
 		* Add Entity to this scene.
 		* 
@@ -92,7 +93,23 @@ namespace SimpleECS
 		*/
 		friend Entity;
 		class SceneImpl;
-		std::unique_ptr<SceneImpl> pImpl;
+		struct SceneImplDeleter
+		{
+			SIMPLEECS_API void operator()(SceneImpl* p);
+		};
+
+		std::unique_ptr<SceneImpl, SceneImplDeleter> pImpl;
 	};
 
+	template<typename T>
+	inline T& Scene::addComponent(Entity e)
+	{
+		return nullptr;
+	}
+
+	template<typename T>
+	std::vector<T>* SimpleECS::Scene::getComponents()
+	{
+		return nullptr;
+	}
 }

@@ -9,6 +9,8 @@ namespace SimpleECS {
 	public:
 		virtual void createComponent(uint32_t entityID) = 0;
 		virtual void deleteComponent(uint32_t entityID) = 0;
+		virtual void invokeStart() = 0;
+		virtual void invokeUpdate() = 0;
 	};
 
 	template<typename T>

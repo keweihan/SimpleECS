@@ -1,9 +1,5 @@
-#ifndef ENTITY_H
-#define ENTITY_H
-
+#pragma once
 #include <vector>
-#include "Component.h"
-#include "Scene.h"
 #include "Transform.h"
 #include <string>
 
@@ -15,19 +11,15 @@
 
 namespace SimpleECS
 {	
+	class Scene;
+
 	/**
 	An object/actor inside scenes. Has a container of components which dictate entity behavior.
 	and exists in world space.
 	*/
 	class Entity {
-	private:
-		friend Scene::SceneImpl;
-		Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
-
-		/**
-		* Internal identifier for this entity. Instantiated on construction.
-		*/
-		uint32_t id;
+	private:		
+		
 
 		/**
 		* Pointer to scene containing this entity.
@@ -35,6 +27,16 @@ namespace SimpleECS
 		Scene* scene;
 
 	public:
+		// TODO: make private
+		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
+		SIMPLEECS_API ~Entity();
+
+		/**
+		* Internal identifier for this entity. Instantiated on construction.
+		* TODO make private
+		*/
+		uint32_t id;
+
 		/**
 		* Optional string identifier for this entity
 		*/
@@ -44,7 +46,7 @@ namespace SimpleECS
 		* Entity position in world space.
 		* TODO: redo...
 		*/
-		Transform* transform;
+		Transform* transform = nullptr;
 
 		/**
 		* Add a component to this entity of type T
@@ -52,7 +54,7 @@ namespace SimpleECS
 		* @returns Component* added to entity.
 		*/
 		template <typename T>
-		T* SIMPLEECS_API addComponent();
+		T* addComponent();
 
 		/**
 		* Retrieve a component attached to entity of type T.
@@ -62,7 +64,7 @@ namespace SimpleECS
 		* 
 		*/
 		template <typename T>
-		T* SIMPLEECS_API getComponent();
+		T* getComponent();
 
 		/**
 		* Retrieve list of all components of type T attached to this entity.
@@ -71,7 +73,27 @@ namespace SimpleECS
 		* @throws Error if T is not of component type
 		*/
 		template <typename T>
-		std::vector<T*>& SIMPLEECS_API getComponents();
+		std::vector<T*>& getComponents();
 	};
+
+	template <typename T>
+	T* Entity::addComponent()
+	{
+		return nullptr;
+		// TODO: insert return statement here
+	}
+
+	template<typename T>
+	inline T* Entity::getComponent()
+	{
+		return nullptr;
+		// TODO: insert return statement here
+	}
+
+	template<typename T>
+	std::vector<T*>& SimpleECS::Entity::getComponents()
+	{
+		static std::vector<T*> emptyVector;
+		return emptyVector;
+	}
 }
-#endif

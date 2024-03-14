@@ -1,5 +1,4 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
 
 #ifdef SIMPLEECS_EXPORTS
@@ -57,5 +56,3 @@ namespace SimpleECS
 		void setEntity(Entity* entity);
 	};
 }
-
-#endif

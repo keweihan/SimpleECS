@@ -1,20 +1,17 @@
+#pragma once
 #include "Scene.h"
-#include "Game.h"
-#include "GameRenderer.h"
-#include "ComponentPool.h"
 #include "Entity.h"
-#include <vector>
-#include <memory>
-#include <type_traits>
+#include "Component.h"
+//#include "ComponentPool.h"
 #include <stdexcept>
-#include <cassert>
 
 using namespace SimpleECS;
 
 /* ---------Scene Impl----- */
 class Scene::SceneImpl {
 public:
-	SceneImpl(Scene* s) : scene(s) {}
+	SceneImpl(Scene* s);
+	~SceneImpl();
 
 	/**
 	* Add Entity to this scene.
@@ -23,25 +20,6 @@ public:
 	* Otherwise returns true if successfully added.
 	*/
 	Entity createEntity();
-
-	/*
-	* Given an entity contained in this scene
-	* create and attach component T to entity.
-	*
-	* @throws if entity id is not contained in this scene.
-	* @returns Original component attached to entity
-	*/
-	template<typename T>
-	T& addComponent(Entity e);
-
-	/*
-	* Return list of components of type T.
-	* 
-	* @throws if type T is not a component
-	* @returns pointer original list of components
-	*/
-	template<typename T>
-	std::vector<T>* getComponents();
 
 	/**
 	* IMMEDIATELY Destroy entity contained by this scene. Proceed with caution, as
@@ -94,7 +72,7 @@ private:
 	/*
 	* Pool of available entity ids. If empty, use max.
 	*/
-	int maxID;
+	int maxID = 0;
 
 	/*
 	* Pointer to scene object this implements.
@@ -113,8 +91,8 @@ private:
 	* 
 	* @throws If T does not inherit from Component
 	*/
-	template<typename T>
-	static std::size_t getComponentID();
+	//template<typename T>
+	//static std::size_t getComponentID();
 
 	/*
 	* Return new id unique to the type of component
@@ -127,42 +105,45 @@ private:
 	std::uint32_t nextEntityID();
 };
 
-template<typename T>
-T& Scene::SceneImpl::addComponent(Entity e)
-{
-	// Check if T is of type component
-	if (!std::is_base_of<Component, T>())
-	{
-		throw std::invalid_argument("Type called for addComponent is not a component.");
-	}
+Scene::SceneImpl::SceneImpl(Scene* s) : scene(s) {}
+Scene::SceneImpl::~SceneImpl() {}
 
-	// Check if component pool exists
-	if (getComponentID<T>() >= allComponents.size())
-	{
-		// Pool does not exist yet. Create component pool for type first
-		allComponents.emplace_back(new T());
-	}
+//template<typename T>
+//T& Scene::SceneImpl::addComponent(Entity e)
+//{
+//	// Check if T is of type component
+//	if (!std::is_base_of<Component, T>())
+//	{
+//		throw std::invalid_argument("Type called for addComponent is not a component.");
+//	}
+//
+//	// Check if component pool exists
+//	if (getComponentID<T>() >= allComponents.size())
+//	{
+//		// Pool does not exist yet. Create component pool for type first
+//		allComponents.emplace_back(new T());
+//	}
+//
+//	// Assign component
+//	ComponentPoolBase pool = *allComponents[getComponentID<T>()];
+//	ComponentPool<T> poolConv = static_cast<ComponentPool<T>>(pool);
+//	pool.createComponent(e->id);
+//	return poolConv.getComponent(e.id);
+//}
+//
+//template<typename T>
+//std::vector<T>* Scene::SceneImpl::getComponents()
+//{
+//	return &allComponents[getComponentID<T>()];
+//}
 
-	// Assign component
-	ComponentPoolBase pool = *allComponents[getComponentID<Transform>()];
-	ComponentPool<T> poolConv = static_cast<ComponentPool<T>>(pool);
-	pool.createComponent(e->id);
-	return poolConv.getComponent(e.id);
-}
-
-template<typename T>
-std::vector<T>* Scene::SceneImpl::getComponents()
-{
-	return *allComponents[getComponentID<T>()];
-}
-
-template<typename T>
-std::size_t Scene::SceneImpl::getComponentID()
-{
-	// Call nextComponentID per unique type T
-	static const std::size_t id = nextComponentID();
-	return id;
-}
+//template<typename T>
+//std::size_t Scene::SceneImpl::getComponentID()
+//{
+//	// Call nextComponentID per unique type T
+//	static const std::size_t id = nextComponentID();
+//	return id;
+//}
 
 std::size_t Scene::SceneImpl::nextComponentID()
 {
@@ -230,34 +211,49 @@ std::uint32_t Scene::SceneImpl::nextEntityID()
 }
 
 /* ---------Scene----- */
-Entity Scene::createEntity()
+//Entity Scene::createEntity()
+//{
+//	return pImpl->createEntity();
+//}
+//
+//bool Scene::destroyEntityImmediate(Entity entityToDelete)
+//{
+//	return pImpl->destroyEntityImmediate(entityToDelete);
+//}
+//
+//bool SimpleECS::Scene::destroyEntity(Entity entityToDelete)
+//{
+//	return pImpl->destroyEntity(entityToDelete);
+//}
+//
+//void SimpleECS::Scene::destroyAllMarkedEntities()
+//{
+//	return pImpl->destroyAllMarkedEntities();
+//}
+
+void SimpleECS::Scene::SceneImplDeleter::operator()(SceneImpl* p)
 {
-	return pImpl->createEntity();
+	delete p;
 }
 
-bool Scene::destroyEntityImmediate(Entity entityToDelete)
+Scene::~Scene() = default;
+
+Entity SIMPLEECS_API SimpleECS::Scene::createEntity()
 {
-	return pImpl->destroyEntityImmediate(entityToDelete);
+	// TODO:
+	return Entity(1, nullptr);
 }
 
-bool SimpleECS::Scene::destroyEntity(Entity entityToDelete)
+bool SIMPLEECS_API SimpleECS::Scene::destroyEntityImmediate(Entity entityToDelete)
 {
-	return pImpl->destroyEntity(entityToDelete);
+	return false;
+}
+
+bool SIMPLEECS_API SimpleECS::Scene::destroyEntity(Entity entityToDelete)
+{
+	return false;
 }
 
 void SimpleECS::Scene::destroyAllMarkedEntities()
 {
-	return pImpl->destroyAllMarkedEntities();
-}
-
-template<typename T>
-inline T& Scene::addComponent(Entity e)
-{
-	return pImpl->addComponent(e);
-}
-
-template<typename T>
-std::vector<T>* SimpleECS::Scene::getComponents()
-{
-	return pImpl->getComponents();
 }

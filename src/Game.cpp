@@ -3,6 +3,7 @@
 #include "GameRenderer.h"
 #include "Entity.h"
 #include "ColliderSystem.h"
+#include "ComponentPool.h"
 #include "Timer.h"
 #include "Color.h"
 #include <SDL.h>
@@ -56,13 +57,10 @@ void Game::mainLoop()
 	}
 
 	// Run initialize of first scene components
-	for (auto entity : sceneList[0]->entities)
-	{
-		for (auto component : entity->getComponents())
-		{
-			component->initialize();
-		};
-	}
+	//for (auto pool : sceneList[0]->getComponentPools())
+	//{
+	//	(*pool).invokeStart();
+	//}
 
 	// Game loop
 	while (!quit)
@@ -82,13 +80,10 @@ void Game::mainLoop()
 		SDL_RenderClear(GameRenderer::renderer);
 
 		// Run update of first scene functions
-		for (auto entity : sceneList[0]->entities)
-		{
-			for (auto component : entity->getComponents())
-			{
-				component->update();
-			};
-		}
+		//for (auto pool : sceneList[0]->pImpl->getComponentPools())
+		//{
+		//	(*pool).invokeUpdate();
+		//}
 
 		// Run collision functions
 		ColliderSystem::invokeCollisions();
@@ -98,7 +93,7 @@ void Game::mainLoop()
 
 		// Mark end of frame
 		Timer::endFrame();
-
+		
 		SDL_RenderPresent(GameRenderer::renderer);
 	}
 }
