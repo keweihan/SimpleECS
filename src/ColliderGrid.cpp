@@ -10,8 +10,8 @@ ColliderGrid::ColliderGrid(const int w, const int h)
 	cellWidth = w;
 	cellHeight = h;
 
-	numRow = ceil(GameRenderer::SCREEN_HEIGHT / (double)cellHeight);
-	numColumn = ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth);
+	numRow = static_cast<int>(ceil(GameRenderer::SCREEN_HEIGHT / (double)cellHeight));
+	numColumn = static_cast<int>(ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth));
 
 	grid.resize(numRow * numColumn + 1); // Last index represents out of bounds cell
 }
@@ -44,10 +44,10 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	collider->getBounds(bound);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft	= ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int columnRight = ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int rowTop		= ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
-	int rowBottom	= ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
+	int columnLeft	= static_cast<int>(ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth));
+	int columnRight = static_cast<int>(ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth));
+	int rowTop		= static_cast<int>(ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight));
+	int rowBottom	= static_cast<int>(ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight));
 
 	int colLeftClamped	= clamp(columnLeft, 0, numColumn - 1);
 	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
