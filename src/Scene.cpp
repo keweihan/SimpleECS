@@ -1,6 +1,6 @@
 #pragma once
-#include "Scene.h"
 #include "Entity.h"
+#include "Scene.h"
 #include "Component.h"
 //#include "ComponentPool.h"
 #include <stdexcept>
@@ -19,7 +19,7 @@ public:
 	* @returns false if entity is already contained by the scene and was not added.
 	* Otherwise returns true if successfully added.
 	*/
-	Entity createEntity();
+	Entity* createEntity();
 
 	/**
 	* IMMEDIATELY Destroy entity contained by this scene. Proceed with caution, as
@@ -48,11 +48,12 @@ public:
 	*/
 	void destroyAllMarkedEntities();
 
+	/*-------- Template implementations -------- */
 	/*
 	* Return list of ALL component pools
 	* TODO: abstract out component pool list to be a "ComponentPools"
 	*/
-	std::vector<std::shared_ptr<ComponentPoolBase>> getComponentPools();
+	std::vector<std::shared_ptr<ComponentPoolBase>>& getComponentPools();
 
 private:
 	/* Allow access
@@ -81,23 +82,10 @@ private:
 
 	/*
 	* Component pool list for scene
-	* Stores components in a contiguous storage for fast iteration. 
+	* Stores components in a contiguous storage for fast iteration.
 	* Access component pool for type T with allComponents[getComponentID<T>()]
 	*/
 	std::vector<std::shared_ptr<ComponentPoolBase>> allComponents;
-
-	/*
-	* Return id unique to the type of component.
-	* 
-	* @throws If T does not inherit from Component
-	*/
-	//template<typename T>
-	//static std::size_t getComponentID();
-
-	/*
-	* Return new id unique to the type of component
-	*/
-	static std::size_t nextComponentID();
 
 	/*
 	* Return the ID of the next entity to be created.
@@ -145,21 +133,12 @@ Scene::SceneImpl::~SceneImpl() {}
 //	return id;
 //}
 
-std::size_t Scene::SceneImpl::nextComponentID()
-{
-	static std::size_t lastID = 0;
-	return lastID++;
-}
 
-std::vector<std::shared_ptr<ComponentPoolBase>> Scene::SceneImpl::getComponentPools()
-{
-	return allComponents;
-}
 
-Entity Scene::SceneImpl::createEntity()
+Entity* Scene::SceneImpl::createEntity()
 {
-	Entity created = Entity(nextEntityID(), scene);
-	if (created.id >= scene->entities.size()) {
+	Entity* created = new Entity(nextEntityID(), scene);
+	if (created->id >= scene->entities.size()) {
 		scene->entities.push_back(created);
 	}
 	return created;
@@ -194,6 +173,11 @@ void Scene::SceneImpl::destroyAllMarkedEntities()
 		destroyEntityImmediate(*iter);
 		iter = toDestroyEntities.erase(iter);
 	}
+}
+
+std::vector<std::shared_ptr<ComponentPoolBase>>& Scene::SceneImpl::getComponentPools()
+{
+	return allComponents;
 }
 
 std::uint32_t Scene::SceneImpl::nextEntityID()
@@ -238,22 +222,28 @@ void SimpleECS::Scene::SceneImplDeleter::operator()(SceneImpl* p)
 
 Scene::~Scene() = default;
 
-Entity SIMPLEECS_API SimpleECS::Scene::createEntity()
+Entity* SimpleECS::Scene::createEntity()
 {
 	// TODO:
-	return Entity(1, nullptr);
+	return pImpl->createEntity();
 }
 
-bool SIMPLEECS_API SimpleECS::Scene::destroyEntityImmediate(Entity entityToDelete)
+bool SimpleECS::Scene::destroyEntityImmediate(uint32_t entityToDelete)
 {
 	return false;
 }
 
-bool SIMPLEECS_API SimpleECS::Scene::destroyEntity(Entity entityToDelete)
+bool SimpleECS::Scene::destroyEntity(uint32_t entityToDelete)
 {
 	return false;
 }
 
 void SimpleECS::Scene::destroyAllMarkedEntities()
 {
+}
+
+std::size_t SimpleECS::Scene::nextComponentID()
+{
+	static std::size_t lastID = 0;
+	return lastID++;
 }

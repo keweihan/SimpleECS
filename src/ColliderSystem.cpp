@@ -55,13 +55,17 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 {
 	collision.a = a;
 	collision.b = b;
-	if (ColliderSystem::getCollisionInfo(collision)) {
-		for (auto component : collision.a->entity->getComponents<Component>())
-		{
-			component->onCollide(*collision.b);
-			component->onCollide(collision);
-		}
-	}
+
+	collision.a->entity->getComponent<Collider>()->onCollide(*collision.b);
+	collision.a->entity->getComponent<Collider>()->onCollide(collision);
+
+	//if (ColliderSystem::getCollisionInfo(collision)) {
+	//	for (auto component : collision.a->entity->getComponents<Component>())
+	//	{
+	//		component->onCollide(*collision.b);
+	//		component->onCollide(collision);
+	//	}
+	//}
 }
 
 void SimpleECS::ColliderSystem::invokeCollisions()

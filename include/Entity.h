@@ -1,6 +1,8 @@
 #pragma once
-#include <vector>
+
+#include "Scene.h"
 #include "Transform.h"
+#include <vector>
 #include <string>
 
 #ifdef SIMPLEECS_EXPORTS
@@ -11,15 +13,12 @@
 
 namespace SimpleECS
 {	
-	class Scene;
-
 	/**
 	An object/actor inside scenes. Has a container of components which dictate entity behavior.
 	and exists in world space.
 	*/
 	class Entity {
 	private:		
-		
 
 		/**
 		* Pointer to scene containing this entity.
@@ -65,35 +64,17 @@ namespace SimpleECS
 		*/
 		template <typename T>
 		T* getComponent();
-
-		/**
-		* Retrieve list of all components of type T attached to this entity.
-		* Use T as Component base class to return all components attached to entity. 
-		* 
-		* @throws Error if T is not of component type
-		*/
-		template <typename T>
-		std::vector<T*>& getComponents();
 	};
 
 	template <typename T>
-	T* Entity::addComponent()
+	inline T* Entity::addComponent()
 	{
-		return nullptr;
-		// TODO: insert return statement here
+		return scene->addComponent<T>(id);
 	}
 
 	template<typename T>
 	inline T* Entity::getComponent()
 	{
-		return nullptr;
-		// TODO: insert return statement here
-	}
-
-	template<typename T>
-	std::vector<T*>& SimpleECS::Entity::getComponents()
-	{
-		static std::vector<T*> emptyVector;
-		return emptyVector;
+		return scene->getComponent<T>(id);
 	}
 }

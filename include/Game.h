@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include "Scene.h"
+#include <string>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
