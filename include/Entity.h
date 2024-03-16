@@ -4,6 +4,7 @@
 #include "Transform.h"
 #include <vector>
 #include <string>
+#include <utility>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -52,8 +53,8 @@ namespace SimpleECS
 		* 
 		* @returns Component* added to entity.
 		*/
-		template <typename T>
-		T* addComponent();
+		template <typename T, typename... Args>
+		T* addComponent(Args&&... args);
 
 		/**
 		* Retrieve a component attached to entity of type T.
@@ -66,10 +67,10 @@ namespace SimpleECS
 		T* getComponent();
 	};
 
-	template <typename T>
-	inline T* Entity::addComponent()
+	template <typename T, typename... Args>
+	inline T* Entity::addComponent(Args&&... args)
 	{
-		return scene->addComponent<T>(id);
+		return scene->addComponent<T>(id, std::forward<Args>(args)...);
 	}
 
 	template<typename T>

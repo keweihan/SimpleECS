@@ -41,8 +41,8 @@ namespace SimpleECS
 		* @throws if entity id is not contained in this scene. 
 		* @returns Original component attached to entity
 		*/
-		template<typename T>
-		T* addComponent(uint32_t e);
+		template <typename T, typename... Args>
+		T* addComponent(uint32_t e, Args&&... args);
 
 		/*
 		* Return list of components of type T.
@@ -153,11 +153,11 @@ namespace SimpleECS
 	};
 
 #pragma region Template_Implementation
-	template<typename T>
-	inline T* Scene::addComponent(uint32_t e)
+	template <typename T, typename... Args>
+	inline T* Scene::addComponent(uint32_t e, Args&&... args)
 	{
 		// Check if T is of type component
-		if (!std::is_base_of<Component, T>())
+		if (!std::is_base_of<Component, T>::value)
 		{
 			throw std::invalid_argument("Type called for addComponent is not a component.");
 		}
@@ -166,7 +166,7 @@ namespace SimpleECS
 		if (getComponentID<T>() >= allComponents.size())
 		{
 			// Pool does not exist yet. Create component pool for type first
-			allComponents.emplace_back(new T());
+			allComponents.emplace_back(std::make_shared<ComponentPool<T>>());
 		}
 
 		// Assign component
