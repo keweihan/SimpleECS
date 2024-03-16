@@ -1,6 +1,6 @@
 #pragma once
-#include <vector>
 #include "Scene.h"
+#include <vector>
 #include <string>
 
 #ifdef SIMPLEECS_EXPORTS

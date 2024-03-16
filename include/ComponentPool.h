@@ -1,13 +1,14 @@
 #pragma once
+#include "Component.h"
 #include <vector>
 #include <memory>
 #include <unordered_set>
 #include <iterator>
+#include <stdexcept>
 
 namespace SimpleECS {
 	class ComponentPoolBase {
 	public:
-		virtual void createComponent(uint32_t entityID) = 0;
 		virtual void deleteComponent(uint32_t entityID) = 0;
 		virtual void invokeStart() = 0;
 		virtual void invokeUpdate() = 0;
@@ -22,13 +23,18 @@ namespace SimpleECS {
 		* Create component and assign it to the entity entityID.
 		* @throws If entity already has component
 		*/
-		void createComponent(uint32_t entityID);
+		template <typename... Args>
+		void createComponent(uint32_t entityID, Args&&... args);
 
 		// check if has component
 		// remove from sparseList and componentList
 		void deleteComponent(uint32_t entityID);
 
 		T* getComponent(uint32_t entityID);
+
+		void invokeStart();
+
+		void invokeUpdate();
 
 		/*
 		Get list of components of this pool
@@ -87,4 +93,68 @@ namespace SimpleECS {
 	//	// Incremented after this occurs. 
 	//	static int maxID;
 	//};
+
+	template<typename T>
+	template <typename... Args>
+	void SimpleECS::ComponentPool<T>::createComponent(uint32_t entityID, Args&&... args)
+	{
+		if (entityID >= sparseList.size())
+		{
+			sparseList.resize(entityID + 1, -1);
+		}
+
+		componentList.push_back(T(std::forward<Args>(args)...));
+		sparseList[entityID] = componentList.size() - 1;
+	}
+
+	template<typename T>
+	void SimpleECS::ComponentPool<T>::deleteComponent(uint32_t entityID)
+	{
+		// Check if entity has this component
+		if (sparseList[entityID] == -1)
+		{
+			throw std::logic_error("Entity does not have component to delete.");
+		}
+
+		// Mark entity as not having this component.
+		sparseList[entityID] = -1;
+	}
+
+	template<typename T>
+	T* SimpleECS::ComponentPool<T>::getComponent(uint32_t entityID)
+	{
+		if (sparseList[entityID] == -1)
+		{
+			return nullptr;
+		}
+		else
+		{
+			return &componentList[sparseList[entityID]];
+		}
+	}
+
+	template<typename T>
+	void SimpleECS::ComponentPool<T>::invokeStart()
+	{
+		for(auto& component : componentList)
+		{
+			component.initialize();
+		}
+	}
+
+	template<typename T>
+	void SimpleECS::ComponentPool<T>::invokeUpdate()
+	{
+		for (auto& component : componentList)
+		{
+			component.update();
+		}
+	}
+
+	template<typename T>
+	std::vector<T>* SimpleECS::ComponentPool<T>::getComponents()
+	{
+		return componentList;
+	}
+
 }

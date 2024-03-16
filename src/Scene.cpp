@@ -15,6 +15,10 @@ Entity* Scene::createEntity()
 	if (created->id >= entities.size()) {
 		entities.push_back(created);
 	}
+	else {
+		entities[created->id] = created;
+	}
+	
 	return created;
 }
 
@@ -33,6 +37,7 @@ bool Scene::destroyEntityImmediate(uint32_t eid)
 
 	// Release id back into pool.
 	availableEntityIds.insert(eid);
+	entities[eid] = nullptr;
 
 	return true;
 }
@@ -70,8 +75,4 @@ std::uint32_t Scene::nextEntityID()
 	}
 }
 
-std::size_t SimpleECS::Scene::nextComponentID()
-{
-	static std::size_t lastID = 0;
-	return lastID++;
-}
+

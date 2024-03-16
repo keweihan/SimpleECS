@@ -4,6 +4,7 @@
 #include "Entity.h"
 #include <tuple>
 #include <SDL.h>
+#include <iostream>
 
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
@@ -15,6 +16,7 @@ void RectangleRenderer::initialize()
 
 void RectangleRenderer::update()
 {
+    std::cout << "bruh" << std::endl;
     // Get transform coordinate
     auto screenCoord = TransformUtil::worldToScreenSpace(entity->transform->position.x, entity->transform->position.y);
 

@@ -16,6 +16,7 @@
 namespace SimpleECS
 {
 	class Entity;
+	class Game;
 
 	/*
 	* Scene class represents a collection of Entities. A Game instance
@@ -104,6 +105,7 @@ namespace SimpleECS
 		* Hidden implementation class.
 		*/
 		friend Entity;
+		friend Game;
 
 		/*
 		* Return id unique to the type of component.
@@ -154,7 +156,7 @@ namespace SimpleECS
 
 #pragma region Template_Implementation
 	template <typename T, typename... Args>
-	inline T* Scene::addComponent(uint32_t e, Args&&... args)
+	inline T* Scene::addComponent(uint32_t eid, Args&&... args)
 	{
 		// Check if T is of type component
 		if (!std::is_base_of<Component, T>::value)
@@ -170,10 +172,13 @@ namespace SimpleECS
 		}
 
 		// Assign component
-		ComponentPoolBase pool = *allComponents[getComponentID<T>()];
-		ComponentPool<T> poolConv = static_cast<ComponentPool<T>>(pool);
-		pool.createComponent(e->id);
-		return poolConv.getComponent(e.id);
+		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[getComponentID<T>()]);
+		poolConv->createComponent(eid, std::forward<Args>(args)...);
+
+		T* comp = poolConv->getComponent(eid);
+		comp->setEntity(entities[eid]);
+
+		return comp;
 	}
 
 	template<typename T>
@@ -185,7 +190,15 @@ namespace SimpleECS
 	template<typename T>
 	inline T* Scene::getComponent(uint32_t e)
 	{
-		return nullptr;
+		// Check if T is of type component
+		if (!std::is_base_of<Component, T>::value)
+		{
+			throw std::invalid_argument("Type called for addComponent is not a component.");
+		}
+
+		// Cast ComponentPoolBase to concrete ComponentPool
+		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[getComponentID<T>()]);
+		return poolConv->getComponent(e);
 	}
 
 	template<typename T>
@@ -194,6 +207,12 @@ namespace SimpleECS
 		// Call nextComponentID per unique type T
 		static const std::size_t id = nextComponentID();
 		return id;
+	}
+
+	inline std::size_t Scene::nextComponentID()
+	{
+		static std::size_t lastID = 0;
+		return lastID++;
 	}
 #pragma endregion Template_Implementation
 }

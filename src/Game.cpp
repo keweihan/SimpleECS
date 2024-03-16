@@ -57,10 +57,10 @@ void Game::mainLoop()
 	}
 
 	// Run initialize of first scene components
-	//for (auto pool : sceneList[0]->getComponentPools())
-	//{
-	//	(*pool).invokeStart();
-	//}
+	for (auto pool : sceneList[0]->getComponentPools())
+	{
+		(*pool).invokeStart();
+	}
 
 	// Game loop
 	while (!quit)
@@ -80,10 +80,10 @@ void Game::mainLoop()
 		SDL_RenderClear(GameRenderer::renderer);
 
 		// Run update of first scene functions
-		//for (auto pool : sceneList[0]->pImpl->getComponentPools())
-		//{
-		//	(*pool).invokeUpdate();
-		//}
+		for (auto pool : sceneList[0]->getComponentPools())
+		{
+			(*pool).invokeUpdate();
+		}
 
 		// Run collision functions
 		ColliderSystem::invokeCollisions();

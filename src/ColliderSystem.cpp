@@ -55,10 +55,12 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 {
 	collision.a = a;
 	collision.b = b;
-
+	
+	// Invoke onCollide of colliding entity component
 	collision.a->entity->getComponent<Collider>()->onCollide(*collision.b);
 	collision.a->entity->getComponent<Collider>()->onCollide(collision);
 
+	// Old code - assumes potentially more than one component per entity
 	//if (ColliderSystem::getCollisionInfo(collision)) {
 	//	for (auto component : collision.a->entity->getComponents<Component>())
 	//	{

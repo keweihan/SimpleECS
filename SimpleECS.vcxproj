@@ -179,7 +179,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ColliderCell.cpp" />
-    <ClCompile Include="src\ComponentPool.cpp" />
     <ClCompile Include="src\SoundPlayer.cpp" />
     <ClCompile Include="src\FontRenderer.cpp" />
     <ClCompile Include="src\LineRenderer.cpp" />
