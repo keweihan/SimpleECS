@@ -1,9 +1,11 @@
 #pragma once
+#include "Component.h"
 #include "Color.h"
 #include "ComponentPool.h"
 #include <unordered_set>
 #include <vector>
 #include <memory>
+#include <stdexcept>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -15,7 +17,7 @@ namespace SimpleECS
 {
 	class Entity;
 
-	/**
+	/*
 	* Scene class represents a collection of Entities. A Game instance
 	* can only display one scene at a time.
 	*/
@@ -87,27 +89,21 @@ namespace SimpleECS
 		void destroyAllMarkedEntities();
 
 		/*
-		* Main background render color.
-		*/
-		Color backgroundColor;
-
-		/*
 		* Entities contained by the scene
 		*/
 		std::vector<Entity*> entities;
 
+		/*
+		* Main background render color.
+		*/
+		Color backgroundColor;
+
 	private:
+#pragma region Private_Members
 		/*
 		* Hidden implementation class.
 		*/
 		friend Entity;
-		class SceneImpl;
-		struct SceneImplDeleter
-		{
-			SIMPLEECS_API void operator()(SceneImpl* p);
-		};
-
-		std::unique_ptr<SceneImpl, SceneImplDeleter> pImpl;
 
 		/*
 		* Return id unique to the type of component.
@@ -121,36 +117,69 @@ namespace SimpleECS
 		* Return new id unique to the type of component
 		*/
 		static std::size_t nextComponentID();
+
+		/*
+		* Return the ID of the next entity to be created.
+		*/
+		std::uint32_t nextEntityID();
+
+		/*
+		* Component pool storage getter
+		*/
+		std::vector<std::shared_ptr<ComponentPoolBase>>& getComponentPools();
+
+		/*
+		* Pool of available entity ids. If empty, use max.
+		*/
+		std::unordered_set<uint32_t> availableEntityIds;
+
+		/*
+		* Entities marked for destruction. Cleared at end of every frame to be deleted.
+		*/
+		std::unordered_set<uint32_t> toDestroyEntities;
+
+		/*
+		* Component pool list for scene
+		* Stores components in a contiguous storage for fast iteration.
+		* Access component pool for type T with allComponents[getComponentID<T>()]
+		*/
+		std::vector<std::shared_ptr<ComponentPoolBase>> allComponents;
+
+		/*
+		* The next entity id to be created.
+		*/
+		int maxID = 0;
+#pragma endregion Private_Members
 	};
 
+#pragma region Template_Implementation
 	template<typename T>
 	inline T* Scene::addComponent(uint32_t e)
 	{
-		//// Check if T is of type component
-		//if (!std::is_base_of<Component, T>())
-		//{
-		//	throw std::invalid_argument("Type called for addComponent is not a component.");
-		//}
-	
-		//// Check if component pool exists
-		//if (getComponentID<T>() >= allComponents.size())
-		//{
-		//	// Pool does not exist yet. Create component pool for type first
-		//	allComponents.emplace_back(new T());
-		//}
-	
-		//// Assign component
-		//ComponentPoolBase pool = *allComponents[getComponentID<T>()];
-		//ComponentPool<T> poolConv = static_cast<ComponentPool<T>>(pool);
-		//pool.createComponent(e->id);
-		//return poolConv.getComponent(e.id);
+		// Check if T is of type component
+		if (!std::is_base_of<Component, T>())
+		{
+			throw std::invalid_argument("Type called for addComponent is not a component.");
+		}
+
+		// Check if component pool exists
+		if (getComponentID<T>() >= allComponents.size())
+		{
+			// Pool does not exist yet. Create component pool for type first
+			allComponents.emplace_back(new T());
+		}
+
+		// Assign component
+		ComponentPoolBase pool = *allComponents[getComponentID<T>()];
+		ComponentPool<T> poolConv = static_cast<ComponentPool<T>>(pool);
+		pool.createComponent(e->id);
+		return poolConv.getComponent(e.id);
 	}
 
 	template<typename T>
 	std::vector<T*>& SimpleECS::Scene::getComponents()
 	{
-		//auto pools = pImpl->getComponentPools();
-		//return pools[getComponentID<T>()];
+		return &allComponents[getComponentID<T>()];
 	}
 
 	template<typename T>
@@ -163,7 +192,8 @@ namespace SimpleECS
 	inline std::size_t Scene::getComponentID()
 	{
 		// Call nextComponentID per unique type T
-		static const std::size_t id = pImpl->nextComponentID();
+		static const std::size_t id = nextComponentID();
 		return id;
 	}
+#pragma endregion Template_Implementation
 }
