@@ -5,10 +5,19 @@
 #include <unordered_set>
 #include <iterator>
 #include <stdexcept>
+#include <iostream>
+
+#ifdef SIMPLEECS_EXPORTS
+#define SIMPLEECS_API __declspec(dllexport)
+#else
+#define SIMPLEECS_API __declspec(dllimport)
+#endif
 
 namespace SimpleECS {
-	class ComponentPoolBase {
+	class SIMPLEECS_API ComponentPoolBase {
 	public:
+		virtual ~ComponentPoolBase() {}
+
 		virtual void deleteComponent(uint32_t entityID) = 0;
 		virtual void invokeStart() = 0;
 		virtual void invokeUpdate() = 0;
@@ -17,7 +26,13 @@ namespace SimpleECS {
 	template<typename T>
 	class ComponentPool : public ComponentPoolBase {
 	public:
-		ComponentPool() {};
+		/*
+		TODO:
+		Patch to an issue where components don't implement copy constructor,
+		which leads to indeterministic corruption of the container storing 
+		the components.
+		*/
+		ComponentPool() { componentList.reserve(100); };
 
 		/*
 		* Create component and assign it to the entity entityID.
@@ -102,9 +117,16 @@ namespace SimpleECS {
 		{
 			sparseList.resize(entityID + 1, -1);
 		}
+		else if (sparseList[entityID] != -1)
+		{
+			throw std::logic_error("Entity already has a component of this type.");
+		}
 
-		componentList.push_back(T(std::forward<Args>(args)...));
+		componentList.emplace_back(std::forward<Args>(args)...);
 		sparseList[entityID] = componentList.size() - 1;
+
+		std::cout << "Created component list size: " << componentList.size() << std::endl;
+		
 	}
 
 	template<typename T>
@@ -116,13 +138,28 @@ namespace SimpleECS {
 			throw std::logic_error("Entity does not have component to delete.");
 		}
 
-		// Mark entity as not having this component.
+		// Remove the component from the componentList
+		int index = sparseList[entityID];
+		componentList.erase(componentList.begin() + index);
+
+		// Update the sparseList to reflect the removal
 		sparseList[entityID] = -1;
+		for (uint32_t i = entityID + 1; i < sparseList.size(); ++i)
+		{
+			if (sparseList[i] != -1)
+			{
+				--sparseList[i];
+			}
+		}
 	}
 
 	template<typename T>
 	T* SimpleECS::ComponentPool<T>::getComponent(uint32_t entityID)
 	{
+		if (componentList.size() > 100) {
+			std::cout << "Component list size: " << componentList.size() << std::endl;
+		}
+
 		if (sparseList[entityID] == -1)
 		{
 			return nullptr;
@@ -136,9 +173,17 @@ namespace SimpleECS {
 	template<typename T>
 	void SimpleECS::ComponentPool<T>::invokeStart()
 	{
+		if (componentList.size() > 100) {
+			std::cout << "Component list size: " << componentList.size() << std::endl;
+		}
+
 		for(auto& component : componentList)
 		{
 			component.initialize();
+		}
+
+		if (componentList.size() > 100) {
+			std::cout << "Component list size: " << componentList.size() << std::endl;
 		}
 	}
 

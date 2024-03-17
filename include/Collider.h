@@ -9,6 +9,7 @@
 #include "Component.h"
 #include "Vector.h"
 #include <vector>
+#include <iostream>
 
 namespace SimpleECS
 {
@@ -29,7 +30,7 @@ namespace SimpleECS
 		~Collider();
 
 		void update() override {}
-		void initialize() override {}
+		void initialize() override { std::cout << "wtf" << std::endl; }
 
 		/**
 		 * Returns whether this collider is colliding with another collider

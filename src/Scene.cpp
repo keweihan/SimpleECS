@@ -21,6 +21,13 @@ Entity* Scene::createEntity()
 	return created;
 }
 
+SIMPLEECS_API Entity* SimpleECS::Scene::createEntity(std::string tag)
+{
+	Entity* created = createEntity();
+	created->tag = tag;
+	return created;
+}
+
 bool Scene::destroyEntityImmediate(uint32_t eid)
 {
 	if (eid >= entities.size())

@@ -57,7 +57,7 @@ void Game::mainLoop()
 	}
 
 	// Run initialize of first scene components
-	for (auto pool : sceneList[0]->getComponentPools())
+	for (auto& pool : sceneList[0]->getComponentPools())
 	{
 		(*pool).invokeStart();
 	}

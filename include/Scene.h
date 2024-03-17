@@ -35,6 +35,7 @@ namespace SimpleECS
 		* Otherwise returns true if successfully added.
 		*/
 		SIMPLEECS_API Entity* createEntity();
+		SIMPLEECS_API Entity* createEntity(std::string tag);
 
 		/*
 		* Given an entity contained in this scene
@@ -124,7 +125,7 @@ namespace SimpleECS
 		/*
 		* Component pool storage getter
 		*/
-		std::vector<std::shared_ptr<ComponentPoolBase>>& getComponentPools();
+		SIMPLEECS_API std::vector<std::shared_ptr<ComponentPoolBase>>& getComponentPools();
 
 		/*
 		* Pool of available entity ids. If empty, use max.
@@ -172,6 +173,10 @@ namespace SimpleECS
 
 		// Assign component
 		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[getComponentID<T>()]);
+		if (!poolConv)
+		{
+			throw std::runtime_error("Failed to cast ComponentPoolBase to ComponentPool<T>.");
+		}
 		poolConv->createComponent(eid, std::forward<Args>(args)...);
 
 		T* comp = poolConv->getComponent(eid);
@@ -195,9 +200,28 @@ namespace SimpleECS
 			throw std::invalid_argument("Type called for addComponent is not a component.");
 		}
 
+		// Check that the component ID is within range
+		std::size_t componentId = getComponentID<T>();
+		if (componentId >= allComponents.size())
+		{
+			throw std::out_of_range("Component ID is out of range.");
+		}
+
 		// Cast ComponentPoolBase to concrete ComponentPool
-		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[getComponentID<T>()]);
-		return poolConv->getComponent(e);
+		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[componentId]);
+		if (!poolConv)
+		{
+			throw std::runtime_error("Failed to cast ComponentPoolBase to ComponentPool<T>.");
+		}
+
+		// Get the component and check if it's null
+		T* component = poolConv->getComponent(e);
+		if (!component)
+		{
+			throw std::runtime_error("Entity does not have a component of this type.");
+		}
+
+		return component;
 	}
 
 	template<typename T>
