@@ -199,7 +199,7 @@ namespace SimpleECS {
 	template<typename T>
 	std::vector<T>* SimpleECS::ComponentPool<T>::getComponents()
 	{
-		return componentList;
+		return &componentList;
 	}
 
 }

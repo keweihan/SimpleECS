@@ -55,7 +55,7 @@ namespace SimpleECS
 		* @returns pointer original list of components
 		*/
 		template<typename T>
-		std::vector<T*>& getComponents();
+		std::vector<T>* getComponents();
 
 		/*
 		* Return component of type T attached to entity with id eid.
@@ -184,14 +184,27 @@ namespace SimpleECS
 		comp->setEntity(entities[eid]);
 
 		Handle<T> handle(poolConv, entities[eid]);
-
 		return handle;
 	}
 
 	template<typename T>
-	std::vector<T*>& SimpleECS::Scene::getComponents()
+	std::vector<T>* SimpleECS::Scene::getComponents()
 	{
-		return &allComponents[getComponentID<T>()];
+		// Check that the component ID is within range
+		std::size_t componentId = getComponentID<T>();
+		if (componentId >= allComponents.size())
+		{
+			throw std::out_of_range("Component ID is out of range.");
+		}
+
+		// Cast ComponentPoolBase to concrete ComponentPool
+		ComponentPool<T>* poolConv = dynamic_cast<ComponentPool<T>*>(&*allComponents[componentId]);
+		if (!poolConv)
+		{
+			throw std::runtime_error("Failed to cast ComponentPoolBase to ComponentPool<T>.");
+		}
+
+		return poolConv->getComponents();
 	}
 
 	template<typename T>
