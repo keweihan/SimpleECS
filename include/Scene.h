@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 #include <stdexcept>
+#include <iostream>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -116,11 +117,6 @@ namespace SimpleECS
 		static std::size_t getComponentID();
 
 		/*
-		* Return new id unique to the type of component
-		*/
-		static std::size_t nextComponentID();
-
-		/*
 		* Return the ID of the next entity to be created.
 		*/
 		std::uint32_t nextEntityID();
@@ -151,6 +147,8 @@ namespace SimpleECS
 		* The next entity id to be created.
 		*/
 		int maxID = 0;
+		SIMPLEECS_API static inline std::size_t counter = 0;
+
 #pragma endregion Private_Members
 	};
 
@@ -165,7 +163,8 @@ namespace SimpleECS
 		}
 
 		// Check if component pool exists
-		if (getComponentID<T>() >= allComponents.size())
+		size_t compId = getComponentID<T>();
+		if (compId >= allComponents.size())
 		{
 			// Pool does not exist yet. Create component pool for type first
 			allComponents.emplace_back(std::make_shared<ComponentPool<T>>());
@@ -205,14 +204,9 @@ namespace SimpleECS
 	inline std::size_t Scene::getComponentID()
 	{
 		// Call nextComponentID per unique type T
-		static const std::size_t id = nextComponentID();
+		static const std::size_t id = counter++;
+		std::cout << typeid(T).hash_code()  << " " << id << std::endl;
 		return id;
-	}
-
-	inline std::size_t Scene::nextComponentID()
-	{
-		static std::size_t lastID = 0;
-		return lastID++;
 	}
 #pragma endregion Template_Implementation
 }

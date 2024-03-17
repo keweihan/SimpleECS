@@ -6,7 +6,6 @@
 
 using namespace SimpleECS;
 
-
 Scene::~Scene() = default;
 
 Entity* Scene::createEntity()
@@ -18,7 +17,7 @@ Entity* Scene::createEntity()
 	else {
 		entities[created->id] = created;
 	}
-	
+	created->transform = addComponent<Transform>(created->id);
 	return created;
 }
 
@@ -74,5 +73,7 @@ std::uint32_t Scene::nextEntityID()
 		return id;
 	}
 }
+
+
 
 
