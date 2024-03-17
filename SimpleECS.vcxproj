@@ -159,6 +159,7 @@
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\FontRenderer.h" />
+    <ClInclude Include="include\CHandle.h" />
     <ClInclude Include="include\LineRenderer.h" />
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\SoundPlayer.h" />

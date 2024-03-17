@@ -32,7 +32,7 @@ namespace SimpleECS {
 		which leads to indeterministic corruption of the container storing 
 		the components.
 		*/
-		ComponentPool() { componentList.reserve(100); };
+		ComponentPool() {};
 
 		/*
 		* Create component and assign it to the entity entityID.

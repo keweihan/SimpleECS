@@ -1,6 +1,7 @@
 #pragma once
 #include "Component.h"
 #include "Color.h"
+#include "CHandle.h"
 #include "ComponentPool.h"
 #include <unordered_set>
 #include <vector>
@@ -45,7 +46,7 @@ namespace SimpleECS
 		* @returns Original component attached to entity
 		*/
 		template <typename T, typename... Args>
-		T* addComponent(uint32_t e, Args&&... args);
+		Handle<T> addComponent(uint32_t e, Args&&... args);
 
 		/*
 		* Return list of components of type T.
@@ -63,7 +64,7 @@ namespace SimpleECS
 		* @returns pointer original list of components
 		*/
 		template<typename T>
-		T* getComponent(uint32_t eid);
+		Handle<T> getComponent(uint32_t eid);
 
 		/**
 		* IMMEDIATELY Destroy entity contained by this scene. Proceed with caution, as
@@ -155,7 +156,7 @@ namespace SimpleECS
 
 #pragma region Template_Implementation
 	template <typename T, typename... Args>
-	inline T* Scene::addComponent(uint32_t eid, Args&&... args)
+	inline Handle<T> Scene::addComponent(uint32_t eid, Args&&... args)
 	{
 		// Check if T is of type component
 		if (!std::is_base_of<Component, T>::value)
@@ -182,7 +183,9 @@ namespace SimpleECS
 		T* comp = poolConv->getComponent(eid);
 		comp->setEntity(entities[eid]);
 
-		return comp;
+		Handle<T> handle(poolConv, entities[eid]);
+
+		return handle;
 	}
 
 	template<typename T>
@@ -192,7 +195,7 @@ namespace SimpleECS
 	}
 
 	template<typename T>
-	inline T* Scene::getComponent(uint32_t e)
+	inline Handle<T> Scene::getComponent(uint32_t e)
 	{
 		// Check if T is of type component
 		if (!std::is_base_of<Component, T>::value)
@@ -221,7 +224,7 @@ namespace SimpleECS
 			throw std::runtime_error("Entity does not have a component of this type.");
 		}
 
-		return component;
+		return Handle<T>(poolConv, entities[e]);
 	}
 
 	template<typename T>

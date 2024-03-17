@@ -1,5 +1,6 @@
 #pragma once
 
+#include "CHandle.h"
 #include "Scene.h"
 #include "Transform.h"
 #include <vector>
@@ -46,7 +47,7 @@ namespace SimpleECS
 		* Entity position in world space.
 		* TODO: redo...
 		*/
-		Transform* transform = nullptr;
+		Handle<Transform> transform;
 
 		/**
 		* Add a component to this entity of type T
@@ -54,7 +55,7 @@ namespace SimpleECS
 		* @returns Component* added to entity.
 		*/
 		template <typename T, typename... Args>
-		T* addComponent(Args&&... args);
+		Handle<T> addComponent(Args&&... args);
 
 		/**
 		* Retrieve a component attached to entity of type T.
@@ -64,17 +65,17 @@ namespace SimpleECS
 		* 
 		*/
 		template <typename T>
-		T* getComponent();
+		Handle<T> getComponent();
 	};
 
 	template <typename T, typename... Args>
-	inline T* Entity::addComponent(Args&&... args)
+	inline Handle<T> Entity::addComponent(Args&&... args)
 	{
 		return scene->addComponent<T>(id, std::forward<Args>(args)...);
 	}
 
 	template<typename T>
-	inline T* Entity::getComponent()
+	inline Handle<T> Entity::getComponent()
 	{
 		return scene->getComponent<T>(id);
 	}
