@@ -36,6 +36,6 @@ namespace SimpleECS
 		void SIMPLEECS_API update() override;
 	private:
 		class FontRendererImpl;
-		std::unique_ptr<FontRendererImpl> pImpl;
+		FontRendererImpl* pImpl;
 	};
 }

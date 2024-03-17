@@ -77,7 +77,7 @@ SimpleECS::FontRenderer::FontRenderer(std::string text, std::string pathToFont, 
     this->size = size;
     this->color = color;
 
-    pImpl = std::make_unique<FontRendererImpl>();
+    pImpl = new FontRendererImpl();
 }
 
 Vector SimpleECS::FontRenderer::getSize()
