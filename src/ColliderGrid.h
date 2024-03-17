@@ -79,6 +79,6 @@ namespace SimpleECS
 		std::vector<ColliderCell> grid;
 
 		// list of all active colliders
-		std::unordered_set<Collider*> colliderList;
+		std::vector<Collider*> colliderList;
 	};
 }

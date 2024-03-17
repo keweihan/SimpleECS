@@ -66,6 +66,8 @@ namespace SimpleECS
 		*/
 		template <typename T>
 		Handle<T> getComponent();
+
+		std::vector<Component*> getComponents();
 	};
 
 	template <typename T, typename... Args>

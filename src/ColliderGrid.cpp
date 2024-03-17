@@ -26,7 +26,7 @@ void SimpleECS::ColliderGrid::populateGrid()
 
 void SimpleECS::ColliderGrid::registerCollider(Collider* collider)
 {
-	colliderList.insert(collider);
+	colliderList.push_back(collider);
 }
 
 constexpr const int& clamp(const int& v, const int& lo, const int& hi)
@@ -76,9 +76,13 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
 {
 	// Remove from general list
-	if (colliderList.find(collider) != colliderList.end())
+	for (auto it = colliderList.begin(); it != colliderList.end();)
 	{
-		colliderList.erase(collider);
+		if (*it == collider)
+		{
+			colliderList.erase(it);
+			break;
+		}
 	}
 
 	// Search grid for references to collider and delete

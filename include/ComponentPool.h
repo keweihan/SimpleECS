@@ -6,6 +6,7 @@
 #include <iterator>
 #include <stdexcept>
 #include <iostream>
+#include <vector>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -17,7 +18,7 @@ namespace SimpleECS {
 	class SIMPLEECS_API ComponentPoolBase {
 	public:
 		virtual ~ComponentPoolBase() {}
-
+		virtual Component* getComponentRaw(uint32_t entityID) = 0; // note: Component* are not stable.
 		virtual void deleteComponent(uint32_t entityID) = 0;
 		virtual void invokeStart() = 0;
 		virtual void invokeUpdate() = 0;
@@ -27,12 +28,15 @@ namespace SimpleECS {
 	class ComponentPool : public ComponentPoolBase {
 	public:
 		/*
-		TODO:
+		TODO (OLD):
 		Patch to an issue where components don't implement copy constructor,
 		which leads to indeterministic corruption of the container storing 
 		the components.
+
+		TODO (NEW):
+		Patch to issue of collider system still using old pointers instead of handler.
 		*/
-		ComponentPool() {};
+		ComponentPool() { componentList.reserve(16000); };
 
 		/*
 		* Create component and assign it to the entity entityID.
@@ -46,6 +50,8 @@ namespace SimpleECS {
 		void deleteComponent(uint32_t entityID);
 
 		T* getComponent(uint32_t entityID);
+
+		Component* getComponentRaw(uint32_t entityID) override;
 
 		void invokeStart();
 
@@ -125,7 +131,7 @@ namespace SimpleECS {
 		componentList.emplace_back(std::forward<Args>(args)...);
 		sparseList[entityID] = componentList.size() - 1;
 
-		std::cout << "Created component list size: " << componentList.size() << std::endl;
+		//std::cout << "Created component list size: " << componentList.size() << std::endl;
 		
 	}
 
@@ -157,7 +163,7 @@ namespace SimpleECS {
 	T* SimpleECS::ComponentPool<T>::getComponent(uint32_t entityID)
 	{
 		if (componentList.size() > 100) {
-			std::cout << "Component list size: " << componentList.size() << std::endl;
+			// std::cout << "Component list size: " << componentList.size() << std::endl;
 		}
 
 		if (sparseList[entityID] == -1)
@@ -202,4 +208,9 @@ namespace SimpleECS {
 		return &componentList;
 	}
 
+	template<typename T>
+	inline Component* ComponentPool<T>::getComponentRaw(uint32_t entityID)
+	{
+		return getComponent(entityID);
+	}
 }

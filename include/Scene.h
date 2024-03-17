@@ -8,6 +8,8 @@
 #include <memory>
 #include <stdexcept>
 #include <iostream>
+#include <string>
+#include <unordered_map>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -150,6 +152,7 @@ namespace SimpleECS
 		*/
 		int maxID = 0;
 		SIMPLEECS_API static inline std::size_t counter = 0;
+		SIMPLEECS_API static inline std::unordered_map<size_t, size_t> componentMap;
 
 #pragma endregion Private_Members
 	};
@@ -194,7 +197,7 @@ namespace SimpleECS
 		std::size_t componentId = getComponentID<T>();
 		if (componentId >= allComponents.size())
 		{
-			throw std::out_of_range("Component ID is out of range.");
+			throw std::out_of_range("Component ID " + std::to_string(componentId) + " is out of range.");
 		}
 
 		// Cast ComponentPoolBase to concrete ComponentPool
@@ -216,6 +219,7 @@ namespace SimpleECS
 			throw std::invalid_argument("Type called for addComponent is not a component.");
 		}
 
+		T* test = nullptr;	
 		// Check that the component ID is within range
 		std::size_t componentId = getComponentID<T>();
 		if (componentId >= allComponents.size())
@@ -244,9 +248,24 @@ namespace SimpleECS
 	inline std::size_t Scene::getComponentID()
 	{
 		// Call nextComponentID per unique type T
-		static const std::size_t id = counter++;
-		std::cout << typeid(T).hash_code()  << " " << id << std::endl;
-		return id;
+		//static const std::size_t id = counter++;
+		//std::cout << typeid(T).hash_code()  << " " << id << std::endl;
+		
+		size_t typeHash = typeid(T).hash_code();
+		if (componentMap.find(typeHash) == componentMap.end())
+		{
+			componentMap[typeHash] = componentMap.size();
+		}
+		return componentMap[typeHash];
+
+		//componentMap[typeid(T).hash_code()] = id;
+
+		if (typeid(T).hash_code() == 8718018987967033793)
+		{
+			std::cout << "boxcollider" << std::endl;
+		}
+
+		//return id;
 	}
 #pragma endregion Template_Implementation
 }
