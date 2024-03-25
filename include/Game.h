@@ -57,7 +57,7 @@ namespace SimpleECS
 		/**
 		 * Sets name of window associated with this game.
 		 */
-		Scene* SIMPLEECS_API getCurrentScene();
+		SIMPLEECS_API Scene* getCurrentScene();
 
 	private:
 
