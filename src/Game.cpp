@@ -12,7 +12,9 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
-Scene* SIMPLEECS_API SimpleECS::Game::getCurrentScene()
+
+
+Scene* Game::getCurrentScene()
 {
 	return sceneList[activeSceneIndex];
 }
@@ -91,7 +93,7 @@ void Game::mainLoop()
 		}
 
 		// Run collision functions
-		ColliderSystem::invokeCollisions();
+		ColliderSystem::getInstance().invokeCollisions();
 
 		// Delete objects
 		sceneList[0]->destroyAllMarkedEntities();

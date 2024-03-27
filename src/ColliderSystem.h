@@ -15,26 +15,32 @@ namespace SimpleECS
 	{
 	public:
 		/*
-		* Constants for grid size
-		*/
-		static const int CELL_HEIGHT = 5;
-		static const int CELL_WIDTH = 5;
+		TODO: Refactor plan
+		- Give Collidergrid "configure(BoxCollider... CircleCollider ...)" function
+			- Replace single std::vector<Collider*> colliderList; with multiple lists of...
+			- vector<BoxCollide>*, vector<SphereCollide>* etc.
 
-		/*
-		* Register to list of colliders to check collisions for
+		- Remove register/deregister collider functions
+		- Replace with initialize system function to be called at start of Game
+			- Collidergrid constructor or in this initializer should obtain references to said lists. 
+		
 		*/
-		static void registerCollider(Collider* collider);
+		static ColliderSystem& getInstance()
+		{
+			static ColliderSystem instance; // Guaranteed to be destroyed.
+			// Instantiated on first use.
+			return instance;
+		}
 
-		/*
-		* Deregister from list of colliders to check collisions for
-		*/
-		static void deregisterCollider(Collider* collider);
+		// Delete these methods to ensure that copies of the singleton can't be made.
+		ColliderSystem(ColliderSystem const&) = delete;
+		void operator=(ColliderSystem const&) = delete;
 		
 		/*
 		* Checks for collisions between all active colliders and invoke
 		* collided entities "onCollision" methods.
 		*/
-		static void invokeCollisions();
+		void invokeCollisions();
 
 		/**
 		 * Retrieves collision information between this and another collider.
@@ -45,22 +51,24 @@ namespace SimpleECS
 		 * 
 		 * @returns false if no collision is present, true otherwise
 		 */
-		static bool getCollisionInfo(Collision& collide);
+		bool getCollisionInfo(Collision& collide);
 
 	private:
+		ColliderSystem() : colliderGrid(ColliderGrid(5, 5)) {}
+
 		/*
 		* Maintains list of all active colliders in scene. 
 		*/
-		static std::vector<Collider*> colliderList;
 
 		/*
 		*
  		*/
-		static ColliderGrid colliderGrid;
+		ColliderGrid colliderGrid;
+
 
 		/*
 		* If collide contains two AABB box containers. Populate with collision data
 		*/
-		static bool getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b);
+		bool getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b);
 	};
 }

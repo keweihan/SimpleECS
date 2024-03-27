@@ -1,4 +1,5 @@
 #pragma once
+#include "BoxCollider.h"
 #include "Collider.h"
 #include "ColliderCell.h"
 #include <vector>
@@ -15,16 +16,6 @@ namespace SimpleECS
 		* Construct grid with given cell dimensions
 		*/
 		ColliderGrid(const int w, const int h);
-
-		/*
-		* Add a collider to this grid
-		*/
-		void registerCollider(Collider*);
-
-		/*
-		* Remove a collider from this grid
-		*/
-		void removeCollider(Collider*);
 
 		/*
 		* Update collider grid positions
@@ -79,6 +70,10 @@ namespace SimpleECS
 		std::vector<ColliderCell> grid;
 
 		// list of all active colliders
-		std::vector<Collider*> colliderList;
+		//std::vector<Collider*> colliderList;
+
+		// 
+		// ference to boxCollider pool
+		std::vector<BoxCollider>* boxPool;
 	};
 }

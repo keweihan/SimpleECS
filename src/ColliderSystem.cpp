@@ -13,33 +13,6 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
-std::vector<Collider*> ColliderSystem::colliderList;
-ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
-
-void ColliderSystem::registerCollider(Collider* collider)
-{
-	colliderList.push_back(collider);
-	colliderGrid.registerCollider(collider);
-}
-
-void ColliderSystem::deregisterCollider(Collider* collider)
-{
-	// Find and remove registered instances of this collider
-	for (auto iter = colliderList.begin(); iter != colliderList.end();)
-	{
-		if (*iter == collider)
-		{
-			iter = colliderList.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-
-	colliderGrid.removeCollider(collider);
-}
-
 //------------------- Collision invocation ---------------------//
 
 template<typename T1, typename T2>
@@ -57,8 +30,8 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 	collision.a = a;
 	collision.b = b;
 
-	// Old code - assumes potentially more than one component per entity
-	if (ColliderSystem::getCollisionInfo(collision)) {
+	// TODO: Old code? - maybe assumes potentially more than one component per entity
+	if (ColliderSystem::getInstance().getCollisionInfo(collision)) {
 		for (auto component : collision.a->entity->getComponents())
 		{
 			component->onCollide(*collision.b);

@@ -24,7 +24,7 @@ namespace SimpleECS
 		/**
 		 * Singleton
 		 */
-		static Game& getInstance() {
+		static SIMPLEECS_API Game& getInstance() {
 			static Game instance;  
 			return instance;
 		}

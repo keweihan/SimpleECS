@@ -36,7 +36,7 @@ namespace SimpleECS {
 		TODO (NEW):
 		Patch to issue of collider system still using old pointers instead of handler.
 		*/
-		ComponentPool() { componentList.reserve(16000); };
+		ComponentPool() {};
 
 		/*
 		* Create component and assign it to the entity entityID.

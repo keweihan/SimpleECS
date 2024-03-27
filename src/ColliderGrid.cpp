@@ -1,5 +1,7 @@
+#include "Game.h"
 #include "ColliderGrid.h"
 #include "GameRenderer.h"
+#include "Entity.h"
 #include <vector>
 
 using namespace SimpleECS;
@@ -14,19 +16,15 @@ ColliderGrid::ColliderGrid(const int w, const int h)
 	numColumn = static_cast<int>(ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth));
 
 	grid.resize(numRow * numColumn + 1); // Last index represents out of bounds cell
+	boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
 {
-	for (auto collide : colliderList)
+	for (auto& collide : *boxPool)
 	{
-		insertToGrid(collide);
+		insertToGrid(&collide);
 	}
-}
-
-void SimpleECS::ColliderGrid::registerCollider(Collider* collider)
-{
-	colliderList.push_back(collider);
 }
 
 constexpr const int& clamp(const int& v, const int& lo, const int& hi)
@@ -70,29 +68,6 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 		|| rowTop != rowTopClamped || rowBottom != rowBotClamped)
 	{
 		grid.back().insert(collider);
-	}
-}
-
-void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
-{
-	// Remove from general list
-	for (auto it = colliderList.begin(); it != colliderList.end();)
-	{
-		if (*it == collider)
-		{
-			colliderList.erase(it);
-			break;
-		}
-	}
-
-	// Search grid for references to collider and delete
-	for (int i = 0; i < grid.size(); ++i)
-	{
-		auto find = grid[i].find(collider);
-		if (find != grid[i].end())
-		{
-			grid[i].erase(find);
-		}
 	}
 }
 
