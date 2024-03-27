@@ -21,17 +21,21 @@ namespace SimpleECS
 	*/
 	class Entity {
 	private:		
-
+		
 		/**
 		* Pointer to scene containing this entity.
 		*/
 		Scene* scene;
 
-	public:
-		// TODO: make private
+		/**
+		* Constructs entity with respect to a scene. See Scene::createEntity() for
+		* user creation of entity object.
+		*/
+		friend Scene;
 		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
 		SIMPLEECS_API ~Entity();
-
+	
+	public:
 		/**
 		* Internal identifier for this entity. Instantiated on construction.
 		* TODO make private

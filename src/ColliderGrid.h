@@ -25,12 +25,12 @@ namespace SimpleECS
 		/*
 		* Get number of cells
 		*/
-		int size() const;
+		size_t size() const;
 
 		/*
 		* Get the number of colliders in a given cell
 		*/
-		int cellSize(int index);
+		int cellSize(const int index);
 
 		/*
 		* Get the colliders populating a given cell. Input grid.size() - 1 to get out of bounds.
@@ -45,7 +45,7 @@ namespace SimpleECS
 		/*
 		* Get the bounds of a given cell
 		*/
-		void getCellBounds(Collider::AABB& output, const int& index);
+		void getCellBounds(Collider::AABB& output, const int index);
 
 	private:
 		/*
@@ -69,11 +69,13 @@ namespace SimpleECS
 		*/
 		std::vector<ColliderCell> grid;
 
-		// list of all active colliders
-		//std::vector<Collider*> colliderList;
-
-		// 
-		// ference to boxCollider pool
+		/*
+		* Reference to underlying vector storage of BoxCollider's component pool.
+		* Stores original BoxCollider components.
+		*/
 		std::vector<BoxCollider>* boxPool;
+
+		// LEGACY: list of all active colliders
+		//std::vector<Collider*> colliderList;
 	};
 }

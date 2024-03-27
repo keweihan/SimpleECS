@@ -15,105 +15,109 @@
 #endif
 
 namespace SimpleECS {
+	/*
+	* Typeless base class representing component pools.
+	*/
 	class SIMPLEECS_API ComponentPoolBase {
 	public:
 		virtual ~ComponentPoolBase() {}
+
+		/*
+		* Return raw, UNSTABLE pointer to component owned by entityID, if it exists.
+		* WARNING: pointer is NOT guaranteed to stay valid. createComponent
+		* can invalidate this pointer.
+		*
+		* @return
+		* raw pointer to component owned by entity id.
+		* nullptr if entityID does not have component.
+		*/
 		virtual Component* getComponentRaw(uint32_t entityID) = 0; // note: Component* are not stable.
+		
+		/*
+		* Delete component from entityID if it has component.
+		* No error or behavior if entity does not have component.
+		*/
 		virtual void deleteComponent(uint32_t entityID) = 0;
+		
+		/*
+		* Invoke start() of all components in pool.
+		*/
 		virtual void invokeStart() = 0;
+
+		/*
+		* Invoke update() of all components in pool.
+		*/
 		virtual void invokeUpdate() = 0;
 	};
 
+	/*
+	* Contiguous storage container for components of type T.
+	*/
 	template<typename T>
 	class ComponentPool : public ComponentPoolBase {
 	public:
-		/*
-		TODO (OLD):
-		Patch to an issue where components don't implement copy constructor,
-		which leads to indeterministic corruption of the container storing 
-		the components.
-
-		TODO (NEW):
-		Patch to issue of collider system still using old pointers instead of handler.
-		*/
 		ComponentPool() {};
 
 		/*
-		* Create component and assign it to the entity entityID.
+		* Create component of class type and assign it to the entity entityID.
 		* @throws If entity already has component
 		*/
 		template <typename... Args>
 		void createComponent(uint32_t entityID, Args&&... args);
 
-		// check if has component
-		// remove from sparseList and componentList
+		/*
+		* Delete component from entityID if it has component.
+		* No error or behavior if entity does not have component. 
+		*/
 		void deleteComponent(uint32_t entityID);
 
+		/*
+		* Return raw pointer to component owned by entityID, if it exists.
+		* WARNING: pointer is NOT guaranteed to stay valid. createComponent
+		* can invalidate this pointer.
+		* 
+		* @return 
+		* raw pointer to component owned by entity id.
+		* nullptr if entityID does not have component.
+		*/
 		T* getComponent(uint32_t entityID);
 
+		/*
+		* Override of base method. 
+		*/
 		Component* getComponentRaw(uint32_t entityID) override;
 
+		/*
+		* Invoke start() of all components in pool.
+		*/
 		void invokeStart();
 
+		/*
+		* Invoke update() of all components in pool.
+		*/
 		void invokeUpdate();
 
 		/*
 		Get list of components of this pool
 		*/
 		std::vector<T>* getComponents();
-
-		// i.e. [ -1, 0, 2, 1]. where -1 at index 0 means entity 0
-		// does NOT have a component of this type T. The 1 at index 3 means
-		// entity 1 has a component of this type T stored in the dense list of componentList at index 1.
-		// Note: Entity can only have one of each component type. 
+		
+		/*
+		* Sparse storage of indices. Index represents entityId and value the index of component
+		* in componentList tha that belongs to entityId.
+		* 
+		* Value -1 at index 0 indicates entity 0 does not have component of this type.
+		* Value 3 at index 2 indicates entity 2 has component of this type stored at componentList[3].
+		* 
+		* Note: Entity can only have one of each component type. 
+		*/
 		std::vector<int> sparseList; 
 
-		// Dense list
+		/*
+		* Dense storage of components owned by entities.
+		*/ 
 		std::vector<T> componentList;
 	};
-	
-	// Planning/skeleton code
-
-	// Entity.Only exists with relation to a scene.
-	//class Entity {
-	//public:
-	//	uint32_t id;
-
-	//	Entity() {
-
-	//	}
-
-	//	template<typename T>
-	//	void addComponent() {
-	//		// Game.currActiveScene->allComponents.insert(ComponentPool<T>());
-	//	}
-
-	//	template<typename T>
-	//	T getComponent() {
-
-	//	}
-	//};
-
-	// Scene AKA EntityManager/container
-	//class Scene {
-	//	Entity CreateEntity() {};
-
-	//	// Retrieve list for a specific pool (i.e. collider...)
-	//	template<typename T>
-	//	ComponentPool<T>& getPool() {};
-
-	//private:
-	//	// SCENE:
-	//	
-	//	std::vector<std::unique_ptr<ComponentPoolBase>> allComponents;
-
-	//	// pool of available ids
-	//	static std::unordered_set<int> availableIds;
-
-	//	// id to set to new entity if it were instantiated and no availableIds exist. 
-	//	// Incremented after this occurs. 
-	//	static int maxID;
-	//};
 
 	template<typename T>
 	template <typename... Args>
@@ -129,7 +133,7 @@ namespace SimpleECS {
 		}
 
 		componentList.emplace_back(std::forward<Args>(args)...);
-		sparseList[entityID] = componentList.size() - 1;
+		sparseList[entityID] = static_cast<int>(componentList.size() - 1);
 
 		//std::cout << "Created component list size: " << componentList.size() << std::endl;
 		
@@ -139,34 +143,27 @@ namespace SimpleECS {
 	void SimpleECS::ComponentPool<T>::deleteComponent(uint32_t entityID)
 	{
 		// Check if entity has this component
-		if (sparseList[entityID] == -1)
+		if (entityID >= sparseList.size() || sparseList[entityID] == -1)
 		{
-			throw std::logic_error("Entity does not have component to delete.");
+			return;
+			//throw std::logic_error("Entity does not have component to delete.");
 		}
 
 		// Remove the component from the componentList
 		int index = sparseList[entityID];
-		componentList.erase(componentList.begin() + index);
-
+		componentList[index] = componentList.back();
+		componentList.pop_back();
+		
 		// Update the sparseList to reflect the removal
+		int ent = componentList[index].entity->id;
+		sparseList[ent] = index;
 		sparseList[entityID] = -1;
-		for (uint32_t i = entityID + 1; i < sparseList.size(); ++i)
-		{
-			if (sparseList[i] != -1)
-			{
-				--sparseList[i];
-			}
-		}
 	}
 
 	template<typename T>
 	T* SimpleECS::ComponentPool<T>::getComponent(uint32_t entityID)
 	{
-		if (componentList.size() > 100) {
-			// std::cout << "Component list size: " << componentList.size() << std::endl;
-		}
-
-		if (sparseList[entityID] == -1)
+		if (entityID >= sparseList.size() || sparseList[entityID] == -1)
 		{
 			return nullptr;
 		}
@@ -179,17 +176,9 @@ namespace SimpleECS {
 	template<typename T>
 	void SimpleECS::ComponentPool<T>::invokeStart()
 	{
-		if (componentList.size() > 100) {
-			std::cout << "Component list size: " << componentList.size() << std::endl;
-		}
-
 		for(auto& component : componentList)
 		{
 			component.initialize();
-		}
-
-		if (componentList.size() > 100) {
-			std::cout << "Component list size: " << componentList.size() << std::endl;
 		}
 	}
 

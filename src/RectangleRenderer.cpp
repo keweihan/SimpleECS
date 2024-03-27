@@ -20,8 +20,8 @@ void RectangleRenderer::update()
     auto screenCoord = TransformUtil::worldToScreenSpace(entity->transform->position.x, entity->transform->position.y);
 
     // Rectangle renders from top left corner. Center.
-    int xPos = screenCoord.x - width/2;
-    int yPos = screenCoord.y - height/2;
+    int xPos = static_cast<int>(screenCoord.x - width/2);
+    int yPos = static_cast<int>(screenCoord.y - height/2);
 
     SDL_Rect fillRect = { xPos, yPos, width, height };
     SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, renderColor.a);

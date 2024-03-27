@@ -9,12 +9,10 @@
 
 namespace SimpleECS 
 {
-	// Forward declarations
 	class Entity;
 	class Collider;
 	class Collision;
 
-	// Component class
 	class SIMPLEECS_API Component {
 		friend class Entity;
 

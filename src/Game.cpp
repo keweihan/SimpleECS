@@ -87,7 +87,7 @@ void Game::mainLoop()
 		SDL_RenderClear(GameRenderer::renderer);
 
 		// Run update of first scene functions
-		for (auto pool : sceneList[0]->getComponentPools())
+		for (auto& pool : sceneList[0]->getComponentPools())
 		{
 			(*pool).invokeUpdate();
 		}

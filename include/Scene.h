@@ -23,7 +23,7 @@ namespace SimpleECS
 	class Game;
 
 	/*
-	* Scene class represents a collection of Entities. A Game instance
+	* Scene class represents a collection of Entities and components. A Game instance
 	* can only display one scene at a time.
 	*/
 	class Scene {
@@ -106,9 +106,6 @@ namespace SimpleECS
 
 	private:
 #pragma region Private_Members
-		/*
-		* Hidden implementation class.
-		*/
 		friend Entity;
 		friend Game;
 
@@ -247,25 +244,12 @@ namespace SimpleECS
 	template<typename T>
 	inline std::size_t Scene::getComponentID()
 	{
-		// Call nextComponentID per unique type T
-		//static const std::size_t id = counter++;
-		//std::cout << typeid(T).hash_code()  << " " << id << std::endl;
-		
 		size_t typeHash = typeid(T).hash_code();
 		if (componentMap.find(typeHash) == componentMap.end())
 		{
 			componentMap[typeHash] = componentMap.size();
 		}
 		return componentMap[typeHash];
-
-		//componentMap[typeid(T).hash_code()] = id;
-
-		if (typeid(T).hash_code() == 8718018987967033793)
-		{
-			std::cout << "boxcollider" << std::endl;
-		}
-
-		//return id;
 	}
 #pragma endregion Template_Implementation
 }

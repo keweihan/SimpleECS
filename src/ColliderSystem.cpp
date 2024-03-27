@@ -30,7 +30,7 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 	collision.a = a;
 	collision.b = b;
 
-	// TODO: Old code? - maybe assumes potentially more than one component per entity
+	// TODO: getComponents is an expensive operation. 
 	if (ColliderSystem::getInstance().getCollisionInfo(collision)) {
 		for (auto component : collision.a->entity->getComponents())
 		{
@@ -75,12 +75,12 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollid
 {
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 
-	Transform aTransform = *(collide.a->entity->transform);
-	Transform bTransform = *(collide.b->entity->transform);
+	Transform& aTransform = *(collide.a->entity->transform);
+	Transform& bTransform = *(collide.b->entity->transform);
 
 	// TODO: dynamic casts are expensive. Figure out a better way.
-	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
-	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
+	BoxCollider* aBox = static_cast<BoxCollider*>(collide.a);
+	BoxCollider* bBox = static_cast<BoxCollider*>(collide.b);
 
 	if (bBox != nullptr && aBox != nullptr)
 	{

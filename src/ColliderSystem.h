@@ -7,9 +7,6 @@
 
 namespace SimpleECS
 {
-	// TODO: Class containing only static classes can be considered bad practice.
-	// Consider alternatives.
-
 	// Library only class for resolving collider logic
 	class ColliderSystem
 	{
@@ -54,7 +51,7 @@ namespace SimpleECS
 		bool getCollisionInfo(Collision& collide);
 
 	private:
-		ColliderSystem() : colliderGrid(ColliderGrid(5, 5)) {}
+		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {}
 
 		/*
 		* Maintains list of all active colliders in scene. 

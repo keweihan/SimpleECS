@@ -101,12 +101,12 @@ void SimpleECS::ColliderGrid::updateGrid()
 	populateGrid();
 }
 
-int SimpleECS::ColliderGrid::size() const
+size_t SimpleECS::ColliderGrid::size() const
 {
 	return grid.size();
 }
 
-int SimpleECS::ColliderGrid::cellSize(int index)
+int SimpleECS::ColliderGrid::cellSize(const int index)
 {
 	return 0;
 }
@@ -118,10 +118,10 @@ const ColliderCell* ColliderGrid::getCellContents(const int index) const
 
 const ColliderCell* ColliderGrid::getOutBoundContent() const
 {
-	return getCellContents(size() - 1);
+	return getCellContents(static_cast<int>(size() - 1));
 }
 
-void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)
+void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int index)
 {
 	// index = row * numColumn + c
 	int column = index % numColumn;
