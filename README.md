@@ -28,6 +28,10 @@ This framework was made for personal use.
 https://github.com/keweihan/SimpleECS/assets/55893673/2c8724b5-a8c4-4367-8d7e-cfb05d333f5f
 
 
+[Simulating 13k+ collision agents at 60fps](https://github.com/keweihan/Pong) using SimpleECS:
+https://github.com/keweihan/SimpleECS/assets/55893673/24fa9c14-4bb8-4ea1-889f-69957d70c8d0
+
+
 _More to come_
 
 ## References
