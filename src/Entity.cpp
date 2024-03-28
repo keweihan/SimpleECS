@@ -1,5 +1,6 @@
+#pragma once
+#include "Scene.h"
 #include "Entity.h"
-#include "Component.h"
 #include <vector>
 
 using namespace SimpleECS;
@@ -7,19 +8,17 @@ using namespace SimpleECS;
 SimpleECS::Entity::~Entity()
 {
 	// Free all components attached to entity
-	for (auto component : components)
+	//scene->destroyEntity(*this);
+}
+
+std::vector<Component*> SimpleECS::Entity::getComponents()
+{
+	std::vector<Component*> components;
+	for (auto& pool : scene->getComponentPools())
 	{
-		delete component;
+		Component* c = pool->getComponentRaw(id);
+		if(c != nullptr)
+			components.push_back(c);
 	}
-}
-
-void Entity::addComponent(Component* component)
-{
-	component->setEntity(this);
-	components.push_back(component);
-}
-
-std::vector<Component*>& Entity::getComponents()
-{
 	return components;
 }

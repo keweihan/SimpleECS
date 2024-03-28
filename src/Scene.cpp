@@ -1,55 +1,86 @@
-#include "Scene.h"
-#include "Game.h"
-#include "Scene.h"
-#include "GameRenderer.h"
+#pragma once
 #include "Entity.h"
+#include "Scene.h"
+#include "Component.h"
+#include <stdexcept>
 
 using namespace SimpleECS;
 
-bool Scene::AddEntity(Entity* entity)
-{
-	// Scene cannot contain two instances of the same entity
-	if (entities.find(entity) == entities.end())
-	{
-		entities.insert(entity);
-		return true;
-	}
+Scene::~Scene() = default;
 
-	return false;
+Entity* Scene::createEntity()
+{
+	Entity* created = new Entity(nextEntityID(), this);
+	if (created->id >= entities.size()) {
+		entities.push_back(created);
+	}
+	else {
+		entities[created->id] = created;
+	}
+	created->transform = addComponent<Transform>(created->id);
+	return created;
 }
 
-bool Scene::DestroyEntityImmediate(Entity* entityToDelete)
+SIMPLEECS_API Entity* SimpleECS::Scene::createEntity(std::string tag)
 {
-	// Scene can only delete an entity it contains
-	if (entities.find(entityToDelete) != entities.end())
-	{
-		entities.erase(entityToDelete);
-		delete entityToDelete;
-
-		return true;
-	}
-
-	return false;
+	Entity* created = createEntity();
+	created->tag = tag;
+	return created;
 }
 
-bool SIMPLEECS_API SimpleECS::Scene::DestroyEntity(Entity* entityToDelete)
+bool Scene::destroyEntityImmediate(uint32_t eid)
 {
-	// Scene can only delete an entity it contains
-	if (entities.find(entityToDelete) != entities.end())
+	if (eid >= entities.size())
 	{
-		entities.erase(entityToDelete);
-		toDestroyEntities.insert(entityToDelete);
-
-		return true;
+		return false;
 	}
-	return false;
+
+	// Delete components
+	for (auto& pool : allComponents)
+	{
+		(*pool).deleteComponent(eid);
+	}
+
+	// Release id back into pool.
+	availableEntityIds.insert(eid);
+	entities[eid] = nullptr;
+
+	return true;
 }
 
-void SimpleECS::Scene::DestroyAllMarkedEntities()
+bool Scene::destroyEntity(uint32_t eid)
 {
-	for (auto it = toDestroyEntities.begin(); it != toDestroyEntities.end();)
+	return toDestroyEntities.insert(eid).second;
+}
+
+void Scene::destroyAllMarkedEntities()
+{
+	for (auto iter = toDestroyEntities.begin(); iter != toDestroyEntities.end();)
 	{
-		delete (*it);
-		it = toDestroyEntities.erase(it);
+		destroyEntityImmediate(*iter);
+		iter = toDestroyEntities.erase(iter);
 	}
 }
+
+std::vector<std::shared_ptr<ComponentPoolBase>>& Scene::getComponentPools()
+{
+	return allComponents;
+}
+
+std::uint32_t Scene::nextEntityID()
+{
+	if (availableEntityIds.empty())
+	{
+		return maxID++;
+	}
+	else
+	{
+		uint32_t id = *availableEntityIds.begin();
+		availableEntityIds.erase(availableEntityIds.begin());
+		return id;
+	}
+}
+
+
+
+

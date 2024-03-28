@@ -21,7 +21,8 @@ namespace SimpleECS
 	{
 	public:
 		SIMPLEECS_API FontRenderer(std::string text, std::string pathToFont, uint16_t size = 16, Color color = Color());
-		
+		//SIMPLEECS_API ~FontRenderer() { delete pImpl; }
+
 		Color color		= Color(0,0,0,1);
 		uint16_t size	= 24;
 		std::string text = "FontRenderer Default Text";
@@ -36,6 +37,6 @@ namespace SimpleECS
 		void SIMPLEECS_API update() override;
 	private:
 		class FontRendererImpl;
-		std::unique_ptr<FontRendererImpl> pImpl;
+		FontRendererImpl* pImpl;
 	};
 }

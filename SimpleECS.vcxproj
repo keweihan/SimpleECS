@@ -42,15 +42,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -126,6 +126,7 @@
       <PreprocessorDefinitions>SIMPLEECS_EXPORTS;_TESTING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -143,6 +144,7 @@
       <PreprocessorDefinitions>NDEBUG;_LIB;SIMPLEECS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -157,6 +159,7 @@
     <ClInclude Include="include\Collider.h" />
     <ClInclude Include="include\Color.h" />
     <ClInclude Include="include\FontRenderer.h" />
+    <ClInclude Include="include\CHandle.h" />
     <ClInclude Include="include\LineRenderer.h" />
     <ClInclude Include="include\PhysicsBody.h" />
     <ClInclude Include="include\SoundPlayer.h" />
@@ -174,6 +177,7 @@
     <ClInclude Include="include\Game.h" />
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\Input.h" />
+    <ClInclude Include="include\ComponentPool.h" />
     <ClInclude Include="src\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>

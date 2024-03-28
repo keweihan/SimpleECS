@@ -77,7 +77,7 @@ SimpleECS::FontRenderer::FontRenderer(std::string text, std::string pathToFont, 
     this->size = size;
     this->color = color;
 
-    pImpl = std::make_unique<FontRendererImpl>();
+    pImpl = new FontRendererImpl();
 }
 
 Vector SimpleECS::FontRenderer::getSize()
@@ -104,10 +104,10 @@ void FontRenderer::initialize()
         printf("Unable to open font! SDL_ttf Error: %s\n", TTF_GetError());
     }
 
-    pImpl->renderText(text, color, Vector(entity->transform.position.x, entity->transform.position.y));
+    pImpl->renderText(text, color, Vector(entity->transform->position.x, entity->transform->position.y));
 }
 
 void SimpleECS::FontRenderer::update()
 {
-    pImpl->renderText(text, color, Vector(entity->transform.position.x, entity->transform.position.y));
+    pImpl->renderText(text, color, Vector(entity->transform->position.x, entity->transform->position.y));
 }

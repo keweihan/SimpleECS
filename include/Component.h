@@ -1,5 +1,4 @@
-#ifndef COMPONENT_H
-#define COMPONENT_H
+#pragma once
 
 
 #ifdef SIMPLEECS_EXPORTS
@@ -10,12 +9,10 @@
 
 namespace SimpleECS 
 {
-	// Forward declarations
 	class Entity;
 	class Collider;
 	class Collision;
 
-	// Component class
 	class SIMPLEECS_API Component {
 		friend class Entity;
 
@@ -47,12 +44,9 @@ namespace SimpleECS
 		*/
 		Entity* entity = nullptr;
 
-	private:
 		/*
 		* Called on adding this component to an entity.
 		*/
 		void setEntity(Entity* entity);
 	};
 }
-
-#endif

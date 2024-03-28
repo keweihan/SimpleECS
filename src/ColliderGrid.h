@@ -1,4 +1,5 @@
 #pragma once
+#include "BoxCollider.h"
 #include "Collider.h"
 #include "ColliderCell.h"
 #include <vector>
@@ -17,16 +18,6 @@ namespace SimpleECS
 		ColliderGrid(const int w, const int h);
 
 		/*
-		* Add a collider to this grid
-		*/
-		void registerCollider(Collider*);
-
-		/*
-		* Remove a collider from this grid
-		*/
-		void removeCollider(Collider*);
-
-		/*
 		* Update collider grid positions
 		*/
 		void updateGrid();
@@ -34,12 +25,12 @@ namespace SimpleECS
 		/*
 		* Get number of cells
 		*/
-		int size() const;
+		size_t size() const;
 
 		/*
 		* Get the number of colliders in a given cell
 		*/
-		int cellSize(int index);
+		int cellSize(const int index);
 
 		/*
 		* Get the colliders populating a given cell. Input grid.size() - 1 to get out of bounds.
@@ -54,7 +45,7 @@ namespace SimpleECS
 		/*
 		* Get the bounds of a given cell
 		*/
-		void getCellBounds(Collider::AABB& output, const int& index);
+		void getCellBounds(Collider::AABB& output, const int index);
 
 	private:
 		/*
@@ -78,7 +69,13 @@ namespace SimpleECS
 		*/
 		std::vector<ColliderCell> grid;
 
-		// list of all active colliders
-		std::unordered_set<Collider*> colliderList;
+		/*
+		* Reference to underlying vector storage of BoxCollider's component pool.
+		* Stores original BoxCollider components.
+		*/
+		std::vector<BoxCollider>* boxPool;
+
+		// LEGACY: list of all active colliders
+		//std::vector<Collider*> colliderList;
 	};
 }

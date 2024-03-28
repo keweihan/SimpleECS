@@ -2,7 +2,7 @@
 #include "Vector.h"
 namespace SimpleECS
 {
-	class Transform
+	class Transform : public Component
 	{
 	public:
 		/**
@@ -14,5 +14,8 @@ namespace SimpleECS
 		 * TODO: Rotation of transform 
 		 */
 		//double rotation = 0;
+
+		void update() override {};
+		void initialize() override {};
 	};
 }

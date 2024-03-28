@@ -7,13 +7,13 @@ using namespace SimpleECS;
 
 void SimpleECS::BoxCollider::update()
 {
-    Vector position = entity->transform.position;
+    Vector position = entity->transform->position;
 
-    bound.xMin = position.x - width / 2;
-    bound.xMax = position.x + width / 2;
+    bound.xMin = static_cast<int>(position.x) - width / 2;
+    bound.xMax = static_cast<int>(position.x) + width / 2;
 
-    bound.yMin = position.y - height / 2;
-    bound.yMax = position.y + height / 2;
+    bound.yMin = static_cast<int>(position.y) - height / 2;
+    bound.yMax = static_cast<int>(position.y) + height / 2;
 }
 
 bool BoxCollider::isColliding(Collider* other)

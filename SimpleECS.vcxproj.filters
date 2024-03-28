@@ -81,6 +81,12 @@
     <ClInclude Include="src\ColliderCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\ComponentPool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\CHandle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Game.cpp">

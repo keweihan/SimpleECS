@@ -1,5 +1,6 @@
 #include "ColliderSystem.h"
 #include "Collider.h"
+#include "BoxCollider.h"
 #include "Component.h"
 #include "Entity.h"
 #include "GameRenderer.h"
@@ -11,33 +12,6 @@
 
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
-
-std::vector<Collider*> ColliderSystem::colliderList;
-ColliderGrid ColliderSystem::colliderGrid(ColliderSystem::CELL_WIDTH, ColliderSystem::CELL_HEIGHT);
-
-void ColliderSystem::registerCollider(Collider* collider)
-{
-	colliderList.push_back(collider);
-	colliderGrid.registerCollider(collider);
-}
-
-void ColliderSystem::deregisterCollider(Collider* collider)
-{
-	// Find and remove registered instances of this collider
-	for (auto iter = colliderList.begin(); iter != colliderList.end();)
-	{
-		if (*iter == collider)
-		{
-			iter = colliderList.erase(iter);
-		}
-		else
-		{
-			++iter;
-		}
-	}
-
-	colliderGrid.removeCollider(collider);
-}
 
 //------------------- Collision invocation ---------------------//
 
@@ -55,7 +29,9 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 {
 	collision.a = a;
 	collision.b = b;
-	if (ColliderSystem::getCollisionInfo(collision)) {
+
+	// TODO: getComponents is an expensive operation. 
+	if (ColliderSystem::getInstance().getCollisionInfo(collision)) {
 		for (auto component : collision.a->entity->getComponents())
 		{
 			component->onCollide(*collision.b);
@@ -99,12 +75,12 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollid
 {
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 
-	Transform aTransform = collide.a->entity->transform;
-	Transform bTransform = collide.b->entity->transform;
+	Transform& aTransform = *(collide.a->entity->transform);
+	Transform& bTransform = *(collide.b->entity->transform);
 
 	// TODO: dynamic casts are expensive. Figure out a better way.
-	BoxCollider* aBox = dynamic_cast<BoxCollider*>(collide.a);
-	BoxCollider* bBox = dynamic_cast<BoxCollider*>(collide.b);
+	BoxCollider* aBox = static_cast<BoxCollider*>(collide.a);
+	BoxCollider* bBox = static_cast<BoxCollider*>(collide.b);
 
 	if (bBox != nullptr && aBox != nullptr)
 	{

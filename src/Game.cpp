@@ -3,6 +3,7 @@
 #include "GameRenderer.h"
 #include "Entity.h"
 #include "ColliderSystem.h"
+#include "ComponentPool.h"
 #include "Timer.h"
 #include "Color.h"
 #include <SDL.h>
@@ -11,13 +12,20 @@
 using namespace SimpleECS;
 using namespace UtilSimpleECS;
 
+
+
+Scene* Game::getCurrentScene()
+{
+	return sceneList[activeSceneIndex];
+}
+
 Game::Game()
 {
 	GameRenderer::SCREEN_WIDTH = 640;
 	GameRenderer::SCREEN_HEIGHT = 480;
 }
 
-SimpleECS::Game::Game(int width, int height)
+void Game::configureWindow(int width, int height)
 {
 	GameRenderer::SCREEN_WIDTH = width;
 	GameRenderer::SCREEN_HEIGHT = height;
@@ -56,12 +64,9 @@ void Game::mainLoop()
 	}
 
 	// Run initialize of first scene components
-	for (auto entity : sceneList[0]->entities)
+	for (auto& pool : sceneList[0]->getComponentPools())
 	{
-		for (auto component : entity->getComponents())
-		{
-			component->initialize();
-		};
+		(*pool).invokeStart();
 	}
 
 	// Game loop
@@ -82,23 +87,20 @@ void Game::mainLoop()
 		SDL_RenderClear(GameRenderer::renderer);
 
 		// Run update of first scene functions
-		for (auto entity : sceneList[0]->entities)
+		for (auto& pool : sceneList[0]->getComponentPools())
 		{
-			for (auto component : entity->getComponents())
-			{
-				component->update();
-			};
+			(*pool).invokeUpdate();
 		}
 
 		// Run collision functions
-		ColliderSystem::invokeCollisions();
+		ColliderSystem::getInstance().invokeCollisions();
 
 		// Delete objects
-		sceneList[0]->DestroyAllMarkedEntities();
+		sceneList[0]->destroyAllMarkedEntities();
 
 		// Mark end of frame
 		Timer::endFrame();
-
+		
 		SDL_RenderPresent(GameRenderer::renderer);
 	}
 }

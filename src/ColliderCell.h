@@ -61,7 +61,7 @@ namespace SimpleECS
 
 		Collider* back();
 
-		int size();
+		size_t size();
 		
 		void insert(Collider* col);
 

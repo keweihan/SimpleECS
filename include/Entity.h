@@ -1,10 +1,11 @@
-#ifndef ENTITY_H
-#define ENTITY_H
+#pragma once
 
-#include <vector>
-#include "Component.h"
+#include "CHandle.h"
+#include "Scene.h"
 #include "Transform.h"
+#include <vector>
 #include <string>
+#include <utility>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -13,67 +14,75 @@
 #endif
 
 namespace SimpleECS
-{
+{	
 	/**
 	An object/actor inside scenes. Has a container of components which dictate entity behavior.
 	and exists in world space.
 	*/
 	class Entity {
-	public:
-		Entity() {};
-		Entity(std::string tag) : tag(tag) {};
-		~Entity();
+	private:		
+		
+		/**
+		* Pointer to scene containing this entity.
+		*/
+		Scene* scene;
 
 		/**
-		* Add a component to this entity
-		* 
+		* Constructs entity with respect to a scene. See Scene::createEntity() for
+		* user creation of entity object.
 		*/
-		void SIMPLEECS_API addComponent(Component* component);
+		friend Scene;
+		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
+		SIMPLEECS_API ~Entity();
+	
+	public:
+		/**
+		* Internal identifier for this entity. Instantiated on construction.
+		* TODO make private
+		*/
+		uint32_t id;
+
+		/**
+		* Optional string identifier for this entity
+		*/
+		std::string tag;
+
+		/**
+		* Entity position in world space.
+		* TODO: redo...
+		*/
+		Handle<Transform> transform;
+
+		/**
+		* Add a component to this entity of type T
+		* 
+		* @returns Component* added to entity.
+		*/
+		template <typename T, typename... Args>
+		Handle<T> addComponent(Args&&... args);
 
 		/**
 		* Retrieve a component attached to entity of type T.
 		* 
-		* @returns nullptr if no component of such type is attached to entity.
+		* @returns A single component of type T attached to entity.
+		* nullptr if no component of such type is attached to entity.
+		* 
 		*/
 		template <typename T>
-		T* getComponent();
+		Handle<T> getComponent();
 
-		/**
-		* Retrieve list of all components attached to this entity.
-		*/
-		std::vector<Component*>& getComponents();
-		
-		/**
-		* Entity position in world space.
-		*/
-		Transform transform;
-
-		/**
-		* Optional identifier for this entity
-		*/
-		std::string tag;
-		
-	private:
-		/**
-		* List of components
-		*/
-		std::vector<Component*> components;
-
+		std::vector<Component*> getComponents();
 	};
 
-	template<typename T>
-	inline T* Entity::getComponent()
+	template <typename T, typename... Args>
+	inline Handle<T> Entity::addComponent(Args&&... args)
 	{
-		T* foundComponent = nullptr;
-		for (auto component : components)
-		{
-			foundComponent = dynamic_cast<T*>(component);
-			if (foundComponent != nullptr)
-			{
-				return foundComponent;
-			}
-		}
-		return foundComponent;
+		return scene->addComponent<T>(id, std::forward<Args>(args)...);
+	}
+
+	template<typename T>
+	inline Handle<T> Entity::getComponent()
+	{
+		return scene->getComponent<T>(id);
 	}
 }
-#endif

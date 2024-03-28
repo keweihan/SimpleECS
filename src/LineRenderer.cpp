@@ -19,8 +19,8 @@ void LineRenderer::update()
 		Vector line(end.x - start.x, end.y - start.y);
 		double slope = line.y / line.x;
 
-		int xRise = sqrt(pow(spacing, 2) / (pow(slope, 2) + 1));
-		int yRise = sqrt(pow(spacing, 2) / (1/pow(slope, 2) + 1));
+		int xRise = static_cast<int>(sqrt(spacing * spacing / (slope * slope + 1)));
+		int yRise = static_cast<int>(sqrt(spacing * spacing / (1/(slope * slope) + 1)));
 		Vector currStart = start;
 		Vector nextEnd = Vector(currStart.x + xRise, currStart.y + yRise);
 
@@ -41,12 +41,13 @@ void SimpleECS::LineRenderer::drawECSLine(Vector startPoint, Vector endPoint)
 
 	for (int i = 0; i < width; i++)
 	{
-		int xOffset = -orth.x * width / 2 + i * (orth.x);
-		int yOffset = -orth.y * width / 2 + i * (orth.y);
+		int xOffset = static_cast<int>(-orth.x * width / 2 + i * (orth.x));
+		int yOffset = static_cast<int>(-orth.y * width / 2 + i * (orth.y));
 
 		auto startCoord = TransformUtil::worldToScreenSpace(startPoint.x + xOffset, startPoint.y + yOffset);
 		auto endCoord = TransformUtil::worldToScreenSpace(endPoint.x + xOffset, endPoint.y + yOffset);
 		SDL_SetRenderDrawColor(GameRenderer::renderer, renderColor.r, renderColor.g, renderColor.b, renderColor.a);
-		SDL_RenderDrawLine(GameRenderer::renderer, startCoord.x, startCoord.y, endCoord.x, endCoord.y);
+		SDL_RenderDrawLine(GameRenderer::renderer, static_cast<int>(startCoord.x), static_cast<int>(startCoord.y), 
+						   static_cast<int>(endCoord.x), static_cast<int>(endCoord.y));
 	}
 }

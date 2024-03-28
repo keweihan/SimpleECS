@@ -1,6 +1,7 @@
 #pragma once
-#include <vector>
 #include "Scene.h"
+#include <vector>
+#include <string>
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)
@@ -16,17 +17,23 @@ namespace SimpleECS
 	*/
 	class Game {
 	public:
-		/**
-		 * Game constructor. Creates an empty game.
-		 *
-		 */
-		SIMPLEECS_API Game();
+		// Singleton
+		Game(const Game&) = delete;
+		Game& operator=(const Game&) = delete;
 
 		/**
-		 * Game constructor. Creates an empty game with custom dimensions
+		 * Singleton
+		 */
+		static SIMPLEECS_API Game& getInstance() {
+			static Game instance;  
+			return instance;
+		}
+
+		/**
+		 * Configures window dimensions. Must be called before start game. 
 		 *
 		 */
-		SIMPLEECS_API Game(int width, int height);
+		void SIMPLEECS_API configureWindow(int width, int height);
 
 		/**
 		 * Start the main game loop. Game must have at least one scene.
@@ -47,7 +54,15 @@ namespace SimpleECS
 		 */
 		void SIMPLEECS_API setName(std::string name);
 
+		/**
+		 * Sets name of window associated with this game.
+		 */
+		SIMPLEECS_API Scene* getCurrentScene();
+
 	private:
+
+		SIMPLEECS_API Game();
+		
 		std::vector<Scene*> sceneList;
 
 		int activeSceneIndex = 0;

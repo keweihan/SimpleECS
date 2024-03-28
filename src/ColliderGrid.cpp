@@ -1,5 +1,7 @@
+#include "Game.h"
 #include "ColliderGrid.h"
 #include "GameRenderer.h"
+#include "Entity.h"
 #include <vector>
 
 using namespace SimpleECS;
@@ -10,23 +12,19 @@ ColliderGrid::ColliderGrid(const int w, const int h)
 	cellWidth = w;
 	cellHeight = h;
 
-	numRow = ceil(GameRenderer::SCREEN_HEIGHT / (double)cellHeight);
-	numColumn = ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth);
+	numRow = static_cast<int>(ceil(GameRenderer::SCREEN_HEIGHT / (double)cellHeight));
+	numColumn = static_cast<int>(ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth));
 
 	grid.resize(numRow * numColumn + 1); // Last index represents out of bounds cell
+	boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
 {
-	for (auto collide : colliderList)
+	for (auto& collide : *boxPool)
 	{
-		insertToGrid(collide);
+		insertToGrid(&collide);
 	}
-}
-
-void SimpleECS::ColliderGrid::registerCollider(Collider* collider)
-{
-	colliderList.insert(collider);
 }
 
 constexpr const int& clamp(const int& v, const int& lo, const int& hi)
@@ -44,10 +42,10 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 	collider->getBounds(bound);
 
 	// Get the left most column index this collider exists in, rightMost, etc.
-	int columnLeft	= ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int columnRight = ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth);
-	int rowTop		= ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
-	int rowBottom	= ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight);
+	int columnLeft	= static_cast<int>(ceil((bound.xMin + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth));
+	int columnRight = static_cast<int>(ceil((bound.xMax + GameRenderer::SCREEN_WIDTH / 2.0) / cellWidth));
+	int rowTop		= static_cast<int>(ceil((-bound.yMin + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight));
+	int rowBottom	= static_cast<int>(ceil((-bound.yMax + GameRenderer::SCREEN_HEIGHT / 2.0) / cellHeight));
 
 	int colLeftClamped	= clamp(columnLeft, 0, numColumn - 1);
 	int colRightClamped = clamp(columnRight, 0, numColumn - 1);
@@ -70,25 +68,6 @@ void SimpleECS::ColliderGrid::insertToGrid(Collider* collider)
 		|| rowTop != rowTopClamped || rowBottom != rowBotClamped)
 	{
 		grid.back().insert(collider);
-	}
-}
-
-void SimpleECS::ColliderGrid::removeCollider(Collider* collider)
-{
-	// Remove from general list
-	if (colliderList.find(collider) != colliderList.end())
-	{
-		colliderList.erase(collider);
-	}
-
-	// Search grid for references to collider and delete
-	for (int i = 0; i < grid.size(); ++i)
-	{
-		auto find = grid[i].find(collider);
-		if (find != grid[i].end())
-		{
-			grid[i].erase(find);
-		}
 	}
 }
 
@@ -122,12 +101,12 @@ void SimpleECS::ColliderGrid::updateGrid()
 	populateGrid();
 }
 
-int SimpleECS::ColliderGrid::size() const
+size_t SimpleECS::ColliderGrid::size() const
 {
 	return grid.size();
 }
 
-int SimpleECS::ColliderGrid::cellSize(int index)
+int SimpleECS::ColliderGrid::cellSize(const int index)
 {
 	return 0;
 }
@@ -139,10 +118,10 @@ const ColliderCell* ColliderGrid::getCellContents(const int index) const
 
 const ColliderCell* ColliderGrid::getOutBoundContent() const
 {
-	return getCellContents(size() - 1);
+	return getCellContents(static_cast<int>(size() - 1));
 }
 
-void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int& index)
+void SimpleECS::ColliderGrid::getCellBounds(Collider::AABB& output, const int index)
 {
 	// index = row * numColumn + c
 	int column = index % numColumn;

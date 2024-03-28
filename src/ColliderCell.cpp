@@ -26,7 +26,7 @@ ColliderCell& SimpleECS::ColliderCell::operator=(const ColliderCell& other)
     return *this;
 }
 
-int ColliderCell::size()
+size_t ColliderCell::size()
 {
     return colList.size();
 }
