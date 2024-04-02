@@ -40,6 +40,16 @@ namespace SimpleECS
 		virtual void onCollide(const Collision& collide) {}
 
 		/*
+		* Set component active status (if inactive, update no longer called)
+		*/
+		virtual void setActive(bool b) { isActive = b; }
+
+		/*
+		* Get component active status (if inactive, update no longer called)
+		*/
+		virtual bool getActive() { return isActive; }
+
+		/*
 		* The entity this component is attached to
 		*/
 		Entity* entity = nullptr;
@@ -48,5 +58,8 @@ namespace SimpleECS
 		* Called on adding this component to an entity.
 		*/
 		void setEntity(Entity* entity);
+	
+	private:
+		bool isActive = true;
 	};
 }

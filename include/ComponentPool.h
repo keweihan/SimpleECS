@@ -187,7 +187,9 @@ namespace SimpleECS {
 	{
 		for (auto& component : componentList)
 		{
-			component.update();
+			if (component.getActive()) {
+				component.update();
+			}
 		}
 	}
 
