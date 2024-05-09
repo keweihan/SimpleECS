@@ -1,8 +1,8 @@
 #pragma once
-#include "Component.h"
-#include "Color.h"
-#include "CHandle.h"
-#include "ComponentPool.h"
+#include "Core/Component.h"
+#include "Utility/Color.h"
+#include "Core/CHandle.h"
+#include "Core/ComponentPool.h"
 #include <unordered_set>
 #include <vector>
 #include <memory>

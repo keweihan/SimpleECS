@@ -1,4 +1,4 @@
-#include "Collider.h"
+#include "Collision/Collider.h"
 #include "ColliderSystem.h"
 
 SimpleECS::Collider::Collider()

@@ -1,5 +1,5 @@
 #pragma once
-#include "Vector.h"
+#include "Core/Vector.h"
 namespace SimpleECS
 {
 	class Transform : public Component

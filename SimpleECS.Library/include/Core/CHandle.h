@@ -6,7 +6,7 @@
 #define SIMPLEECS_API __declspec(dllimport)
 #endif
 
-#include "ComponentPool.h"
+#include "Core/ComponentPool.h"
 #include <cstdint>
 
 namespace SimpleECS

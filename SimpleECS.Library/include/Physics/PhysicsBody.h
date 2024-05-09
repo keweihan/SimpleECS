@@ -1,5 +1,5 @@
 #pragma once
-#include <SimpleECS_Core.h>
+#include "SimpleECS.h"
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)

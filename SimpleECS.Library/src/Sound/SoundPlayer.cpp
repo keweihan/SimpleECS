@@ -1,4 +1,4 @@
-#include "SoundPlayer.h"
+#include "Sound/SoundPlayer.h"
 #include "SDL_mixer.h"
 #include <memory>
 

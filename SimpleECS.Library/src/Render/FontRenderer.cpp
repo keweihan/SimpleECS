@@ -1,10 +1,10 @@
-#include "FontRenderer.h"
+#include "Render/FontRenderer.h"
 #include "SDL_ttf.h"
 #include <SDL.h>
 #include "Core/GameRenderer.h"
 #include "Utility/TransformUtil.h"
-#include "Vector.h"
-#include "Entity.h"
+#include "Core/Vector.h"
+#include "Core/Entity.h"
 #include <tuple>
 
 using namespace SimpleECS;

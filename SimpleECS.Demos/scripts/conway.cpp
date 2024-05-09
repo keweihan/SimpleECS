@@ -3,7 +3,7 @@ Stress test of SimpleECS collision system.
 
 Kewei Han
 */
-#include <SimpleECS_Core.h>
+#include <SimpleECS.h>
 #include <iostream>
 #include <cstdlib>
 #include <vector>

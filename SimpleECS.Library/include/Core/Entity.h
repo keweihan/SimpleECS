@@ -1,8 +1,8 @@
 #pragma once
 
-#include "CHandle.h"
-#include "Scene.h"
-#include "Transform.h"
+#include "Core/CHandle.h"
+#include "Core/Scene.h"
+#include "Core/Transform.h"
 #include <vector>
 #include <string>
 #include <utility>

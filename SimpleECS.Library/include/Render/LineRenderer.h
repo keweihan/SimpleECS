@@ -1,7 +1,7 @@
 #pragma once
-#include <Component.h>
-#include <Color.h>
-#include <Vector.h>
+#include "Core/Component.h"
+#include "Utility/Color.h"
+#include "Core/Vector.h"
 
 #ifdef SIMPLEECS_EXPORTS
 #define SIMPLEECS_API __declspec(dllexport)

@@ -1,4 +1,4 @@
-#include "Timer.h"
+#include "Core/Timer.h"
 #include <SDL.h>
 
 uint64_t SimpleECS::Timer::frameFinishTime;

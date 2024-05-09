@@ -1,4 +1,4 @@
-#include "Input.h"
+#include "Input/Input.h"
 #include <SDL.h>
 
 bool SimpleECS::Input::getKeyDown(KeyCode key)

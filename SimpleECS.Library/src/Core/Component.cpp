@@ -1,4 +1,4 @@
-#include "Component.h"
+#include "Core/Component.h"
 
 void SimpleECS::Component::setEntity(Entity* entity)
 {

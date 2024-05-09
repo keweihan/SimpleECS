@@ -15,64 +15,64 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Component.h">
+    <ClInclude Include="include\Core\Component.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Entity.h">
+    <ClInclude Include="include\Core\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Game.h">
+    <ClInclude Include="include\Core\Game.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Scene.h">
+    <ClInclude Include="include\Core\Scene.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\SimpleECS_Core.h">
+    <ClInclude Include="include\SimpleECS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\GameRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\RectangleRenderer.h">
+    <ClInclude Include="include\Render\RectangleRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Utility\TransformUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Transform.h">
+    <ClInclude Include="include\Core\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Input.h">
+    <ClInclude Include="include\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Collider.h">
+    <ClInclude Include="include\Collision\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Collision\ColliderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\BoxCollider.h">
+    <ClInclude Include="include\Collision\BoxCollider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\PhysicsBody.h">
+    <ClInclude Include="include\Physics\PhysicsBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Vector.h">
+    <ClInclude Include="include\Core\Vector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Color.h">
+    <ClInclude Include="include\Utility\Color.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\Timer.h">
+    <ClInclude Include="include\Core\Timer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\LineRenderer.h">
+    <ClInclude Include="include\Render\LineRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\FontRenderer.h">
+    <ClInclude Include="include\Render\FontRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\SoundPlayer.h">
+    <ClInclude Include="include\Sound\SoundPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Collision\ColliderGrid.h">
@@ -81,10 +81,10 @@
     <ClInclude Include="src\Collision\ColliderCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\ComponentPool.h">
+    <ClInclude Include="include\Core\ComponentPool.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\CHandle.h">
+    <ClInclude Include="include\Core\CHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Core\GameRenderer.h">
@@ -95,7 +95,7 @@
     <ClCompile Include="src\Core\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\RectangleRenderer.cpp">
+    <ClCompile Include="src\Render\RectangleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Utility\TransformUtil.cpp">
@@ -125,13 +125,13 @@
     <ClCompile Include="src\Core\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Utility\Vector.cpp">
+    <ClCompile Include="src\Core\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\LineRenderer.cpp">
+    <ClCompile Include="src\Render\LineRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Rendering\FontRenderer.cpp">
+    <ClCompile Include="src\Render\FontRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\Sound\SoundPlayer.cpp">

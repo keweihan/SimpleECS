@@ -1,7 +1,7 @@
-#include "BoxCollider.h"
-#include "PhysicsBody.h"
+#include "Collision/BoxCollider.h"
+#include "Physics/PhysicsBody.h"
 #include "ColliderSystem.h"
-#include "Entity.h"
+#include "Core/Entity.h"
 
 using namespace SimpleECS;
 

@@ -1,7 +1,7 @@
 #pragma once
-#include "Entity.h"
-#include "Scene.h"
-#include "Component.h"
+#include "Core/Entity.h"
+#include "Core/Scene.h"
+#include "Core/Component.h"
 #include <stdexcept>
 
 using namespace SimpleECS;

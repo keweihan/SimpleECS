@@ -1,7 +1,7 @@
-#include "Game.h"
+#include "Core/Game.h"
 #include "ColliderGrid.h"
 #include "../Core/GameRenderer.h"
-#include "Entity.h"
+#include "Core/Entity.h"
 #include <vector>
 
 using namespace SimpleECS;

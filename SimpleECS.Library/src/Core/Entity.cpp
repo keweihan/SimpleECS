@@ -1,6 +1,6 @@
 #pragma once
-#include "Scene.h"
-#include "Entity.h"
+#include "Core/Scene.h"
+#include "Core/Entity.h"
 #include <vector>
 
 using namespace SimpleECS;

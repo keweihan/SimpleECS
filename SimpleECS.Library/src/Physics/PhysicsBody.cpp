@@ -1,5 +1,5 @@
-#include "PhysicsBody.h"
-#include "Timer.h"
+#include "Physics/PhysicsBody.h"
+#include "Core/Timer.h"
 
 void SimpleECS::PhysicsBody::update()
 {

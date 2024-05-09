@@ -155,29 +155,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\BoxCollider.h" />
-    <ClInclude Include="include\Collider.h" />
-    <ClInclude Include="include\Color.h" />
-    <ClInclude Include="include\FontRenderer.h" />
-    <ClInclude Include="include\CHandle.h" />
-    <ClInclude Include="include\LineRenderer.h" />
-    <ClInclude Include="include\PhysicsBody.h" />
-    <ClInclude Include="include\SoundPlayer.h" />
-    <ClInclude Include="include\Timer.h" />
-    <ClInclude Include="include\Transform.h" />
-    <ClInclude Include="include\Vector.h" />
+    <ClInclude Include="include\Collision\BoxCollider.h" />
+    <ClInclude Include="include\Collision\Collider.h" />
+    <ClInclude Include="include\Utility\Color.h" />
+    <ClInclude Include="include\Render\FontRenderer.h" />
+    <ClInclude Include="include\Core\CHandle.h" />
+    <ClInclude Include="include\Render\LineRenderer.h" />
+    <ClInclude Include="include\Physics\PhysicsBody.h" />
+    <ClInclude Include="include\Sound\SoundPlayer.h" />
+    <ClInclude Include="include\Core\Timer.h" />
+    <ClInclude Include="include\Core\Transform.h" />
+    <ClInclude Include="include\Core\Vector.h" />
     <ClInclude Include="src\Collision\ColliderGrid.h" />
     <ClInclude Include="src\Collision\ColliderSystem.h" />
     <ClInclude Include="src\Collision\ColliderCell.h" />
     <ClInclude Include="src\GameRenderer.h" />
-    <ClInclude Include="include\RectangleRenderer.h" />
-    <ClInclude Include="include\SimpleECS_Core.h" />
-    <ClInclude Include="include\Component.h" />
-    <ClInclude Include="include\Entity.h" />
-    <ClInclude Include="include\Game.h" />
-    <ClInclude Include="include\Scene.h" />
-    <ClInclude Include="include\Input.h" />
-    <ClInclude Include="include\ComponentPool.h" />
+    <ClInclude Include="include\Render\RectangleRenderer.h" />
+    <ClInclude Include="include\SimpleECS.h" />
+    <ClInclude Include="include\Core\Component.h" />
+    <ClInclude Include="include\Core\Entity.h" />
+    <ClInclude Include="include\Core\Game.h" />
+    <ClInclude Include="include\Core\Scene.h" />
+    <ClInclude Include="include\Input\Input.h" />
+    <ClInclude Include="include\Core\ComponentPool.h" />
     <ClInclude Include="src\Core\GameRenderer.h" />
     <ClInclude Include="src\Utility\TransformUtil.h" />
   </ItemGroup>
@@ -186,10 +186,10 @@
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\GameRenderer.cpp" />
     <ClCompile Include="src\Sound\SoundPlayer.cpp" />
-    <ClCompile Include="src\Rendering\FontRenderer.cpp" />
-    <ClCompile Include="src\Rendering\LineRenderer.cpp" />
+    <ClCompile Include="src\Render\FontRenderer.cpp" />
+    <ClCompile Include="src\Render\LineRenderer.cpp" />
     <ClCompile Include="src\Collision\ColliderGrid.cpp" />
-    <ClCompile Include="src\Utility\Vector.cpp" />
+    <ClCompile Include="src\Core\Vector.cpp" />
     <ClCompile Include="src\Core\Timer.cpp" />
     <ClCompile Include="src\Physics\PhysicsBody.cpp" />
     <ClCompile Include="src\Collision\BoxCollider.cpp" />
@@ -198,7 +198,7 @@
     <ClCompile Include="src\Input\Input.cpp" />
     <ClCompile Include="src\Core\Component.cpp" />
     <ClCompile Include="src\Core\Entity.cpp" />
-    <ClCompile Include="src\Rendering\RectangleRenderer.cpp" />
+    <ClCompile Include="src\Render\RectangleRenderer.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />
     <ClCompile Include="src\Utility\TransformUtil.cpp" />
   </ItemGroup>

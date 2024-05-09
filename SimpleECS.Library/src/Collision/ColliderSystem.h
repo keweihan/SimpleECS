@@ -1,8 +1,8 @@
 #pragma once
 
-#include "Collider.h"
+#include "Collision/Collider.h"
 #include "ColliderGrid.h"
-#include "PhysicsBody.h"
+#include "Physics/PhysicsBody.h"
 #include "vector"
 
 namespace SimpleECS

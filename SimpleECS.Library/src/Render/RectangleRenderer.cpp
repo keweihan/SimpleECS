@@ -1,7 +1,7 @@
-#include "RectangleRenderer.h"
+#include "Render/RectangleRenderer.h"
 #include "Core/GameRenderer.h"
 #include "Utility/TransformUtil.h"
-#include "Entity.h"
+#include "Core/Entity.h"
 #include <tuple>
 #include <SDL.h>
 #include <iostream>

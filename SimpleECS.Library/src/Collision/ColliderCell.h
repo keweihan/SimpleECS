@@ -3,7 +3,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <memory>
-#include "Collider.h"
+#include "Collision/Collider.h"
 #include "boost/container/small_vector.hpp"
 
 #ifdef _TESTING

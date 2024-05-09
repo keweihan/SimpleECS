@@ -1,11 +1,11 @@
-#include "Game.h"
-#include "Scene.h"
+#include "Core/Game.h"
+#include "Core/Scene.h"
 #include "GameRenderer.h"
-#include "Entity.h"
+#include "Core/Entity.h"
 #include "../Collision/ColliderSystem.h"
-#include "ComponentPool.h"
-#include "Timer.h"
-#include "Color.h"
+#include "Core/ComponentPool.h"
+#include "Core/Timer.h"
+#include "Utility/Color.h"
 #include <SDL.h>
 #include <iostream>
 

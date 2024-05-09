@@ -6,8 +6,8 @@
 #define SIMPLEECS_API __declspec(dllimport)
 #endif
 
-#include "Component.h"
-#include "Collider.h"
+#include "Core/Component.h"
+#include "Collision/Collider.h"
 #include <vector>
 
 namespace SimpleECS

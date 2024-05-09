@@ -3,7 +3,7 @@ Pong implementation using SimpleECS.
 
 Kewei Han
 */
-#include <SimpleECS_Core.h>
+#include <SimpleECS.h>
 #include <iostream>
 #include <cstdlib>
 #include <vector>

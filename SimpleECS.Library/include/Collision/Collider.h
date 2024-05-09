@@ -6,8 +6,8 @@
 #define SIMPLEECS_API __declspec(dllimport)
 #endif
 
-#include "Component.h"
-#include "Vector.h"
+#include "Core/Component.h"
+#include "Core/Vector.h"
 #include <vector>
 #include <iostream>
 
