@@ -1,8 +1,8 @@
 #pragma once
 
-#include "SimpleECS_Core.h"
+#include "SimpleECS.h"
 #include "gtest/gtest.h"
-#include "ColliderCell.h"
+#include "Collision/ColliderCell.h"
 #include "boost/container/small_vector.hpp"
 #include <vector>
 

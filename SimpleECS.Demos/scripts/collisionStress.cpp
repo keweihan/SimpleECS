@@ -60,7 +60,7 @@ public:
 
 	void update() {
 		frameCount++;
-		int currSecond = Timer::getProgramLifetime() / 1000;
+		int currSecond = static_cast<int>(Timer::getProgramLifetime() / 1000);
 		if (currSecond > prevSecond)
 		{
 			displayFrames = frameCount;
@@ -240,8 +240,8 @@ int main() {
 		addBounds();
 
 		// Get a grid of squares
-		int columns = ceil(sqrt(NUM_BALLS / ((double)SCREEN_HEIGHT / (double)SCREEN_WIDTH)));
-		int rows = ceil(NUM_BALLS / columns);
+		int columns = static_cast<int>(ceil(sqrt(NUM_BALLS / ((double)SCREEN_HEIGHT / (double)SCREEN_WIDTH))));
+		int rows = static_cast<int>(ceil(NUM_BALLS / columns));
 		int numSpawned = spawnBalls(rows, columns, NUM_BALLS);
 
 		createCurrFramesCounter();

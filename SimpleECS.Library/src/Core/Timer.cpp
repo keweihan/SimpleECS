@@ -16,8 +16,8 @@ uint64_t SimpleECS::Timer::getProgramLifetime()
 
 void SimpleECS::Timer::endFrame()
 {
-	int currTicks = SDL_GetTicks64();
-	previousFrameLength = currTicks - frameFinishTime;
+	uint64_t currTicks = SDL_GetTicks64();
+	previousFrameLength = static_cast<uint16_t>(currTicks - frameFinishTime);
 
 	frameFinishTime = currTicks;
 }

@@ -1,10 +1,6 @@
 #pragma once
 
-#ifdef SIMPLEECS_EXPORTS
-#define SIMPLEECS_API __declspec(dllexport)
-#else
-#define SIMPLEECS_API __declspec(dllimport)
-#endif
+#include "SimpleECSAPI.h"
 
 #include "Core/Component.h"
 #include "Collision/Collider.h"

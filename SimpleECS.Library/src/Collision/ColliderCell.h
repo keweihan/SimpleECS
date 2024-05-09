@@ -1,4 +1,6 @@
 #pragma once
+#pragma warning(disable: 4251) // ignores warning for dll warning. User does not use this class.
+
 #include <vector>
 #include <unordered_map>
 #include <unordered_set>
@@ -6,15 +8,17 @@
 #include "Collision/Collider.h"
 #include "boost/container/small_vector.hpp"
 
-#ifdef _TESTING
-	#ifdef SIMPLEECS_EXPORTS
-		#define SIMPLEECS_API __declspec(dllexport)
-	#else
-		#define SIMPLEECS_API __declspec(dllimport)
-	#endif
-#else
-	#define SIMPLEECS_API // Leave it blank in release mode
-#endif
+//#ifdef _TESTING
+//	#ifdef SIMPLEECS_EXPORTS
+//		#define SIMPLEECS_API __declspec(dllexport)
+//	#else
+//		#define SIMPLEECS_API __declspec(dllimport)
+//	#endif
+//#else
+//	#define SIMPLEECS_API // Leave it blank in release mode
+//#endif
+
+#include "SimpleECSAPI.h"
 
 namespace SimpleECS
 {
