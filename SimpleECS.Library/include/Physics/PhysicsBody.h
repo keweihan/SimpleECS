@@ -15,6 +15,7 @@ namespace SimpleECS
 		PhysicsBody() : velocity() {}
 
 		Vector velocity;
+		Vector acceleration;
 
 		void update() override;
 		void initialize() override {};

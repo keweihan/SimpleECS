@@ -3,6 +3,12 @@
 
 void SimpleECS::PhysicsBody::update()
 {
+	//Vector gravity = Vector(0, -90.86);
+	//acceleration = gravity;
+
+	velocity.x += acceleration.x * Timer::getDeltaTime() / 1000;
+	velocity.y += acceleration.y * Timer::getDeltaTime() / 1000;
+
 	entity->transform->position.x += velocity.x * Timer::getDeltaTime()/1000;
 	entity->transform->position.y += velocity.y * Timer::getDeltaTime()/1000;
 }
