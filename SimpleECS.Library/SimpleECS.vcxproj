@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SIMPLEECS_EXPORTS;_TESTING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -143,7 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;SIMPLEECS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -166,9 +166,9 @@
     <ClInclude Include="include\Timer.h" />
     <ClInclude Include="include\Transform.h" />
     <ClInclude Include="include\Vector.h" />
-    <ClInclude Include="src\ColliderGrid.h" />
-    <ClInclude Include="src\ColliderSystem.h" />
-    <ClInclude Include="src\ColliderCell.h" />
+    <ClInclude Include="src\Collision\ColliderGrid.h" />
+    <ClInclude Include="src\Collision\ColliderSystem.h" />
+    <ClInclude Include="src\Collision\ColliderCell.h" />
     <ClInclude Include="src\GameRenderer.h" />
     <ClInclude Include="include\RectangleRenderer.h" />
     <ClInclude Include="include\SimpleECS_Core.h" />
@@ -178,28 +178,29 @@
     <ClInclude Include="include\Scene.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\ComponentPool.h" />
-    <ClInclude Include="src\TransformUtil.h" />
+    <ClInclude Include="src\Core\GameRenderer.h" />
+    <ClInclude Include="src\Utility\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ColliderCell.cpp" />
-    <ClCompile Include="src\SoundPlayer.cpp" />
-    <ClCompile Include="src\FontRenderer.cpp" />
-    <ClCompile Include="src\LineRenderer.cpp" />
-    <ClCompile Include="src\ColliderGrid.cpp" />
-    <ClCompile Include="src\Vector.cpp" />
-    <ClCompile Include="src\Timer.cpp" />
-    <ClCompile Include="src\PhysicsBody.cpp" />
-    <ClCompile Include="src\BoxCollider.cpp" />
-    <ClCompile Include="src\Collider.cpp" />
-    <ClCompile Include="src\ColliderSystem.cpp" />
-    <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\Component.cpp" />
-    <ClCompile Include="src\Entity.cpp" />
-    <ClCompile Include="src\RectangleRenderer.cpp" />
-    <ClCompile Include="src\Scene.cpp" />
-    <ClCompile Include="src\Game.cpp" />
-    <ClCompile Include="src\GameRenderer.cpp" />
-    <ClCompile Include="src\TransformUtil.cpp" />
+    <ClCompile Include="src\Collision\ColliderCell.cpp" />
+    <ClCompile Include="src\Core\Game.cpp" />
+    <ClCompile Include="src\Core\GameRenderer.cpp" />
+    <ClCompile Include="src\Sound\SoundPlayer.cpp" />
+    <ClCompile Include="src\Rendering\FontRenderer.cpp" />
+    <ClCompile Include="src\Rendering\LineRenderer.cpp" />
+    <ClCompile Include="src\Collision\ColliderGrid.cpp" />
+    <ClCompile Include="src\Utility\Vector.cpp" />
+    <ClCompile Include="src\Core\Timer.cpp" />
+    <ClCompile Include="src\Physics\PhysicsBody.cpp" />
+    <ClCompile Include="src\Collision\BoxCollider.cpp" />
+    <ClCompile Include="src\Collision\Collider.cpp" />
+    <ClCompile Include="src\Collision\ColliderSystem.cpp" />
+    <ClCompile Include="src\Input\Input.cpp" />
+    <ClCompile Include="src\Core\Component.cpp" />
+    <ClCompile Include="src\Core\Entity.cpp" />
+    <ClCompile Include="src\Rendering\RectangleRenderer.cpp" />
+    <ClCompile Include="src\Core\Scene.cpp" />
+    <ClCompile Include="src\Utility\TransformUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

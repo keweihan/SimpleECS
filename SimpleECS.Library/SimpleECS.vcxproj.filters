@@ -36,7 +36,7 @@
     <ClInclude Include="include\RectangleRenderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\TransformUtil.h">
+    <ClInclude Include="src\Utility\TransformUtil.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Transform.h">
@@ -48,7 +48,7 @@
     <ClInclude Include="include\Collider.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ColliderSystem.h">
+    <ClInclude Include="src\Collision\ColliderSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\BoxCollider.h">
@@ -75,10 +75,10 @@
     <ClInclude Include="include\SoundPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ColliderGrid.h">
+    <ClInclude Include="src\Collision\ColliderGrid.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\ColliderCell.h">
+    <ClInclude Include="src\Collision\ColliderCell.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\ComponentPool.h">
@@ -87,63 +87,66 @@
     <ClInclude Include="include\CHandle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\Core\GameRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Game.cpp">
+    <ClCompile Include="src\Core\Scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Scene.cpp">
+    <ClCompile Include="src\Rendering\RectangleRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameRenderer.cpp">
+    <ClCompile Include="src\Utility\TransformUtil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\RectangleRenderer.cpp">
+    <ClCompile Include="src\Core\Entity.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\TransformUtil.cpp">
+    <ClCompile Include="src\Core\Component.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Entity.cpp">
+    <ClCompile Include="src\Input\Input.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Component.cpp">
+    <ClCompile Include="src\Collision\Collider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Input.cpp">
+    <ClCompile Include="src\Collision\ColliderSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Collider.cpp">
+    <ClCompile Include="src\Collision\BoxCollider.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ColliderSystem.cpp">
+    <ClCompile Include="src\Physics\PhysicsBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\BoxCollider.cpp">
+    <ClCompile Include="src\Core\Timer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\PhysicsBody.cpp">
+    <ClCompile Include="src\Utility\Vector.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Timer.cpp">
+    <ClCompile Include="src\Rendering\LineRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\Vector.cpp">
+    <ClCompile Include="src\Rendering\FontRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\LineRenderer.cpp">
+    <ClCompile Include="src\Sound\SoundPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\FontRenderer.cpp">
+    <ClCompile Include="src\Collision\ColliderGrid.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\SoundPlayer.cpp">
+    <ClCompile Include="src\Collision\ColliderCell.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ColliderGrid.cpp">
+    <ClCompile Include="src\Core\Game.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\ColliderCell.cpp">
+    <ClCompile Include="src\Core\GameRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

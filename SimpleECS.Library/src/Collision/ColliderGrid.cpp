@@ -1,6 +1,6 @@
 #include "Game.h"
 #include "ColliderGrid.h"
-#include "GameRenderer.h"
+#include "../Core/GameRenderer.h"
 #include "Entity.h"
 #include <vector>
 

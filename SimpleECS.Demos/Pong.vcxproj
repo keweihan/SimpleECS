@@ -149,7 +149,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scripts\collisionStress.cpp" />
+    <ClCompile Include="scripts\pong.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

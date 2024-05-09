@@ -1,6 +1,6 @@
 #include "LineRenderer.h"
-#include "GameRenderer.h"
-#include "TransformUtil.h"
+#include "Core/GameRenderer.h"
+#include "Utility/TransformUtil.h"
 #include <tuple>
 #include <cmath>
 #include "SDL.h"

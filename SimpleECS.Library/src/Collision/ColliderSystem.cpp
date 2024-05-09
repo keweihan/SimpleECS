@@ -3,8 +3,8 @@
 #include "BoxCollider.h"
 #include "Component.h"
 #include "Entity.h"
-#include "GameRenderer.h"
-#include "TransformUtil.h"
+#include "Core/GameRenderer.h"
+#include "Utility/TransformUtil.h"
 #include "boost/functional/hash.hpp"
 #include <vector>
 #include <thread>

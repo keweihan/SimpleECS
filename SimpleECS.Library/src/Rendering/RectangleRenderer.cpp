@@ -1,6 +1,6 @@
 #include "RectangleRenderer.h"
-#include "GameRenderer.h"
-#include "TransformUtil.h"
+#include "Core/GameRenderer.h"
+#include "Utility/TransformUtil.h"
 #include "Entity.h"
 #include <tuple>
 #include <SDL.h>
