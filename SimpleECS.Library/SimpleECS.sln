@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleECS", "SimpleECS.vcxp
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleECS-tests", "..\SimpleECS.Tests\SimpleECS-tests.vcxproj", "{1E95B1C8-C475-429A-843E-58334C966408}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleECS.Apps", "..\SimpleECS.Apps\Pong.vcxproj", "{3486017A-4C6F-4B76-9099-285A314677FA}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SimpleECS.Demos", "..\SimpleECS.Demos\Pong.vcxproj", "{3486017A-4C6F-4B76-9099-285A314677FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

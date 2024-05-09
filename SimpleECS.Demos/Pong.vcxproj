@@ -24,7 +24,7 @@
     <ProjectGuid>{3486017a-4c6f-4b76-9099-285a314677fa}</ProjectGuid>
     <RootNamespace>Pong</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SimpleECS.Apps</ProjectName>
+    <ProjectName>SimpleECS.Demos</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
