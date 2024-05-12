@@ -38,22 +38,12 @@ void SimpleECS::PhysicsBody::onCollide(const Collision& collide)
 	// Consider two physics body going towards each other in
 	// in a collision. If the first body's velocity is set from collision resolution
 	// before the second resolves its collision, the second will resolve as if the first was already
-	// flying away.
-	
-	// Shift position out of overlap
-	entity->transform->position.x += (collide.normal * collide.penetration).x;
-	entity->transform->position.y += (collide.normal * collide.penetration).y;
+	// flying away.	
 
-	
-	std::cout << entity->tag << "[" << velocity.x << "," << velocity.y << "] " << "Original Velocity Mag : " << sqrt(pow(velocity.x,2) + pow(velocity.y, 2)) << std::endl;
-	
+	// Calculate new velocity (simple reflect across collision normal)
+	// velocity = velocity - (collide.normal * (velocity.dotProduct(collide.normal))) * 2;
+	// futureVelocity = velocity;
 
-	// Calculate new velocity (reflect across collision normal)
-	//velocity = velocity - (collide.normal * (velocity.dotProduct(collide.normal))) * 2;
-	//futureVelocity = velocity;
-
-	// Calculate new velocity (mass velocity 2D calculation)
-	// From https://en.wikipedia.org/wiki/Elastic_collision#Two-Dimensional_Collision_With_Two_Moving_Objects
 	PhysicsBody other;
 	double massCoef;
 	try {
@@ -63,22 +53,22 @@ void SimpleECS::PhysicsBody::onCollide(const Collision& collide)
 	catch (const std::exception&){
 		other = PhysicsBody();
 		other.velocity = Vector();
-
 		massCoef = 2;
 	}
 
+	// Shift position out of overlap (weighted shift amount based on relative mass)
+	entity->transform->position.x += (collide.normal * collide.penetration).x * massCoef/2;
+	entity->transform->position.y += (collide.normal * collide.penetration).y * massCoef/2;
+
+	// Calculate new velocity (mass velocity 2D calculation)
+	// Adapted from https://en.wikipedia.org/wiki/Elastic_collision#Two-Dimensional_Collision_With_Two_Moving_Objects
+	// using collision normals instead of position vectors 
 	Vector posDiff		= entity->transform->position - collide.b->entity->transform->position;
 	double posDiffMag	= posDiff.getMagnitude() * posDiff.getMagnitude();
 	double dotProd		= posDiff.dotProduct(velocity - other.velocity);
-	
-	double changeCoeff = massCoef * dotProd / posDiffMag;
-	Vector velocityChange = posDiff * changeCoeff;
+	Vector velocityChange = collide.normal * ((velocity - other.velocity).dotProduct(collide.normal)) * massCoef;
 
-	Vector velocityChangeGPT = collide.normal * ((velocity - other.velocity).dotProduct(collide.normal)) * massCoef;
-
-	futureVelocity = velocity - velocityChangeGPT;
-
-	std::cout << entity->tag << "[" << futureVelocity.x << "," << futureVelocity.y << "] " << " Post Velocity Mag: " << sqrt(pow(futureVelocity.x, 2) + pow(futureVelocity.y, 2)) << std::endl << std::endl;
+	futureVelocity = velocity - velocityChange;
 }
 
 void SimpleECS::PhysicsBody::lateUpdate()
