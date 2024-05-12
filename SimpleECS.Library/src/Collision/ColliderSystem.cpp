@@ -91,8 +91,9 @@ bool SimpleECS::ColliderSystem::getCollisionBoxBox(Collision& collide, BoxCollid
 		bBox->getBounds(bBounds);
 
 		//If any of the sides from A are outside of B, no collision occuring.
-		if (aBounds.yMin >= bBounds.yMax || aBounds.yMax <= bBounds.yMin 
-			|| aBounds.xMax <= bBounds.xMin || aBounds.xMin >= bBounds.xMax)
+		double epsilon = 0.01;  // Small margin value
+		if (aBounds.yMin >= bBounds.yMax - epsilon || aBounds.yMax <= bBounds.yMin + epsilon
+			|| aBounds.xMax <= bBounds.xMin + epsilon || aBounds.xMin >= bBounds.xMax - epsilon)
 		{
 			return false;
 		}

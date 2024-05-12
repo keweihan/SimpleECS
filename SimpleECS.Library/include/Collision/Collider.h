@@ -14,8 +14,8 @@ namespace SimpleECS
 
 	public:
 		struct AABB {
-			int xMin, yMin;
-			int xMax, yMax;
+			double xMin, yMin;
+			double xMax, yMax;
 		};
 
 		/**
