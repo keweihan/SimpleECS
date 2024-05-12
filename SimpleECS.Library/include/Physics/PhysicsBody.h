@@ -14,13 +14,24 @@ namespace SimpleECS
 	public:
 		PhysicsBody() : velocity() {}
 
+		double mass = 1;
+
 		Vector velocity;
 		Vector acceleration;
+
+		
 
 		void update() override;
 		void initialize() override {};
 
+		void applyForce(Vector direction, double magnitude);
+
 		void onCollide(const Collider& other) override;
 		void onCollide(const Collision& collide) override;
+
+		void lateUpdate() override;
+	
+	private:
+		Vector futureVelocity;
 	};
 }

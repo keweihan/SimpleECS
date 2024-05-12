@@ -44,6 +44,11 @@ namespace SimpleECS {
 		* Invoke update() of all components in pool.
 		*/
 		virtual void invokeUpdate() = 0;
+
+		/*
+		* Invoke lateUpdate() of all components in pool.
+		*/
+		virtual void invokeLateUpdate() = 0;
 	};
 
 	/*
@@ -92,6 +97,11 @@ namespace SimpleECS {
 		* Invoke update() of all components in pool.
 		*/
 		void invokeUpdate();
+
+		/*
+		* Invoke lateUpdate() of all components in pool.
+		*/
+		void invokeLateUpdate();
 
 		/*
 		Get list of components of this pool
@@ -185,6 +195,17 @@ namespace SimpleECS {
 		{
 			if (component.getActive()) {
 				component.update();
+			}
+		}
+	}
+
+	template<typename T>
+	inline void ComponentPool<T>::invokeLateUpdate()
+	{
+		for (auto& component : componentList)
+		{
+			if (component.getActive()) {
+				component.lateUpdate();
 			}
 		}
 	}

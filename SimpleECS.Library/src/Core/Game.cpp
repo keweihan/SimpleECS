@@ -95,8 +95,16 @@ void Game::mainLoop()
 		// Run collision functions
 		ColliderSystem::getInstance().invokeCollisions();
 
+		// Run late update
+		for (auto& pool : sceneList[0]->getComponentPools())
+		{
+			(*pool).invokeLateUpdate();
+		}
+
 		// Delete objects
 		sceneList[0]->destroyAllMarkedEntities();
+
+
 
 		// Mark end of frame
 		Timer::endFrame();

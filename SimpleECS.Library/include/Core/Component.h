@@ -26,6 +26,11 @@ namespace SimpleECS
 		virtual void initialize() = 0;
 
 		/*
+		* Called after update after every frame of rendering
+		*/
+		virtual void lateUpdate() {}
+
+		/*
 		* Called on collision with another entity
 		*/
 		virtual void onCollide(const Collider& collide) {}
