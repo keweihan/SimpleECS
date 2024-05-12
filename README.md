@@ -44,8 +44,3 @@ https://github.com/keweihan/SimpleECS/assets/55893673/24a29842-6675-422a-a963-e6
 Demonstration of momentum based collisions by simulating [pi generating collisions](https://www.youtube.com/watch?v=HEfHFsfGXjs&t=119s) using SimpleECS:
 
 https://github.com/keweihan/SimpleECS/assets/55893673/7436e5f3-5bdf-419c-a868-5cde9f12d2a4
-
-
-
-## References
-Referenced [Lazy Foo](https://lazyfoo.net/tutorials/SDL/index.php) for SDL introduction.
