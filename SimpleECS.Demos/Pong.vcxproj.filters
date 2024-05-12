@@ -18,7 +18,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="scripts\momentum.cpp">
+    <ClCompile Include="scripts\piCalcMomentum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

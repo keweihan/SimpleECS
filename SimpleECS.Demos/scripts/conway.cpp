@@ -1,5 +1,6 @@
 /*
-Stress test of SimpleECS collision system.
+Basic implementation of Conway's game of life. Read in RLE file
+from rats.rle
 
 Kewei Han
 */
@@ -286,8 +287,6 @@ int main() {
     auto genDisplay = scene->createEntity();
     genDisplay->addComponent<FontRenderer>("Default", "assets/bit9x9.ttf", 26, Color(124, 200, 211, 0xff));
     genDisplay->addComponent<GenerationCounter>();
-
- 
 
     // TODO: fix this bug. If BoxCollider isn't present library crashses.
     auto dummy = scene->createEntity();
