@@ -125,7 +125,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>SIMPLEECS_EXPORTS;_TESTING</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\packages\imgui-1.90.6\backends;E:\Projects\SimpleECS\SimpleECS.Library\packages\imgui-1.90.6;E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -143,7 +143,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_LIB;SIMPLEECS_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>E:\Projects\SimpleECS\SimpleECS.Library\packages\imgui-1.90.6\backends;E:\Projects\SimpleECS\SimpleECS.Library\packages\imgui-1.90.6;E:\Projects\SimpleECS\SimpleECS.Library\src;C:\Program Files\boost\boost_1_82_0;E:\Projects\SimpleECS\SimpleECS.Library\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -167,6 +167,14 @@
     <ClInclude Include="include\Core\Timer.h" />
     <ClInclude Include="include\Core\Transform.h" />
     <ClInclude Include="include\Core\Vector.h" />
+    <ClInclude Include="packages\imgui-1.90.6\backends\imgui_impl_sdl2.h" />
+    <ClInclude Include="packages\imgui-1.90.6\backends\imgui_impl_sdlrenderer2.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imconfig.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imgui.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imgui_internal.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imstb_rectpack.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imstb_textedit.h" />
+    <ClInclude Include="packages\imgui-1.90.6\imstb_truetype.h" />
     <ClInclude Include="src\Collision\ColliderGrid.h" />
     <ClInclude Include="src\Collision\ColliderSystem.h" />
     <ClInclude Include="src\Collision\ColliderCell.h" />
@@ -183,6 +191,13 @@
     <ClInclude Include="src\Utility\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="packages\imgui-1.90.6\backends\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\backends\imgui_impl_sdlrenderer2.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\imgui.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\imgui_demo.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\imgui_draw.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\imgui_tables.cpp" />
+    <ClCompile Include="packages\imgui-1.90.6\imgui_widgets.cpp" />
     <ClCompile Include="src\Collision\ColliderCell.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\GameRenderer.cpp" />
