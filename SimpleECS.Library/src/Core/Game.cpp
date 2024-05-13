@@ -63,6 +63,8 @@ void Game::init()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
 
 	ImGui::StyleColorsDark();
 	ImGui_ImplSDL2_InitForSDLRenderer(GameRenderer::window, GameRenderer::renderer);
@@ -101,6 +103,7 @@ void Game::mainLoop()
 		ImGui_ImplSDLRenderer2_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
+		//ImGui::DockSpaceOverViewport();
 		bool showDemo = true;
 		ImGui::ShowDemoWindow(&showDemo);
 		ImGui::Begin("Hello, world!");
@@ -140,5 +143,13 @@ void Game::mainLoop()
 		ImGui::Render();
 		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 		SDL_RenderPresent(GameRenderer::renderer);
+
+		// Update and Render additional Platform Windows
+		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
+		{
+			ImGui::UpdatePlatformWindows();
+			ImGui::RenderPlatformWindowsDefault();
+		}
 	}
 }
