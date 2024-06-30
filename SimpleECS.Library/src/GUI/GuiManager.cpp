@@ -29,9 +29,13 @@ void GuiManager::update()
 	ImGui::NewFrame();
 	//ImGui::DockSpaceOverViewport();
 	bool showDemo = true;
+
 	ImGui::ShowDemoWindow(&showDemo);
-	ImGui::Begin("Hello, world!");
-	ImGui::Text("Hello, world!");
+
+	ImGui::Begin("Viewport");
+	float portWidth = static_cast<double>(GameRenderer::SCREEN_WIDTH / 1.5);
+	float portHeight = static_cast<double>(GameRenderer::SCREEN_HEIGHT / 1.5);
+	ImGui::Image((ImTextureID)GameRenderer::gameTexture, { portWidth, portHeight });
 	ImGui::End();
 }
 

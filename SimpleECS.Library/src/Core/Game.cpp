@@ -95,6 +95,7 @@ void Game::mainLoop()
 		GuiManager::getInstance().update();
 
 		//Clear screen
+		SDL_SetRenderTarget(GameRenderer::renderer, GameRenderer::gameTexture);
 		Color sceneColor = sceneList[0]->backgroundColor;
 		SDL_SetRenderDrawColor(GameRenderer::renderer, sceneColor.r, sceneColor.g, sceneColor.b, sceneColor.a);
 		SDL_RenderClear(GameRenderer::renderer);
@@ -121,6 +122,11 @@ void Game::mainLoop()
 		Timer::endFrame();
 	
 		// Render engine GUI components
+		SDL_SetRenderTarget(GameRenderer::renderer, NULL);
+		
+		SDL_SetRenderDrawColor(GameRenderer::renderer, sceneColor.r, sceneColor.g, sceneColor.b, sceneColor.a);
+		SDL_RenderClear(GameRenderer::renderer);
+
 		GuiManager::getInstance().render();
 		SDL_RenderPresent(GameRenderer::renderer);
 	}
