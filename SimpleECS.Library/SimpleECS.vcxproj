@@ -188,6 +188,7 @@
     <ClInclude Include="include\Input\Input.h" />
     <ClInclude Include="include\Core\ComponentPool.h" />
     <ClInclude Include="src\Core\GameRenderer.h" />
+    <ClInclude Include="src\GUI\GuiManager.h" />
     <ClInclude Include="src\Utility\TransformUtil.h" />
   </ItemGroup>
   <ItemGroup>
@@ -201,6 +202,7 @@
     <ClCompile Include="src\Collision\ColliderCell.cpp" />
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\GameRenderer.cpp" />
+    <ClCompile Include="src\GUI\GuiManager.cpp" />
     <ClCompile Include="src\Sound\SoundPlayer.cpp" />
     <ClCompile Include="src\Render\FontRenderer.cpp" />
     <ClCompile Include="src\Render\LineRenderer.cpp" />

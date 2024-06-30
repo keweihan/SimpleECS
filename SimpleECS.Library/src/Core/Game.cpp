@@ -6,6 +6,7 @@
 #include "Core/ComponentPool.h"
 #include "Core/Timer.h"
 #include "Utility/Color.h"
+#include "GUI/GuiManager.h"
 #include <SDL.h>
 
 #include <imgui.h>
@@ -57,18 +58,7 @@ void Game::init()
 {
 	GameRenderer::initGameRenderer();
 	SDL_SetWindowTitle(GameRenderer::window, gameName.c_str());
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;
-
-	ImGui::StyleColorsDark();
-	ImGui_ImplSDL2_InitForSDLRenderer(GameRenderer::window, GameRenderer::renderer);
-	ImGui_ImplSDLRenderer2_Init(GameRenderer::renderer);
+	GuiManager::getInstance().init();
 }
 
 void Game::mainLoop()
@@ -89,27 +79,20 @@ void Game::mainLoop()
 	// Game loop
 	while (!quit)
 	{
-
 		// Check for closing window
 		while (SDL_PollEvent(&e))
 		{
+			// TODO: Move/abstract logic to GuiManager.
 			ImGui_ImplSDL2_ProcessEvent(&e);
+
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
 			}
 		}
 
-		ImGui_ImplSDLRenderer2_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
-		ImGui::NewFrame();
-		//ImGui::DockSpaceOverViewport();
-		bool showDemo = true;
-		ImGui::ShowDemoWindow(&showDemo);
-		ImGui::Begin("Hello, world!");
-		ImGui::Text("Hello, world!");
-		ImGui::End();
-
+		// Define engine GUI components
+		GuiManager::getInstance().update();
 
 		//Clear screen
 		Color sceneColor = sceneList[0]->backgroundColor;
@@ -134,22 +117,11 @@ void Game::mainLoop()
 		// Delete objects
 		sceneList[0]->destroyAllMarkedEntities();
 
-		
-
 		// Mark end of frame
 		Timer::endFrame();
-
-		
-		ImGui::Render();
-		ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
+	
+		// Render engine GUI components
+		GuiManager::getInstance().render();
 		SDL_RenderPresent(GameRenderer::renderer);
-
-		// Update and Render additional Platform Windows
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
-		if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-		{
-			ImGui::UpdatePlatformWindows();
-			ImGui::RenderPlatformWindowsDefault();
-		}
 	}
 }
