@@ -121,9 +121,10 @@ void Game::mainLoop()
 		// Mark end of frame
 		Timer::endFrame();
 	
-		// Render engine GUI components
+		// Render engine GUI components to window
 		SDL_SetRenderTarget(GameRenderer::renderer, NULL);
-		
+
+		// Set window background coloring and clear render
 		SDL_SetRenderDrawColor(GameRenderer::renderer, sceneColor.r, sceneColor.g, sceneColor.b, sceneColor.a);
 		SDL_RenderClear(GameRenderer::renderer);
 

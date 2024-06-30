@@ -1,3 +1,5 @@
+#define IMGUI_DEFINE_MATH_OPERATORS // For imvec2 operators
+
 #include "GuiManager.h"
 #include "Core/GameRenderer.h"
 #include <imgui.h>
@@ -30,12 +32,18 @@ void GuiManager::update()
 	//ImGui::DockSpaceOverViewport();
 	bool showDemo = true;
 
+	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
 	ImGui::ShowDemoWindow(&showDemo);
+	
+	ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_HorizontalScrollbar);
 
-	ImGui::Begin("Viewport");
 	float portWidth = static_cast<double>(GameRenderer::SCREEN_WIDTH / 1.5);
 	float portHeight = static_cast<double>(GameRenderer::SCREEN_HEIGHT / 1.5);
-	ImGui::Image((ImTextureID)GameRenderer::gameTexture, { portWidth, portHeight });
+	ImVec2 portSize = ImVec2(portWidth, portHeight);
+
+	ImVec2 center_pos = (ImGui::GetWindowSize() - portSize) * 0.5f;
+	ImGui::SetCursorPos(center_pos);
+	ImGui::Image((ImTextureID)GameRenderer::gameTexture, portSize);
 	ImGui::End();
 }
 
