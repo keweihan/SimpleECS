@@ -203,6 +203,7 @@
     <ClCompile Include="src\Core\Game.cpp" />
     <ClCompile Include="src\Core\GameRenderer.cpp" />
     <ClCompile Include="src\GUI\GuiManager.cpp" />
+    <ClCompile Include="src\GUI\RobotoMedium.h" />
     <ClCompile Include="src\Sound\SoundPlayer.cpp" />
     <ClCompile Include="src\Render\FontRenderer.cpp" />
     <ClCompile Include="src\Render\LineRenderer.cpp" />
@@ -219,6 +220,7 @@
     <ClCompile Include="src\Render\RectangleRenderer.cpp" />
     <ClCompile Include="src\Core\Scene.cpp" />
     <ClCompile Include="src\Utility\TransformUtil.cpp" />
+    <ClCompile Include="\\wsl.localhost\Ubuntu\home\keweihan\Linux Projects\convert_font_to_c\RobotoMedium.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

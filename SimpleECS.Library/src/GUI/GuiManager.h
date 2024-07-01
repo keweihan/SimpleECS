@@ -1,5 +1,5 @@
 #pragma once
-
+#include <imgui.h>
 
 namespace UtilSimpleECS
 {
@@ -36,6 +36,8 @@ namespace UtilSimpleECS
 		 * Render calls. Not often changed
 		 */
 		void render();
-
+	
+	private:
+		ImFont* font = nullptr;
 	};
 }

@@ -5,9 +5,11 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
+#include "RobotoMedium.h"
 
 using namespace UtilSimpleECS;
 
+ImFont* font = nullptr; 
 
 void GuiManager::init()
 {
@@ -22,6 +24,9 @@ void GuiManager::init()
 	ImGui::StyleColorsDark();
 	ImGui_ImplSDL2_InitForSDLRenderer(GameRenderer::window, GameRenderer::renderer);
 	ImGui_ImplSDLRenderer2_Init(GameRenderer::renderer);
+
+
+	font = io.Fonts->AddFontFromMemoryCompressedTTF(RobotoMedium_compressed_data, RobotoMedium_compressed_size, 13);
 }
 
 void GuiManager::update()
@@ -30,6 +35,9 @@ void GuiManager::update()
 	ImGui_ImplSDL2_NewFrame();
 	ImGui::NewFrame();
 	//ImGui::DockSpaceOverViewport();
+
+	if(font) { ImGui::PushFont(font); }
+
 	bool showDemo = true;
 
 	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
