@@ -41,7 +41,7 @@ namespace SimpleECS
 		/**
 		* Optional string identifier for this entity
 		*/
-		std::string tag;
+		std::string tag = "Default";
 
 		/**
 		* Entity position in world space.

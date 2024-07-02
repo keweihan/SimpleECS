@@ -38,6 +38,10 @@ namespace UtilSimpleECS
 		void render();
 	
 	private:
+		/**
+		 * Configure theming
+		 */
+		void applyTheme();
 		ImFont* font = nullptr;
 	};
 }
