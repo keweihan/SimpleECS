@@ -8,6 +8,7 @@
 #include <imgui_impl_sdl2.h>
 #include <imgui_impl_sdlrenderer2.h>
 #include "RobotoMedium.h"
+#include "Physics/PhysicsBody.h"
 
 using namespace UtilSimpleECS;
 using namespace SimpleECS;
@@ -77,28 +78,40 @@ void GuiManager::update()
 			}
 			ImGui::EndListBox();
 		}
-		//static int item_current_idx = 0;
-		//
-		//if (ImGui::BeginListBox("##listbox 2", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
-		//{
-		//	for (int n = 0; n < Game::getInstance().getCurrentScene()->entities.size(); n++)
-		//	{
-		//		const bool is_selected = (item_current_idx == n);
-		//		if (ImGui::Selectable(Game::getInstance().getCurrentScene()->entities[n]->tag.c_str(), is_selected)) {
-		//			item_current_idx = n;
-		//		}
-		//		// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-		//		if (is_selected)
-		//			ImGui::SetItemDefaultFocus();
-		//	}
-		//	ImGui::EndListBox();
-		//}
+		selectedEntity = items[item_current_idx];
 	};
 	ImGui::End();
 
 	ImGui::Begin("Statistics");
 	{
-		ImGui::Text("TODO");
+		ImGui::Text(selectedEntity->tag.c_str());
+
+
+		
+		// TODO: move logic to components (components should have rendering)
+		// But, logically one should not have to be responsible for writing GUI code when writing
+		// a game logic component. 
+		ImGui::Text("Position");
+		Vector pos = selectedEntity->transform->position;
+		float pos2f[2] = { pos.x, pos.y };
+		ImGui::DragFloat2("Position", pos2f);
+		selectedEntity->transform->position = { pos2f[0], pos2f[1] }; // Reassign to source
+
+		ImGui::Text("Velocity");
+		try
+		{
+			Handle<PhysicsBody> physbd = selectedEntity->getComponent<PhysicsBody>();
+			if (physbd) {
+				Vector vel = physbd->velocity;
+				float vel2f[2] = { vel.x, vel.y };
+				ImGui::DragFloat2("Velocity", vel2f);
+				physbd->velocity = { vel2f[0], vel2f[1] }; // Reassign to source
+			}
+		}
+		catch (const std::exception&)
+		{
+
+		}
 	};
 	ImGui::End();
 

@@ -1,5 +1,6 @@
 #pragma once
 #include <imgui.h>
+#include "Core/Entity.h"
 
 namespace UtilSimpleECS
 {
@@ -42,6 +43,8 @@ namespace UtilSimpleECS
 		 * Configure theming
 		 */
 		void applyTheme();
+
+		SimpleECS::Entity* selectedEntity = nullptr;
 		ImFont* font = nullptr;
 	};
 }

@@ -65,6 +65,7 @@ void Game::mainLoop()
 {
 	SDL_Event e;
 	bool quit = false;
+	bool movingWindow = false;
 
 	if (sceneList.size() == 0) {
 		throw std::runtime_error("No scenes in game! ");

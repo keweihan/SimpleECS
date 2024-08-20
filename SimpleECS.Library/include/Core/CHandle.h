@@ -29,10 +29,13 @@ namespace SimpleECS
 			return _pool->getComponent(_entity->id);
 		}
 
+		// Explicit conversion operator to bool
+		explicit operator bool() const {
+			return _entity != nullptr;
+		}
 
 	private:
 		Entity* _entity;
-
 		ComponentPool<T>* _pool;
 	};
 
