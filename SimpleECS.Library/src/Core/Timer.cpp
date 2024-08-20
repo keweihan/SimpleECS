@@ -1,12 +1,16 @@
 #include "Core/Timer.h"
 #include <SDL.h>
+#include <iostream>
 
 uint64_t SimpleECS::Timer::frameFinishTime;
 uint16_t SimpleECS::Timer::previousFrameLength;
 
+
 uint64_t SimpleECS::Timer::getDeltaTime()
 {
-	return previousFrameLength;
+	// TODO: move to config file setup
+	int maxDeltaTime = 500;
+	return previousFrameLength < maxDeltaTime ? previousFrameLength : maxDeltaTime;
 }
 
 uint64_t SimpleECS::Timer::getProgramLifetime()

@@ -34,7 +34,7 @@ namespace SimpleECS
 		static uint64_t frameFinishTime;
 
 		// Duration of previous frame
-		static uint16_t previousFrameLength; 
+		static uint16_t previousFrameLength;
 
 		/*
 		* Call at end of every game loop to indicate end
