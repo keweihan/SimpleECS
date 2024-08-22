@@ -58,6 +58,7 @@ void Game::init()
 {
 	GameRenderer::initGameRenderer();
 	SDL_SetWindowTitle(GameRenderer::window, gameName.c_str());
+	SDL_SetWindowResizable(GameRenderer::window, SDL_bool(true));
 	GuiManager::getInstance().init();
 }
 
