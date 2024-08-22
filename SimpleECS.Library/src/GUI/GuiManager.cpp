@@ -62,65 +62,142 @@ void GuiManager::update()
 
 	ImGui::Begin("Entities");
 	{
-		std::vector<Entity*> items = Game::getInstance().getCurrentScene()->entities;
-		static int item_current_idx = 0; // Here we store our selection data as an index.
-		if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
-		{
-			for (int n = 0; n < items.size(); n++)
+		if (ImGui::CollapsingHeader("Hierarchy", ImGuiTreeNodeFlags_DefaultOpen)) {
+			std::vector<Entity*> items = Game::getInstance().getCurrentScene()->entities;
+			static int item_current_idx = 0; // Here we store our selection data as an index.
+			if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 			{
-				const bool is_selected = (item_current_idx == n);
-				if (ImGui::Selectable((items[n]->tag + "##" + std::to_string(n)).c_str(), is_selected))
-					item_current_idx = n;
+				for (int n = 0; n < items.size(); n++)
+				{
+					const bool is_selected = (item_current_idx == n);
+					if (ImGui::Selectable((items[n]->tag + "##" + std::to_string(n)).c_str(), is_selected))
+						item_current_idx = n;
 
-				// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
-				if (is_selected)
-					ImGui::SetItemDefaultFocus();
+					// Set the initial focus when opening the combo (scrolling + keyboard navigation focus)
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+				ImGui::EndListBox();
 			}
-			ImGui::EndListBox();
+			selectedEntity = items[item_current_idx];
 		}
-		selectedEntity = items[item_current_idx];
 	};
 	ImGui::End();
 
-	ImGui::Begin("Statistics");
+	ImGui::Begin("Inspector");
 	{
-		ImGui::Text(selectedEntity->tag.c_str());
+		if (ImGui::CollapsingHeader("Entity", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::BeginChild("EntityNameWrapper", ImVec2(0, ImGui::GetTextLineHeightWithSpacing() + 10), true, ImGuiWindowFlags_NoScrollbar);
+			ImGui::Text(selectedEntity->tag.c_str());
+			ImGui::EndChild();
+		}
 
+		ImGui::Separator();
 
 		
 		// TODO: move logic to components (components should have rendering)
 		// But, logically one should not have to be responsible for writing GUI code when writing
-		// a game logic component. 
-		ImGui::Text("Position");
-		Vector pos = selectedEntity->transform->position;
-		float pos2f[2] = { pos.x, pos.y };
-		ImGui::DragFloat2("Position", pos2f);
-		selectedEntity->transform->position = { pos2f[0], pos2f[1] }; // Reassign to source
+		// a game logic component. Consider reflection schemes with macros.
 
-		ImGui::Text("Velocity");
+		if (ImGui::CollapsingHeader("Transform", ImGuiTreeNodeFlags_DefaultOpen)) {
+			ImGui::BeginGroup();
+			Vector pos = selectedEntity->transform->position;
+			float pos2f[2] = { pos.x, pos.y };
+			ImGui::DragFloat2("Position", pos2f);
+			selectedEntity->transform->position = { pos2f[0], pos2f[1] }; // Reassign to source
+			ImGui::EndGroup();
+		}
+
+
+		ImGui::Separator();
+
+		
 		try
 		{
 			Handle<PhysicsBody> physbd = selectedEntity->getComponent<PhysicsBody>();
 			if (physbd) {
-				Vector vel = physbd->velocity;
-				float vel2f[2] = { vel.x, vel.y };
-				ImGui::DragFloat2("Velocity", vel2f);
-				physbd->velocity = { vel2f[0], vel2f[1] }; // Reassign to source
+				if (ImGui::CollapsingHeader("PhysicsBody", ImGuiTreeNodeFlags_DefaultOpen)) {
+					Vector vel = physbd->velocity;
+					float vel2f[2] = { vel.x, vel.y };
+					ImGui::BeginGroup();
+					ImGui::DragFloat2("Velocity", vel2f);
+					ImGui::EndGroup();
+					physbd->velocity = { vel2f[0], vel2f[1] }; // Reassign to source
+				}
 			}
 		}
 		catch (const std::exception&)
 		{
 
 		}
+		
 	};
 	ImGui::End();
 
-	ImGui::Begin("File Explorer");
+	ImGui::Begin("Statistics");
 	{
-		ImGui::Text("TODO");
+		std::vector<Entity*> entities = Game::getInstance().getCurrentScene()->entities;
+		ImGuiIO& io = ImGui::GetIO();
+		if (ImGui::BeginTable("StatisticsTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
+		{
+			ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthFixed, 100);
+			ImGui::TableSetupColumn(nullptr, ImGuiTableColumnFlags_WidthStretch);
+			ImVec4 color = ImVec4(0.710f, 0.808f, 0.655f, 1.0f);
+			//ImGui::TableHeadersRow();
+
+			// FPS Row
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("FPS");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::TextColored(color, "%.1f", io.Framerate);
+			
+			// Entities Row
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("Entity Count");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::TextColored(color, "%d", static_cast<int>(entities.size()));
+
+			// Num components
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::Text("deltaTime (ms)");
+			ImGui::TableSetColumnIndex(1);
+			ImGui::TextColored(color, "%.3f", 1000.0f / io.Framerate);
+
+			ImGui::EndTable();
+		}
 	};
 	ImGui::End();
 
+	static bool isPaused = false;
+	ImGui::Begin("Freeze Control");
+	{
+		if (ImGui::Button(isPaused ? "Resume" : "Pause"))
+		{
+			isPaused = !isPaused;
+			// Add your pause/resume logic here
+			if (isPaused)
+			{
+				// Pause the game
+				Timer::setFreezeMode(true);
+				
+			}
+			else
+			{
+				// Resume the game
+				Timer::setFreezeMode(false);
+			}
+		}
+
+		if (ImGui::Button("Freeze Step"))
+		{
+			Timer::freezeStep(15);
+		}
+		
+	};
+	ImGui::End();
 }
 
 void GuiManager::render()

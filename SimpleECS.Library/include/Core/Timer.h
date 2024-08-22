@@ -29,12 +29,29 @@ namespace SimpleECS
 		*/
 		static uint64_t getProgramLifetime();
 
+		/*
+		* Freeze time (getDeltaTime returns 0)
+		* TODO: separate time and physics time.
+		*/
+		static void setFreezeMode(bool);
+
+		/*
+		 * Step forward one step in time.
+		 * TODO: separate time and physics time.
+		 */
+		static void freezeStep(uint16_t time);
+
 	private:
 		// Time of previous frame finish in ms
 		static uint64_t frameFinishTime;
 
 		// Duration of previous frame
 		static uint16_t previousFrameLength;
+
+		// Time is in freeze mode
+		static bool inFreezeMode; // Dictates isFrozen == true
+		static bool isFreezed;	  // Dictates getDeltaTime return 0
+		static uint16_t freezeFrameLength; // Length of frozen step
 
 		/*
 		* Call at end of every game loop to indicate end
