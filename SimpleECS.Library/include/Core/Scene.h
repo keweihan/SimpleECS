@@ -135,7 +135,7 @@ namespace SimpleECS
 
 		/*
 		* Component pool list for scene
-		* Stores components in a contiguous storage for fast iteration.
+		* Contiguous component pools storage.
 		* Access component pool for type T with allComponents[getComponentID<T>()]
 		*/
 		std::vector<std::shared_ptr<ComponentPoolBase>> allComponents;
