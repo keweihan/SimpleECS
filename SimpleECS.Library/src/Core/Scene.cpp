@@ -39,10 +39,11 @@ bool Scene::destroyEntityImmediate(uint32_t eid)
 	for (auto& pool : allComponents)
 	{
 		(*pool).deleteComponent(eid);
-	}
+	}	
 
 	// Release id back into pool.
 	availableEntityIds.insert(eid);
+	delete entities[eid];
 	entities[eid] = nullptr;
 
 	return true;
@@ -51,6 +52,18 @@ bool Scene::destroyEntityImmediate(uint32_t eid)
 bool Scene::destroyEntity(uint32_t eid)
 {
 	return toDestroyEntities.insert(eid).second;
+}
+
+std::vector<Entity*> SimpleECS::Scene::getEntities()
+{
+	std::vector<Entity*> active;
+	active.reserve(entities.size());
+	for (auto ent : entities) {
+		if (ent) {
+			active.push_back(ent);
+		}
+	}
+	return active;
 }
 
 void Scene::destroyAllMarkedEntities()

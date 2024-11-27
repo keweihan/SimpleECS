@@ -203,9 +203,6 @@
     <ClCompile Include="src\GUI\GuiManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="\\wsl.localhost\Ubuntu\home\keweihan\Linux Projects\convert_font_to_c\RobotoMedium.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\GUI\RobotoMedium.h">
       <Filter>Source Files</Filter>
     </ClCompile>

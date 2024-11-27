@@ -85,6 +85,11 @@ namespace SimpleECS
 		SIMPLEECS_API bool destroyEntity(uint32_t eid);
 
 		/**
+		* Get a list of active entities
+		*/
+		SIMPLEECS_API std::vector<Entity*> getEntities();
+
+		/**
 		*  IMMEDIATELY destroys all entities marked for destruction (i.e. in toDestroyEntities) 
 		*  Proceed with caution, as references can be broken.
 		*/
@@ -92,6 +97,7 @@ namespace SimpleECS
 
 		/*
 		* Entities contained by the scene
+		* TODO: move to private and create method to return active entities only.
 		*/
 		std::vector<Entity*> entities;
 

@@ -41,7 +41,7 @@ void GuiManager::update()
 	ImGui::NewFrame();
 	//ImGui::DockSpaceOverViewport();
 
-	if(font) { ImGui::PushFont(font); }
+	//if(font) { ImGui::PushFont(font); }
 
 	bool showDemo = true;
 
@@ -63,7 +63,7 @@ void GuiManager::update()
 	ImGui::Begin("Entities");
 	{
 		if (ImGui::CollapsingHeader("Hierarchy", ImGuiTreeNodeFlags_DefaultOpen)) {
-			std::vector<Entity*> items = Game::getInstance().getCurrentScene()->entities;
+			std::vector<Entity*> items = Game::getInstance().getCurrentScene()->getEntities();
 			static int item_current_idx = 0; // Here we store our selection data as an index.
 			if (ImGui::BeginListBox("##listbox 1", ImVec2(-FLT_MIN, 10 * ImGui::GetTextLineHeightWithSpacing())))
 			{
@@ -136,7 +136,7 @@ void GuiManager::update()
 
 	ImGui::Begin("Statistics");
 	{
-		std::vector<Entity*> entities = Game::getInstance().getCurrentScene()->entities;
+		std::vector<Entity*> entities = Game::getInstance().getCurrentScene()->getEntities();
 		ImGuiIO& io = ImGui::GetIO();
 		if (ImGui::BeginTable("StatisticsTable", 2, ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg))
 		{
