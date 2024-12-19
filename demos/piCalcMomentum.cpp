@@ -37,11 +37,11 @@ Scene* mainScene;
 
 class CurrFrameCounter : public Component {
 public:
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 	};
 
-	void update() {
+	void update() override {
 		frameCount++;
 		int currSecond = static_cast<int>(Timer::getProgramLifetime() / 1000);
 		if (currSecond > prevSecond)
@@ -62,13 +62,13 @@ public:
 
 class CollisionCounterBall : public Component {
 public:
-	void initialize() {};
+	void initialize() override {};
 	
-	void onCollide(const Collider& other) {
+	void onCollide(const Collider& other) override {
 		collideCount++;
 	}
 
-	void update() { }
+	void update() override { }
 	uint64_t collideCount = 0;
 	Handle<FontRenderer> textRender;
 };
@@ -79,11 +79,11 @@ public:
 		ballCounter = _ballCounter;
 	}
 
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 	};
 
-	void update() {
+	void update() override {
 		string text = "Collision Count: " + std::to_string(ballCounter->collideCount);
 		textRender->text = text;
 	}

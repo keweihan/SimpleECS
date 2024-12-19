@@ -1,4 +1,3 @@
-#pragma once
 #include "./SDLImGuiRenderer.h"
 #include "Core/Game.h"
 #include "Core/Scene.h"

@@ -88,7 +88,7 @@ void GuiManager::update()
 	{
 		if (ImGui::CollapsingHeader("Entity", ImGuiTreeNodeFlags_DefaultOpen)) {
 			ImGui::BeginChild("EntityNameWrapper", ImVec2(0, ImGui::GetTextLineHeightWithSpacing() + 10), true, ImGuiWindowFlags_NoScrollbar);
-			ImGui::Text(selectedEntity->tag.c_str());
+			ImGui::Text("%s", selectedEntity->tag.c_str());
 			ImGui::EndChild();
 		}
 

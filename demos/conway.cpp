@@ -105,7 +105,7 @@ public:
 
     Cell(int _r, int _c) : r(_r), c(_c) {}
     
-    void initialize() 
+    void initialize() override
     {
         double xPos = c * cellSize - SCREEN_WIDTH / 2;
         double yPos = r * cellSize - SCREEN_HEIGHT / 2;
@@ -178,7 +178,7 @@ class CellManager : public Component {
 public:
     CellManager(vector<vector<bool>>& _parsedGrid): parsedGrid(_parsedGrid) {}
 
-    void initialize()
+    void initialize() override
     {
         // Create entities from parsedGrid
         auto scene = Game::getInstance().getCurrentScene();
@@ -237,12 +237,12 @@ int CellManager::generation = 0;
 class GenerationCounter : public Component {
 public:
 
-    void initialize() {
+    void initialize() override {
         textRender = entity->getComponent<FontRenderer>();
         entity->transform->position = Vector(0, 0);
     };
 
-    void update() {
+    void update() override {
         string text = "Generation: " + std::to_string(CellManager::generation);
         textRender->text = text;
     }
@@ -254,12 +254,12 @@ public:
 class AvgFrameCounter : public Component {
 public:
 
-    void initialize() {
+    void initialize() override {
         textRender = entity->getComponent<FontRenderer>();
         entity->transform->position = Vector(0, 25);
     };
 
-    void update() {
+    void update() override {
         framesPassed++;
         int64_t lifeTime = Timer::getProgramLifetime();
         int64_t avgFPS = framesPassed / std::max(static_cast<int>(Timer::getProgramLifetime()) / 1000, 1);

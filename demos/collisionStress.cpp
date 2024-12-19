@@ -36,12 +36,12 @@ Scene* mainScene;
 class AvgFrameCounter : public Component {
 public:
 
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 		entity->transform->position = Vector(0, -25);
 	};
 
-	void update() {
+	void update() override {
 		framesPassed++;
 		int64_t lifeTime = Timer::getProgramLifetime();
 		int64_t avgFPS = framesPassed / std::max(static_cast<int>(Timer::getProgramLifetime()) / 1000, 1);
@@ -57,12 +57,12 @@ public:
 class CurrFrameCounter : public Component {
 public:
 
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 		entity->transform->position = Vector(0, 25);
 	};
 
-	void update() {
+	void update() override {
 		frameCount++;
 		int currSecond = static_cast<int>(Timer::getProgramLifetime() / 1000);
 		if (currSecond > prevSecond)
@@ -84,12 +84,12 @@ public:
 class TimeCounter : public Component {
 public:
 
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 		entity->transform->position = Vector(0, -75);
 	};
 
-	void update() {
+	void update() override {
 		string text = "Time: " + std::to_string(Timer::getProgramLifetime()/1000);
 		textRender->text = text;
 	}
@@ -101,12 +101,12 @@ class ObjectCounter : public Component {
 public:
 	ObjectCounter(int numObj) : num(numObj) {}
 
-	void initialize() {
+	void initialize() override {
 		textRender = entity->getComponent<FontRenderer>();
 		entity->transform->position = Vector(0, 75);
 	};
 
-	void update() {
+	void update() override {
 		string text = std::to_string(num) + " Objects";
 		textRender->text = text;
 	}

@@ -28,10 +28,11 @@ def install_dependencies():
 
 
 def clean():
-    shutil.rmtree("build")
+    shutil.rmtree("build", ignore_errors=True)
 
 
 def clean_rebuild():
+    clean()
     install_dependencies()
     build_release()
     build_debug()

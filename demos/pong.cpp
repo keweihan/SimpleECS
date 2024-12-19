@@ -58,7 +58,7 @@ class PaddleController : public Component {
 public:
 	PaddleController(PlayerType player) : player(player) {};
 	
-	void initialize() {}
+	void initialize() override {}
 
 	// Apply computer control of paddle based on ball position
 	void aiControl(bool& downPressed, bool& upPressed)

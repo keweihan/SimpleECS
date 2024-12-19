@@ -70,7 +70,7 @@ namespace SimpleECS {
 		* Delete component from entityID if it has component.
 		* No error or behavior if entity does not have component. 
 		*/
-		void deleteComponent(uint32_t entityID);
+		void deleteComponent(uint32_t entityID) override;
 
 		/*
 		* Return raw pointer to component owned by entityID, if it exists.
@@ -91,17 +91,17 @@ namespace SimpleECS {
 		/*
 		* Invoke start() of all components in pool.
 		*/
-		void invokeStart();
+		void invokeStart() override;
 
 		/*
 		* Invoke update() of all components in pool.
 		*/
-		void invokeUpdate();
+		void invokeUpdate() override;
 
 		/*
 		* Invoke lateUpdate() of all components in pool.
 		*/
-		void invokeLateUpdate();
+		void invokeLateUpdate() override;
 
 		/*
 		Get list of components of this pool
