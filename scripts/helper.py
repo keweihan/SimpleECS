@@ -1,6 +1,7 @@
 import argparse
 import os
 import subprocess
+import shutil
 
 
 def run_command(command):
@@ -24,6 +25,16 @@ def install_dependencies():
     """Install dependencies with Conan"""
     run_command("conan install . --output-folder=. --build=missing -s build_type=Release")
     run_command("conan install . --output-folder=. --build=missing -s build_type=Debug")
+
+
+def clean():
+    shutil.rmtree("build")
+
+
+def clean_rebuild():
+    install_dependencies()
+    build_release()
+    build_debug()
 
 
 def build_release():
@@ -100,6 +111,9 @@ def parse_args():
     # Test command
     subparsers.add_parser("test", help="Run tests")
 
+    subparsers.add_parser("clean", help="Clean builds")
+
+    subparsers.add_parser("rebuild", help="Clean and rebuild")
     return parser
 
 
@@ -115,6 +129,10 @@ if __name__ == "__main__":
             build_debug()
     elif args.command == "test":
         run_tests()
+    elif args.command == "clean":
+        clean()
+    elif args.command == "rebuild":
+        clean_rebuild()
     else:
         parser.print_help()
         exit(1)
