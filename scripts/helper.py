@@ -1,12 +1,6 @@
 import argparse
 import os
 import subprocess
-import socket
-
-
-def is_ghc_cluster() -> bool:
-    hostname = socket.gethostname()
-    return hostname.startswith("ghc")
 
 
 def run_command(command):
@@ -28,10 +22,6 @@ def run_tests():
 
 def install_dependencies():
     """Install dependencies with Conan"""
-    if is_ghc_cluster():
-        run_command("bash -c 'source scripts/ghc_setup.sh'")
-        return
-
     run_command("conan install . --output-folder=. --build=missing -s build_type=Release")
     run_command("conan install . --output-folder=. --build=missing -s build_type=Debug")
 
