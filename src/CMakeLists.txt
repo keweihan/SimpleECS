@@ -57,6 +57,7 @@ message("ImGui include directories: ${IMGUI_INCLUDE_DIRS}")
 target_link_libraries(SimpleECS
     PUBLIC
         SimpleECS_Headers
+        Boost::boost
     PRIVATE
         SDL2::SDL2main
         SDL2::SDL2
@@ -64,6 +65,5 @@ target_link_libraries(SimpleECS
         sdl_ttf::sdl_ttf
         SDL2_mixer::SDL2_mixer
         # SDL2_image::SDL2_image // Not a dependency
-        Boost::boost
         ${CMAKE_DL_LIBS}
 )

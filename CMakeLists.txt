@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.16)
 project(SimpleECS)
+enable_testing()
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,5 +37,6 @@ message("ImGui include directories: ${IMGUI_INCLUDE_DIRS}")
 # Subdirectories 
 add_subdirectory(src)
 add_subdirectory(demos)
+add_subdirectory(tests)
 
 message("Build type: ${CMAKE_BUILD_TYPE}")

@@ -3,9 +3,11 @@ import os
 import subprocess
 import socket
 
+
 def is_ghc_cluster() -> bool:
     hostname = socket.gethostname()
     return hostname.startswith("ghc")
+
 
 def run_command(command):
     """Run a shell command and print the output in real time."""
@@ -19,18 +21,19 @@ def run_command(command):
         exit(1)
 
 
+def run_tests():
+    """Run tests"""
+    run_command("cd build/Release && ctest")
+
+
 def install_dependencies():
     """Install dependencies with Conan"""
     if is_ghc_cluster():
         run_command("bash -c 'source scripts/ghc_setup.sh'")
         return
-    
-    run_command(
-        "conan install . --output-folder=. --build=missing -s build_type=Release"
-    )
-    run_command(
-        "conan install . --output-folder=. --build=missing -s build_type=Debug"
-    )
+
+    run_command("conan install . --output-folder=. --build=missing -s build_type=Release")
+    run_command("conan install . --output-folder=. --build=missing -s build_type=Debug")
 
 
 def build_release():
@@ -41,9 +44,7 @@ def build_release():
 
     if is_windows:
         # Configure build system with CMake
-        run_command(
-            f"cmake -B build -DCMAKE_TOOLCHAIN_FILE='build/generators/conan_toolchain.cmake'"
-        )
+        run_command(f"cmake -B build -DCMAKE_TOOLCHAIN_FILE='build/generators/conan_toolchain.cmake'")
         # Build with CMake
         run_command(f"cmake --build {build_dir} --config Release")
     else:
@@ -61,9 +62,7 @@ def build_debug():
 
     if is_windows:
         # Configure build system with CMake
-        run_command(
-            f"cmake ./build -DCMAKE_TOOLCHAIN_FILE='conan_toolchain.cmake'"
-        )
+        run_command(f"cmake ./build -DCMAKE_TOOLCHAIN_FILE='conan_toolchain.cmake'")
         # Build with CMake
         run_command(f"cmake --build {build_dir} --config Debug")
     else:
@@ -74,9 +73,7 @@ def build_debug():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Build and install dependencies."
-    )
+    parser = argparse.ArgumentParser(description="Build and install dependencies.")
     subparsers = parser.add_subparsers(dest="command")
 
     # Install command
@@ -95,9 +92,7 @@ def parse_args():
 
 
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="Build and install dependencies."
-    )
+    parser = argparse.ArgumentParser(description="Build and install dependencies.")
     subparsers = parser.add_subparsers(dest="command")
 
     # Install command
@@ -112,6 +107,9 @@ def parse_args():
         help="Type of build: release or debug",
     )
 
+    # Test command
+    subparsers.add_parser("test", help="Run tests")
+
     return parser
 
 
@@ -125,6 +123,8 @@ if __name__ == "__main__":
             build_release()
         elif args.type == "debug":
             build_debug()
+    elif args.command == "test":
+        run_tests()
     else:
         parser.print_help()
         exit(1)
