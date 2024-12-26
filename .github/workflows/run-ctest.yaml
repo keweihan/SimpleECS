@@ -111,6 +111,7 @@ jobs:
     needs: build-linux-images
     name: Performance Runs
     runs-on: ubuntu-latest
+    if: ${{ always() }}
     container:
       image: ghcr.io/${{ github.repository_owner }}/build-env-gcc:latest
       credentials:
