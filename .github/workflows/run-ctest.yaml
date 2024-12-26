@@ -1,0 +1,181 @@
+name: CI Pipeline
+
+on:
+  push:
+      branches:
+      - dev
+      - main
+
+jobs:
+  # Change detection
+  changes:
+    name: Get Changed Files
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    # Set job outputs to values from filter step
+    outputs:
+      conanfile: ${{ steps.filter.outputs.conanfile }}
+      dockerclang: ${{ steps.filter.outputs.dockerclang }}
+      dockergcc: ${{ steps.filter.outputs.dockergcc }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    - uses: dorny/paths-filter@v3
+      id: filter
+      with:
+        base: ${{ github.ref }}
+        filters: |
+          conanfile:
+            - 'conanfile.py'
+          dockerclang:
+            - '.github/docker/clang/Dockerfile'
+          dockergcc:
+            - '.github/docker/gcc/Dockerfile'
+
+  build-linux-images:
+    name: Build Linux images
+    needs: changes
+    runs-on: ubuntu-latest
+    if: ${{ needs.changes.outputs.conanfile == 'true' }}
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler: ['clang','gcc']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build Docker image
+        run: |
+          export DOCKER_BUILDKIT=1
+          docker build -t ghcr.io/${{ github.repository_owner }}/build-env-${{ matrix.compiler }}:latest -f .github/docker/${{ matrix.compiler }}/Dockerfile .
+
+      - name: Push Docker image
+        run: |
+          docker push ghcr.io/${{ github.repository_owner }}/build-env-${{ matrix.compiler }}:latest
+
+  test-linux:
+    needs: build-linux-images
+    name: Test with Linux
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    strategy:
+      fail-fast: true
+      matrix:
+        compiler: ['clang','gcc']
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/build-env-${{ matrix.compiler }}:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --user root
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Move installed conan dependencies in container to local path
+      - name: Move conan dependencies 
+        run: |
+          mv /workspace/build ./build
+
+      - name: Compiler version
+        run: |
+          gcc --version
+
+      - name: Build test executables
+        run: | # Set default profile to profile in container 
+          export CONAN_HOME=/root/.conan2
+          python3 scripts/helper.py build --type release
+      
+      - name: Run tests
+        run: |
+          cd build/Release && ctest
+  
+  test-performance: 
+    needs: build-linux-images
+    name: Performance Runs
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    container:
+      image: ghcr.io/${{ github.repository_owner }}/build-env-gcc:latest
+      credentials:
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+      options: --user root
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Move installed conan dependencies in container to local path
+      - name: Move conan dependencies 
+        run: |
+          mv /workspace/build ./build
+
+      - name: Compiler version
+        run: |
+          gcc --version
+
+      - name: Build test executables
+        run: | # Set default profile to profile in container 
+          export CONAN_HOME=/root/.conan2
+          python3 scripts/helper.py build --type release
+      
+      - name: Run stress collision scene
+        run: |
+          ./build/Release/bin/perfCollisionStress >> $GITHUB_STEP_SUMMARY
+      
+      - name: Run sparse collision scene
+        run: |
+          ./build/Release/bin/perfCollisionSparse >> $GITHUB_STEP_SUMMARY
+    
+
+  test-windows:
+    name: Test with Windows MSVC
+    runs-on: windows-latest  # This specifies a Windows environment
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Conan path
+        run: echo "CONAN_USER_HOME=${{ github.workspace }}" >> $GITHUB_ENV
+
+      - name: Set up Conan
+        run: |
+          python -m pip install --upgrade pip
+          pip install conan
+          conan profile detect
+
+      - name: Cache Conan dependencies
+        id: cache-conan
+        uses: actions/cache@v4
+        with:
+          # Cache Conan dependencies based on the hash of conanfile.py
+          path: |
+            ${{ github.workspace }}/build
+            C:/Users/runneradmin/.conan2
+          key: ${{ runner.os }}-conan-${{ hashFiles('**/conanfile.py') }}
+          restore-keys: |
+            ${{ runner.os }}-conan-
+
+      - name: Install Conan dependencies
+        if: steps.cache-conan.outputs.cache-hit != 'true'
+        run: |
+          python scripts/helper.py install
+
+      - name: Build executables
+        run: |
+          python scripts/helper.py build --type release
+        
+      - name: Run tests
+        run: |
+          python scripts/helper.py test
+
+

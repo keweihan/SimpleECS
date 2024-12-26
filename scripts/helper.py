@@ -8,7 +8,7 @@ def run_command(command):
     """Run a shell command and print the output in real time."""
     try:
         print(f"Executing command: {command}")
-        result = subprocess.run(command, shell=True, check=True, text=True)
+        result = subprocess.run(command, shell=True, check=True, text=True, env=os.environ.copy())
         print(result.stdout)
     except subprocess.CalledProcessError as e:
         print(f"Error occurred while executing: {command}")
@@ -18,7 +18,11 @@ def run_command(command):
 
 def run_tests():
     """Run tests"""
-    run_command("cd build/Release && ctest")
+    is_windows = os.name == "nt"
+    if is_windows:
+        run_command("cd build && ctest")
+    else:
+        run_command("cd build/Release && ctest")
 
 
 def install_dependencies():
