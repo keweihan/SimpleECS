@@ -135,9 +135,13 @@ jobs:
           export CONAN_HOME=/root/.conan2
           python3 scripts/helper.py build --type release
       
-      - name: Run tests
+      - name: Run stress collision scene
         run: |
           ./build/Release/bin/perfCollisionStress >> $GITHUB_STEP_SUMMARY
+      
+      - name: Run sparse collision scene
+        run: |
+          ./build/Release/bin/perfCollisionSparse >> $GITHUB_STEP_SUMMARY
     
 
   test-windows:

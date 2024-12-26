@@ -1,5 +1,6 @@
 set(TEST_TARGETS
   perfCollisionStress
+  perfCollisionSparse
 )
 
 foreach(target ${TEST_TARGETS})
