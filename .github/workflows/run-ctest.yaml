@@ -118,7 +118,6 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GITHUB_TOKEN }}
       options: --user root
-          cd build/Release && ctest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
