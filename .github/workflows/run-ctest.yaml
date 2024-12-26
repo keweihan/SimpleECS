@@ -95,14 +95,6 @@ jobs:
           export CONAN_HOME=/root/.conan2
           python3 scripts/helper.py build --type release
       
-      - name: Conan profile
-        run: |
-          export CONAN_HOME=/root/.conan2
-          echo "## Conan Profile Information" >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY
-          conan profile show >> $GITHUB_STEP_SUMMARY
-          echo "```" >> $GITHUB_STEP_SUMMARY
-      
       - name: Run tests
         run: |
           cd build/Release && ctest
@@ -148,6 +140,7 @@ jobs:
   test-windows:
     name: Test with Windows MSVC
     runs-on: windows-latest  # This specifies a Windows environment
+    cancel-in-progress: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
