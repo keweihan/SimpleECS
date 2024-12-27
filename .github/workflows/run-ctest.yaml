@@ -5,6 +5,7 @@ on:
       branches:
       - dev
       - main
+  workflow_dispatch:
 
 jobs:
   # Change detection
@@ -37,7 +38,7 @@ jobs:
     name: Build Linux images
     needs: changes
     runs-on: ubuntu-latest
-    if: ${{ needs.changes.outputs.conanfile == 'true' }}
+    if: ${{ needs.changes.outputs.conanfile == 'true' || needs.changes.outputs.dockergcc == 'true' || needs.changes.outputs.dockerclang == 'true'}}
     strategy:
       fail-fast: true
       matrix:
@@ -140,7 +141,6 @@ jobs:
   test-windows:
     name: Test with Windows MSVC
     runs-on: windows-latest  # This specifies a Windows environment
-    cancel-in-progress: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

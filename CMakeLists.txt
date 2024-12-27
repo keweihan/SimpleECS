@@ -18,25 +18,34 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
+# Set OpenMP flags for Clang
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
+
 # Include Conan dependencies
 find_package(Boost REQUIRED)
 find_package(SDL2 REQUIRED)
 find_package(SDL2_ttf REQUIRED)
 find_package(SDL2_mixer REQUIRED)
 find_package(imgui REQUIRED CONFIG)
+find_package(OpenMP REQUIRED)
 
-# Create interface library for headers
-add_library(SimpleECS_Headers INTERFACE)
-target_include_directories(SimpleECS_Headers INTERFACE 
-    ${CMAKE_SOURCE_DIR}/include
-)
+if(OpenMP_CXX_FOUND)
+    # Create interface library for headers
+    add_library(SimpleECS_Headers INTERFACE)
+    target_include_directories(SimpleECS_Headers INTERFACE 
+        ${CMAKE_SOURCE_DIR}/include
+    )
 
-get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui INTERFACE_INCLUDE_DIRECTORIES)
-message("ImGui include directories: ${IMGUI_INCLUDE_DIRS}")
+    get_target_property(IMGUI_INCLUDE_DIRS imgui::imgui INTERFACE_INCLUDE_DIRECTORIES)
+    message("ImGui include directories: ${IMGUI_INCLUDE_DIRS}")
 
-# Subdirectories 
-add_subdirectory(src)
-add_subdirectory(demos)
-add_subdirectory(tests)
+    # Subdirectories 
+    add_subdirectory(src)
+    add_subdirectory(demos)
+    add_subdirectory(tests)
 
-message("Build type: ${CMAKE_BUILD_TYPE}")
+    message("Build type: ${CMAKE_BUILD_TYPE}")
+else()
+    message(FATAL_ERROR "OpenMP not found")
+endif()
