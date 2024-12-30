@@ -50,10 +50,10 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	
 		for (int i = 0; i < colliderGrid.size(); ++i)
 		{
-			auto cell = *colliderGrid.getCellContents(i);
-			for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
+			const auto& cell = colliderGrid.getCellContents(i);
+			for (auto iterA = cell->begin(); iterA != cell->end(); ++iterA)
 			{
-				for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
+				for (auto iterB = iterA + 1; iterB != cell->end(); ++iterB)
 				{
 					_invokeCollision(collision, (*iterA), (*iterB));
 					_invokeCollision(collision, (*iterB), (*iterA));
