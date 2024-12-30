@@ -1,6 +1,7 @@
 name: CI Pipeline
 
 on:
+  workflow_dispatch:
   push:
       branches:
       - dev
@@ -140,7 +141,6 @@ jobs:
   test-windows:
     name: Test with Windows MSVC
     runs-on: windows-latest  # This specifies a Windows environment
-    cancel-in-progress: true
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
