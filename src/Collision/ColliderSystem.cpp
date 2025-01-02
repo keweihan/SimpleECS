@@ -45,24 +45,35 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	colliderGrid.updateGrid();
 	Collision collision = {};
 
+	// Set of potential collision pairs
+	std::unordered_set<std::pair<Collider*, Collider*>, PairHash<Collider*, Collider*>>
+		potentialPairs;
+
 	// Populate with potential pairs
 	try {
 	
 		for (int i = 0; i < colliderGrid.size(); ++i)
 		{
-			const auto& cell = colliderGrid.getCellContents(i);
-			for (auto iterA = cell->begin(); iterA != cell->end(); ++iterA)
+			auto cell = *colliderGrid.getCellContents(i);
+			for (auto iterA = cell.begin(); iterA != cell.end(); ++iterA)
 			{
-				for (auto iterB = iterA + 1; iterB != cell->end(); ++iterB)
+				for (auto iterB = iterA + 1; iterB != cell.end(); ++iterB)
 				{
-					_invokeCollision(collision, (*iterA), (*iterB));
-					_invokeCollision(collision, (*iterB), (*iterA));
+					potentialPairs.insert({ *iterA, *iterB });
 				}
 			}
 		}
 	}
 	catch (const std::exception& e) {
 		std::cerr << "Exception occurred while populating potential pairs: " << e.what() << std::endl;
+	}
+
+	// Invoke onCollide of colliding entity components
+	for (const auto& collisionPair : potentialPairs)
+	{
+		// Invoke from both sides
+		_invokeCollision(collision, collisionPair.first, collisionPair.second);
+		_invokeCollision(collision, collisionPair.second, collisionPair.first);
 	}
 }
 
