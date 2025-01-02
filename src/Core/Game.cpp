@@ -104,7 +104,7 @@ void Game::mainLoop()
 		}
 
 		// Run collision functions
-		ColliderSystem::getInstance().invokeCollisions();
+		ColliderSystem::getInstance().detectResolve();
 
 		// Run late update
 		for (auto& pool : sceneList[0]->getComponentPools())

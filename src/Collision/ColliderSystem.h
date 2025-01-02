@@ -7,20 +7,12 @@
 
 namespace SimpleECS
 {
-	// Library only class for resolving collider logic
+	// Library only controller level class for resolving collider logic
 	class ColliderSystem
 	{
 	public:
 		/*
-		TODO: Refactor plan
-		- Give Collidergrid "configure(BoxCollider... CircleCollider ...)" function
-			- Replace single std::vector<Collider*> colliderList; with multiple lists of...
-			- vector<BoxCollide>*, vector<SphereCollide>* etc.
-
-		- Remove register/deregister collider functions
-		- Replace with initialize system function to be called at start of Game
-			- Collidergrid constructor or in this initializer should obtain references to said lists. 
-		
+		* 
 		*/
 		static ColliderSystem& getInstance()
 		{
@@ -29,7 +21,7 @@ namespace SimpleECS
 			return instance;
 		}
 
-		// Delete these methods to ensure that copies of the singleton can't be made.
+		// Singleton class
 		ColliderSystem(ColliderSystem const&) = delete;
 		void operator=(ColliderSystem const&) = delete;
 		
@@ -37,7 +29,13 @@ namespace SimpleECS
 		* Checks for collisions between all active colliders and invoke
 		* collided entities "onCollision" methods.
 		*/
-		void invokeCollisions();
+		void detectResolve();
+
+	private:
+		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {
+			auto boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
+			colliderGrid.registerColliders(new ColliderPoolView<BoxCollider>(boxPool));
+		}
 
 		/**
 		 * Retrieves collision information between this and another collider.
@@ -47,28 +45,26 @@ namespace SimpleECS
 		 * Normal is calculated with respect to a colliding with b. 
 		 * 
 		 * @returns false if no collision is present, true otherwise
+		 * 
+		 * TODO: move logic to concrete Colliders (visitor pattern)
 		 */
 		bool getCollisionInfo(Collision& collide);
 
-	private:
-		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {
-			auto boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
-			colliderGrid.registerColliders(new ColliderPoolView<BoxCollider>(boxPool));
-		}
-
-		/*
-		* Maintains list of all active colliders in scene. 
-		*/
-
-		/*
-		*
- 		*/
-		ColliderGrid colliderGrid;
-
-
-		/*
+		/**
 		* If collide contains two AABB box containers. Populate with collision data
+		*
+		* TODO: move logic to BoxCollider (visitor pattern)
 		*/
 		bool getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b);
+
+		/*
+		* Invoke onCollide functions of collider a
+		*/
+		void invokeCollision(Collision& collision, Collider* a, Collider* other);
+
+		/*
+		* Spatial structure
+		*/
+		ColliderGrid colliderGrid;
 	};
 }

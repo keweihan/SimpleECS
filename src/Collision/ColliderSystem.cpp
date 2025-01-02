@@ -25,7 +25,7 @@ struct PairHash {
 	}
 };
 
-inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
+inline void SimpleECS::ColliderSystem::invokeCollision(Collision& collision, Collider* a, Collider* b)
 {
 	collision.a = a;
 	collision.b = b;
@@ -40,7 +40,7 @@ inline void _invokeCollision(Collision& collision, Collider* a, Collider* b)
 	}
 }
 
-void SimpleECS::ColliderSystem::invokeCollisions()
+void SimpleECS::ColliderSystem::detectResolve()
 {
 	colliderGrid.updateGrid();
 	Collision collision = {};
@@ -51,7 +51,6 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 
 	// Populate with potential pairs
 	try {
-	
 		for (int i = 0; i < colliderGrid.size(); ++i)
 		{
 			auto cell = *colliderGrid.getCellContents(i);
@@ -72,8 +71,8 @@ void SimpleECS::ColliderSystem::invokeCollisions()
 	for (const auto& collisionPair : potentialPairs)
 	{
 		// Invoke from both sides
-		_invokeCollision(collision, collisionPair.first, collisionPair.second);
-		_invokeCollision(collision, collisionPair.second, collisionPair.first);
+		invokeCollision(collision, collisionPair.first, collisionPair.second);
+		invokeCollision(collision, collisionPair.second, collisionPair.first);
 	}
 }
 
@@ -160,6 +159,7 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	// Breaking principles of polymorphism (likely) necessary. 
 	// Different collider collisions (i.e. sphere-sphere, sphere-box, box-box) 
 	// require different implementation.
+	// (1/2/25): TODO: not necessary, kind of - use visitor pattern. 
 	BoxCollider* boxA = dynamic_cast<BoxCollider*>(collide.a);
 	BoxCollider* boxB = dynamic_cast<BoxCollider*>(collide.b);
 

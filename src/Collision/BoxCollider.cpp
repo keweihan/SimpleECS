@@ -9,6 +9,7 @@ void SimpleECS::BoxCollider::update()
 {
     Vector position = entity->transform->position;
 
+    // TODO: why calculate bounds every frame?
     bound.xMin = position.x - width / 2;
     bound.xMax = position.x + width / 2;
 
@@ -20,6 +21,7 @@ bool BoxCollider::isColliding(Collider* other)
 {
     // STUB
     //return ColliderSystem::getCollisionInfo(new Collide);
+    // TODO: what is this
     return false;
 }
 
