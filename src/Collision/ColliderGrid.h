@@ -2,10 +2,11 @@
 #include "Collision/BoxCollider.h"
 #include "Collision/Collider.h"
 #include "ColliderCell.h"
+#include "Collision/ColliderList.h"
 #include <vector>
 
 namespace SimpleECS
-{
+{	
 	/*
 	* Define a spacial grid to segment possible colliding objects
 	*/
@@ -16,6 +17,11 @@ namespace SimpleECS
 		* Construct grid with given cell dimensions
 		*/
 		ColliderGrid(const int w, const int h);
+
+		/*
+		 * Register pool of collider components 
+		 */
+		void registerColliders(ColliderPoolViewBase* pool);
 
 		/*
 		* Update collider grid positions
@@ -69,13 +75,16 @@ namespace SimpleECS
 		*/
 		std::vector<ColliderCell> grid;
 
-		/*
-		* Reference to underlying vector storage of BoxCollider's component pool.
-		* Stores original BoxCollider components.
-		*/
-		std::vector<BoxCollider>* boxPool;
+		// /*
+		// * Reference to underlying vector storage of BoxCollider's component pool.
+		// * Stores original BoxCollider components.
+		// */
+		// std::vector<BoxCollider>* boxPool;
 
-		// LEGACY: list of all active colliders
-		//std::vector<Collider*> colliderList;
+		// /*
+		// * Contiguous pools of all collider types 
+		// */
+		// std::vector<ColliderPoolViewBase*> colliderPools;
+		ColliderList colList;
 	};
 }

@@ -16,12 +16,16 @@ ColliderGrid::ColliderGrid(const int w, const int h)
 	numColumn = static_cast<int>(ceil(GameRenderer::SCREEN_WIDTH / (double)cellWidth));
 
 	grid.resize(numRow * numColumn + 1); // Last index represents out of bounds cell
-	boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
+}
+
+void SimpleECS::ColliderGrid::registerColliders(ColliderPoolViewBase *pool)
+{
+	colList.addPool(pool);
 }
 
 void SimpleECS::ColliderGrid::populateGrid()
 {
-	for (auto& collide : *boxPool)
+	for (auto& collide : colList)
 	{
 		insertToGrid(&collide);
 	}

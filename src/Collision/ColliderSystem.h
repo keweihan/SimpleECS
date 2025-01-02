@@ -51,7 +51,10 @@ namespace SimpleECS
 		bool getCollisionInfo(Collision& collide);
 
 	private:
-		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {}
+		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {
+			auto boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
+			colliderGrid.registerColliders(new ColliderPoolView<BoxCollider>(boxPool));
+		}
 
 		/*
 		* Maintains list of all active colliders in scene. 
