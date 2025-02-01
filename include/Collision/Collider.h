@@ -3,6 +3,7 @@
 #include "SimpleECSAPI.h"
 
 #include "Core/Component.h"
+#include "Visitors/ColliderVisitor.h"
 #include "Core/Vector.h"
 #include <vector>
 #include <iostream>
@@ -37,6 +38,11 @@ namespace SimpleECS
 		 * Gets AABB bounds of this collider
 		 */
 		virtual void getBounds(AABB& bounds) const = 0;
+
+		/**
+		 * TODO: accept visitor to allow for type specific processing
+		 */
+		virtual void accept(ColliderVisitor* visitor) = 0;
 	};
 
 	/**

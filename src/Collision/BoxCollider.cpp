@@ -29,3 +29,8 @@ void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
 {
     bounds = bound;
 }
+
+void SimpleECS::BoxCollider::accept(ColliderVisitor *visitor)
+{
+    // TODO: implement
+}
