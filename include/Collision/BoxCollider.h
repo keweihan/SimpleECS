@@ -4,7 +4,9 @@
 
 #include "Core/Component.h"
 #include "Collision/Collider.h"
+#include "Collision/Visitors/BoxColliderVisitor.h"
 #include <vector>
+#include <memory>
 
 namespace SimpleECS
 {
@@ -14,8 +16,8 @@ namespace SimpleECS
 	class SIMPLEECS_API BoxCollider : public Collider {
 
 	public:
-		BoxCollider() : Collider(), width(40), height(40) {}
-		BoxCollider(int w, int h) : Collider(), width(w), height(h) {}
+		BoxCollider() : Collider(), width(40), height(40), visitor(std::make_shared<BoxColliderVisitor>()) {}
+		BoxCollider(int w, int h) : Collider(), width(w), height(h), visitor(std::make_shared<BoxColliderVisitor>()) {}
 
 		void update() override;
 		void initialize() override {}
@@ -27,11 +29,16 @@ namespace SimpleECS
 
 		void getBounds(AABB& bounds) const override;
 
+		bool accept(Collision& out, std::shared_ptr<SimpleECS::ColliderVisitor> visitor) override;
+
+		std::shared_ptr<ColliderVisitor> getVisitor() override;
+
 		/**
 		 * Collider boundaries, centered around transform center.
 		 */
 		int width, height;
 	private:
 		AABB bound = {};
+		std::shared_ptr<BoxColliderVisitor> visitor;
 	};
 }

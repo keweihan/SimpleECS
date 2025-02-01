@@ -15,7 +15,7 @@ using namespace std;
 using namespace SimpleECS;
 
 // Run parameters
-const bool RENDER_WINDOW = false;
+const bool RENDER_WINDOW = true;
 
 // Environment parameters
 const int SCREEN_HEIGHT		= 720;

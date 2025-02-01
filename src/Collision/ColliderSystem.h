@@ -50,13 +50,6 @@ namespace SimpleECS
 		 */
 		bool getCollisionInfo(Collision& collide);
 
-		/**
-		* If collide contains two AABB box containers. Populate with collision data
-		*
-		* TODO: move logic to BoxCollider (visitor pattern)
-		*/
-		bool getCollisionBoxBox(Collision& collide, BoxCollider* a, BoxCollider* b);
-
 		/*
 		* Invoke onCollide functions of collider a
 		*/

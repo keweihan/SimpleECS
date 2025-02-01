@@ -3,9 +3,11 @@
 #include "SimpleECSAPI.h"
 
 #include "Core/Component.h"
-#include "Core/Vector.h"
+#include "Visitors/ColliderVisitor.h"
+#include "Collision/Collision.h"
 #include <vector>
 #include <iostream>
+#include <memory> 
 
 namespace SimpleECS
 {
@@ -22,7 +24,7 @@ namespace SimpleECS
 		 * Register and deregister collider against ColliderSystem
 		 * on construction/deconstruction
 		 */
-		Collider();
+		Collider() ;
 		~Collider();
 
 		void update() override {}
@@ -37,20 +39,15 @@ namespace SimpleECS
 		 * Gets AABB bounds of this collider
 		 */
 		virtual void getBounds(AABB& bounds) const = 0;
-	};
 
-	/**
-	* Data container for collision information
-	*/
-	class SIMPLEECS_API Collision {
-	public:
-		// Collision object is not to be directly copied.
-		Collision(const Collision&) = delete;
-		Collision& operator=(const Collision&) = delete;
+		/**
+		 * Accept visitor to allow for type specific processing
+		 */
+		virtual bool accept(Collision& out, std::shared_ptr<ColliderVisitor> visitor) = 0;
 
-		Collider* a = nullptr;
-		Collider* b = nullptr;
-		double penetration = 0;
-		Vector normal;
+		/**
+		 * Return visitor object for this Collider type
+		 */
+		virtual std::shared_ptr<ColliderVisitor> getVisitor() = 0; 
 	};
 }
