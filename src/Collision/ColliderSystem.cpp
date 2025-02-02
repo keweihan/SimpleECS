@@ -3,7 +3,6 @@
 #include "Collision/BoxCollider.h"
 #include "Core/Component.h"
 #include "Core/Entity.h"
-#include "Core/GameRenderer.h"
 #include "Utility/TransformUtil.h"
 #include "boost/functional/hash.hpp"
 #include <vector>
