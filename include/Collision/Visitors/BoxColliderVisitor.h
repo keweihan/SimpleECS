@@ -1,20 +1,20 @@
-// #pragma once
+#pragma once
 
-// #include "SimpleECSAPI.h"
+#include "SimpleECSAPI.h"
 
-// #include "Collision/Visitors/ColliderVisitor.h"
-// #include <vector>
-// #include <iostream>
+#include "Collision/Visitors/ColliderVisitor.h"
+#include <vector>
+#include <iostream>
 
-// namespace SimpleECS
-// {
-// 	// Collider class
-// 	class SIMPLEECS_API BoxColliderVisitor : public ColliderVisitor {
+namespace SimpleECS
+{
+	// Collider class
+	class SIMPLEECS_API BoxColliderVisitor : public ColliderVisitor {
 
-// 	public:
-// 		BoxColliderVisitor();
-// 		~BoxColliderVisitor();
+	public:
+		BoxColliderVisitor();
+		~BoxColliderVisitor();
 
-//         void visit(BoxCollider* collider) override;
-// 	};
-// }
+        void visitBox(Collision& out, BoxCollider* collider) override;
+	};
+}

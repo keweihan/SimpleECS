@@ -4,7 +4,7 @@
 
 #include "Core/Component.h"
 #include "Visitors/ColliderVisitor.h"
-#include "Core/Vector.h"
+#include "Collision/Collision.h"
 #include <vector>
 #include <iostream>
 
@@ -42,21 +42,6 @@ namespace SimpleECS
 		/**
 		 * TODO: accept visitor to allow for type specific processing
 		 */
-		virtual void accept(ColliderVisitor* visitor) = 0;
-	};
-
-	/**
-	* Data container for collision information
-	*/
-	class SIMPLEECS_API Collision {
-	public:
-		// Collision object is not to be directly copied.
-		Collision(const Collision&) = delete;
-		Collision& operator=(const Collision&) = delete;
-
-		Collider* a = nullptr;
-		Collider* b = nullptr;
-		double penetration = 0;
-		Vector normal;
+		virtual void accept(Collision& out, ColliderVisitor* visitor) = 0;
 	};
 }

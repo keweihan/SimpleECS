@@ -162,6 +162,18 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	BoxCollider* boxA = dynamic_cast<BoxCollider*>(collide.a);
 	BoxCollider* boxB = dynamic_cast<BoxCollider*>(collide.b);
 
+	/*
+	
+	accept(Collision& collide, const ColliderVisitor visitor) {
+	
+	}
+	
+	ColliderVisitor aVisitor = collide.a.getVisitor(); // i.e. BoxCollder
+	collide.b.accept(collide, aVisitor) // i.e. CircleCollider
+
+	
+	*/
+
 	// AABB collision
     if (boxA != nullptr && boxB != nullptr)
     {

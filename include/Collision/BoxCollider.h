@@ -27,7 +27,7 @@ namespace SimpleECS
 
 		void getBounds(AABB& bounds) const override;
 
-		void accept(ColliderVisitor* visitor) override;
+		void accept(Collision& out, ColliderVisitor* visitor) override;
 
 		/**
 		 * Collider boundaries, centered around transform center.

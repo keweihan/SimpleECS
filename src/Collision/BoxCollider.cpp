@@ -30,7 +30,7 @@ void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
     bounds = bound;
 }
 
-void SimpleECS::BoxCollider::accept(ColliderVisitor *visitor)
+void SimpleECS::BoxCollider::accept(Collision& out, ColliderVisitor *visitor)
 {
-    // TODO: implement
+    visitor->visitBox(out, this);
 }
