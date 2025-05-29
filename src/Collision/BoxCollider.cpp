@@ -2,6 +2,7 @@
 #include "Physics/PhysicsBody.h"
 #include "ColliderSystem.h"
 #include "Core/Entity.h"
+#include "Collision/Visitors/BoxColliderVisitor.h"
 
 using namespace SimpleECS;
 
@@ -33,4 +34,9 @@ void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
 void SimpleECS::BoxCollider::accept(Collision& out, ColliderVisitor *visitor)
 {
     visitor->visitBox(out, this);
+}
+
+ColliderVisitor* SimpleECS::BoxCollider::getVisitor()
+{
+    return new BoxColliderVisitor();
 }

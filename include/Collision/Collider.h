@@ -43,5 +43,10 @@ namespace SimpleECS
 		 * TODO: accept visitor to allow for type specific processing
 		 */
 		virtual void accept(Collision& out, ColliderVisitor* visitor) = 0;
+
+		/**
+		 * Return visitor object for this Collider type
+		 */
+		virtual ColliderVisitor* getVisitor() = 0; 
 	};
 }

@@ -1,6 +1,13 @@
 #include "Collision/Visitors/BoxColliderVisitor.h"
+#include <iostream>
 
-void SimpleECS::BoxColliderVisitor::visitBox(Collision& out, BoxCollider *collider)
+SimpleECS::BoxColliderVisitor::BoxColliderVisitor()
 {
 
 }
+
+void SimpleECS::BoxColliderVisitor::visitBox(Collision &out, BoxCollider *collider)
+{
+
+}
+

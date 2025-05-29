@@ -29,6 +29,8 @@ namespace SimpleECS
 
 		void accept(Collision& out, ColliderVisitor* visitor) override;
 
+		ColliderVisitor* getVisitor() override;
+
 		/**
 		 * Collider boundaries, centered around transform center.
 		 */

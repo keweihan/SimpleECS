@@ -16,5 +16,8 @@ namespace SimpleECS
 		~BoxColliderVisitor();
 
         void visitBox(Collision& out, BoxCollider* collider) override;
+    
+    private:
+        BoxCollider* parentCollide;
 	};
 }

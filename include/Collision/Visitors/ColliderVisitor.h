@@ -9,13 +9,14 @@
 namespace SimpleECS
 {
 	class BoxCollider;
+	class Collider;
 	
 	// Collider class
 	class SIMPLEECS_API ColliderVisitor {
 
 	public:
-		ColliderVisitor();
-		~ColliderVisitor();
+		ColliderVisitor() {};
+		~ColliderVisitor() {};
 
         /// Resolve collision with a box
         /// @param collider 
