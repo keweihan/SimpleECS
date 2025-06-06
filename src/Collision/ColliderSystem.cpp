@@ -166,7 +166,7 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	
 
 	
-	ColliderVisitor* aVisitor = collide.a->getVisitor(); // i.e. BoxCollder
+	std::shared_ptr<SimpleECS::ColliderVisitor> aVisitor = collide.a->getVisitor(); // i.e. BoxCollder
 	collide.b->accept(collide, aVisitor); // i.e. CircleCollider
 
 	

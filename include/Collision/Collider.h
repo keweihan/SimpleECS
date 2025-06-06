@@ -7,6 +7,7 @@
 #include "Collision/Collision.h"
 #include <vector>
 #include <iostream>
+#include <memory> 
 
 namespace SimpleECS
 {
@@ -23,7 +24,7 @@ namespace SimpleECS
 		 * Register and deregister collider against ColliderSystem
 		 * on construction/deconstruction
 		 */
-		Collider();
+		Collider() ;
 		~Collider();
 
 		void update() override {}
@@ -40,13 +41,13 @@ namespace SimpleECS
 		virtual void getBounds(AABB& bounds) const = 0;
 
 		/**
-		 * TODO: accept visitor to allow for type specific processing
+		 * Accept visitor to allow for type specific processing
 		 */
-		virtual void accept(Collision& out, ColliderVisitor* visitor) = 0;
+		virtual void accept(Collision& out, std::shared_ptr<ColliderVisitor> visitor) = 0;
 
 		/**
 		 * Return visitor object for this Collider type
 		 */
-		virtual ColliderVisitor* getVisitor() = 0; 
+		virtual std::shared_ptr<ColliderVisitor> getVisitor() = 0; 
 	};
 }
