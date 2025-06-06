@@ -43,7 +43,7 @@ namespace SimpleECS
 		/**
 		 * Accept visitor to allow for type specific processing
 		 */
-		virtual void accept(Collision& out, std::shared_ptr<ColliderVisitor> visitor) = 0;
+		virtual bool accept(Collision& out, std::shared_ptr<ColliderVisitor> visitor) = 0;
 
 		/**
 		 * Return visitor object for this Collider type

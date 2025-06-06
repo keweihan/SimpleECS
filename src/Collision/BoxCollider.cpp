@@ -31,9 +31,9 @@ void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
     bounds = bound;
 }
 
-void SimpleECS::BoxCollider::accept(Collision& out, std::shared_ptr<SimpleECS::ColliderVisitor> visitor)
+bool SimpleECS::BoxCollider::accept(Collision& out, std::shared_ptr<SimpleECS::ColliderVisitor> visitor)
 {
-    visitor->visitBox(out, this);
+    return visitor->visitBox(out);
 }
 
 std::shared_ptr<SimpleECS::ColliderVisitor> SimpleECS::BoxCollider::getVisitor()

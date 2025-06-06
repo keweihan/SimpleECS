@@ -12,12 +12,9 @@ namespace SimpleECS
 	class SIMPLEECS_API BoxColliderVisitor : public ColliderVisitor {
 
 	public:
-		BoxColliderVisitor(BoxCollider* parent) : parentCollide(parent) {};
+		BoxColliderVisitor() {};
 		~BoxColliderVisitor() {};
 
-        void visitBox(Collision& out, BoxCollider* collider) override;
-    
-    private:
-        BoxCollider* parentCollide;
+        bool visitBox(Collision& out) override;
 	};
 }

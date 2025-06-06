@@ -16,8 +16,8 @@ namespace SimpleECS
 	class SIMPLEECS_API BoxCollider : public Collider {
 
 	public:
-		BoxCollider() : Collider(), width(40), height(40), visitor(std::make_shared<BoxColliderVisitor>(this)) {}
-		BoxCollider(int w, int h) : Collider(), width(w), height(h), visitor(std::make_shared<BoxColliderVisitor>(this)) {}
+		BoxCollider() : Collider(), width(40), height(40), visitor(std::make_shared<BoxColliderVisitor>()) {}
+		BoxCollider(int w, int h) : Collider(), width(w), height(h), visitor(std::make_shared<BoxColliderVisitor>()) {}
 
 		void update() override;
 		void initialize() override {}
@@ -29,7 +29,7 @@ namespace SimpleECS
 
 		void getBounds(AABB& bounds) const override;
 
-		void accept(Collision& out, std::shared_ptr<SimpleECS::ColliderVisitor> visitor) override;
+		bool accept(Collision& out, std::shared_ptr<SimpleECS::ColliderVisitor> visitor) override;
 
 		std::shared_ptr<ColliderVisitor> getVisitor() override;
 
