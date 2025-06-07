@@ -3,14 +3,14 @@
 #include "SimpleECSAPI.h"
 
 #include "Core/Component.h"
-#include "Visitors/ColliderVisitor.h"
 #include "Collision/Collision.h"
 #include <vector>
 #include <iostream>
-#include <memory> 
 
 namespace SimpleECS
 {
+	class BoxCollider;
+
 	// Collider class
 	class SIMPLEECS_API Collider : public Component {
 
@@ -43,11 +43,11 @@ namespace SimpleECS
 		/**
 		 * Accept visitor to allow for type specific processing
 		 */
-		virtual bool accept(Collision& out, std::shared_ptr<ColliderVisitor> visitor) = 0;
+		virtual bool accept(Collision& out, Collider* visitor) = 0;
 
 		/**
-		 * Return visitor object for this Collider type
+		 * Resolve collision between this collider and a box
 		 */
-		virtual std::shared_ptr<ColliderVisitor> getVisitor() = 0; 
+		virtual bool visitBox(Collision& out, BoxCollider* box) = 0;
 	};
 }

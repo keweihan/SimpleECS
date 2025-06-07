@@ -80,8 +80,7 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	if (collide.a == nullptr || collide.b == nullptr) return false;
 	
 	// Use visitor pattern to resolve types
-	std::shared_ptr<SimpleECS::ColliderVisitor> aVisitor = collide.a->getVisitor(); // i.e. BoxCollder
-	return collide.b->accept(collide, aVisitor); // i.e. CircleCollider
+	return collide.b->accept(collide, collide.a); // i.e. CircleCollider
 
 	
 
