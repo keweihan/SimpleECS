@@ -1,6 +1,5 @@
 #pragma once
 
-
 #include "SimpleECSAPI.h"
 
 namespace SimpleECS 

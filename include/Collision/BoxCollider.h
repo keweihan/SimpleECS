@@ -21,11 +21,6 @@ namespace SimpleECS
 		void update() override;
 		void initialize() override {}
 
-		/**
-		 * Returns whether this collider is colliding with another collider
-		 */
-		bool isColliding(Collider* other) override;
-
 		void getBounds(AABB& bounds) const override;
 
 		bool accept(Collision& out, Collider* visitor) override;

@@ -28,12 +28,7 @@ namespace SimpleECS
 		~Collider();
 
 		void update() override {}
-		void initialize() override { std::cout << "wtf" << std::endl; }
-
-		/**
-		 * Returns whether this collider is colliding with another collider
-		 */
-		virtual bool isColliding(Collider* other) = 0;
+		void initialize() override {}
 
 		/**
 		 * Gets AABB bounds of this collider
@@ -47,6 +42,7 @@ namespace SimpleECS
 
 		/**
 		 * Resolve collision between this collider and a box
+		 * Populate out with collision information
 		 */
 		virtual bool visitBox(Collision& out, BoxCollider* box) = 0;
 	};

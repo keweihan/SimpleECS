@@ -44,3 +44,18 @@ https://github.com/keweihan/SimpleECS/assets/55893673/24a29842-6675-422a-a963-e6
 Demonstration of momentum based collisions by simulating [pi generating collisions](https://www.youtube.com/watch?v=HEfHFsfGXjs&t=119s) using SimpleECS:
 
 https://github.com/keweihan/SimpleECS/assets/55893673/7436e5f3-5bdf-419c-a868-5cde9f12d2a4
+
+## Getting Started (Mac/Windows)
+
+1. install `python` (>=3.8)
+2. [conan ](https://conan.io/downloads) 
+    - ex. `pip install conan`
+3. [cmake](https://cmake.org/download/) 
+    - Ubuntu: `sudo apt install -y cmake`
+4. Run installer helper `python ./scripts/build.py install`
+
+### Build and run
+1. Configure scene in `demos/collisionStress.cpp`. E.g. run headless (no window/rendering) or with window 
+2. Build executable `python src/build.py build --type release`
+    - Use `debug` for debuggable version. 
+3. Execute runnable in `./build/bin/collisionStress`

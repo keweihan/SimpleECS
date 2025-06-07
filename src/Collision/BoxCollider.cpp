@@ -17,14 +17,6 @@ void SimpleECS::BoxCollider::update()
     bound.yMax = position.y + height / 2;
 }
 
-bool BoxCollider::isColliding(Collider* other)
-{
-    // STUB
-    //return ColliderSystem::getCollisionInfo(new Collide);
-    // TODO: what is this
-    return false;
-}
-
 void SimpleECS::BoxCollider::getBounds(Collider::AABB& bounds) const
 {
     bounds = bound;
@@ -67,10 +59,6 @@ bool SimpleECS::BoxCollider::visitBox(Collision &collide, BoxCollider *box)
 
 		double yDistance = std::abs(aTransform.position.y - bTransform.position.y);
 		double yOverlap = (aExtentY + bExtentY) - yDistance;
-
-		//if ((yOverlap < xOverlap ? yOverlap : xOverlap) == 0) {
-		//	return false;
-		//}
 
 		// Least penetration is on y-axis
 		if (yOverlap < xOverlap)

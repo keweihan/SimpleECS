@@ -40,7 +40,7 @@ void SimpleECS::Timer::freezeStep(uint16_t time)
 	}
 	else
 	{
-		// todo: throw warning
+		// TODO: throw warning
 	}
 }
 

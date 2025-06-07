@@ -38,7 +38,7 @@ namespace SimpleECS
 		}
 
 		/**
-		 * Retrieves collision information between this and another collider.
+		 * Retrieves collision information between two colliders.
 		 * Populates collide with collision information if there is a collision
 		 * between collide.a and collide.b 
 		 * 
@@ -46,7 +46,6 @@ namespace SimpleECS
 		 * 
 		 * @returns false if no collision is present, true otherwise
 		 * 
-		 * TODO: move logic to concrete Colliders (visitor pattern)
 		 */
 		bool getCollisionInfo(Collision& collide);
 

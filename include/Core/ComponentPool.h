@@ -10,6 +10,12 @@
 
 #include "SimpleECSAPI.h"
 
+#ifdef SIMPLEECS_EXPORTS
+  #define SIMPLEECS_API __declspec(dllexport)
+#else
+  #define SIMPLEECS_API __declspec(dllimport)
+#endif
+
 namespace SimpleECS {
 	/*
 	* Typeless base class representing component pools.
