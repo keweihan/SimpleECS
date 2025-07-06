@@ -47,7 +47,7 @@ void SimpleECS::PhysicsBody::onCollide(const Collision& collide)
 	PhysicsBody other;
 	double massCoef;
 	try {
-		other = *collide.b->entity->getComponent<PhysicsBody>();
+		other = *collide.b->entity->phys;
 		massCoef = 2 * other.mass / (other.mass + mass);
 	}
 	catch (const std::exception&){

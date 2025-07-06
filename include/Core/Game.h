@@ -95,5 +95,5 @@ namespace SimpleECS
 		 * @throws std::runtime_error if no scenes are added to the game.
 		 */
 		void mainLoop();
-	};
+	};  
 }

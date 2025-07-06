@@ -232,14 +232,7 @@ namespace SimpleECS
 		{
 			throw std::runtime_error("Failed to cast ComponentPoolBase to ComponentPool<T>.");
 		}
-
-		// Get the component and check if it's null
-		T* component = poolConv->getComponent(e);
-		if (!component)
-		{
-			throw std::runtime_error("Entity does not have a component of this type.");
-		}
-
+		
 		return Handle<T>(poolConv, e);
 	}
 

@@ -114,7 +114,7 @@ void GuiManager::update()
 		
 		try
 		{
-			Handle<PhysicsBody> physbd = selectedEntity->getComponent<PhysicsBody>();
+			Handle<PhysicsBody> physbd = selectedEntity->phys;
 			if (physbd) {
 				if (ImGui::CollapsingHeader("PhysicsBody", ImGuiTreeNodeFlags_DefaultOpen)) {
 					Vector vel = physbd->velocity;

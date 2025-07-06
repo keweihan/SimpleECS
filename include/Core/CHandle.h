@@ -15,6 +15,10 @@ namespace SimpleECS
 	class Handle {
 	public:
 		Handle();
+
+		/// @brief Create handler with pointer semantics to component
+		/// @param pool Pool of all components of type T
+		/// @param eid eid for which to retrieve component T
 		Handle(ComponentPool<T>* pool, uint32_t eid) : _pool(pool), _eid(eid) {}
 		
 		T& operator*() {

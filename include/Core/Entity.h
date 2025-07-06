@@ -3,6 +3,7 @@
 #include "Core/CHandle.h"
 #include "Core/Scene.h"
 #include "Core/Transform.h"
+#include "Physics/PhysicsBody.h"
 #include <vector>
 #include <string>
 #include <utility>
@@ -13,6 +14,7 @@ namespace SimpleECS
 {	
 	template <typename T>
 	class Handle;
+	class PhysicsBody;
 
 	/**
 	An object/actor inside scenes. Has a container of components which dictate entity behavior.
@@ -31,7 +33,7 @@ namespace SimpleECS
 		* user creation of entity object.
 		*/
 		friend Scene;
-		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
+		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s), phys(s->getComponent<PhysicsBody>(id)) {};
 		SIMPLEECS_API ~Entity();
 	
 	public:
@@ -51,6 +53,8 @@ namespace SimpleECS
 		* TODO: redo...
 		*/
 		Handle<Transform> transform;
+
+		Handle<PhysicsBody> phys;
 
 		/**
 		* Add a component to this entity of type T
