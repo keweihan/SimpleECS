@@ -10,10 +10,14 @@
 
 #include "SimpleECSAPI.h"
 
-#ifdef SIMPLEECS_EXPORTS
-  #define SIMPLEECS_API __declspec(dllexport)
+#ifdef _WIN32
+	#ifdef SIMPLEECS_EXPORTS
+		#define SIMPLEECS_API __declspec(dllexport)
+	#else
+		#define SIMPLEECS_API __declspec(dllimport)
+	#endif
 #else
-  #define SIMPLEECS_API __declspec(dllimport)
+	#define SIMPLEECS_API
 #endif
 
 namespace SimpleECS {
