@@ -33,7 +33,7 @@ namespace SimpleECS
 		* user creation of entity object.
 		*/
 		friend Scene;
-		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s), phys(s->getComponent<PhysicsBody>(id)) {};
+		SIMPLEECS_API Entity(uint32_t id, Scene* s) : id(id), scene(s) {};
 		SIMPLEECS_API ~Entity();
 	
 	public:
@@ -83,9 +83,22 @@ namespace SimpleECS
 		return scene->addComponent<T>(id, std::forward<Args>(args)...);
 	}
 
+	template <>
+	inline Handle<PhysicsBody> Entity::addComponent() {
+		// Custom implementation for PhysicsBody
+		phys = scene->addComponent<PhysicsBody>(id);
+		return phys;
+	}
+
 	template<typename T>
 	inline Handle<T> Entity::getComponent()
 	{
 		return scene->getComponent<T>(id);
+	}
+
+	template<>
+	inline Handle<PhysicsBody> Entity::getComponent()
+	{
+		return phys;
 	}
 }

@@ -41,16 +41,16 @@ void SimpleECS::PhysicsBody::onCollide(const Collision& collide)
 	// flying away.	
 
 	// Calculate new velocity (simple reflect across collision normal)
-	// velocity = velocity - (collide.normal * (velocity.dotProduct(collide.normal))) * 2;
+	// velocity = velocity - (collide.normal * (velocity.dotProduct(collide.normal))) * 2;A
 	// futureVelocity = velocity;
 
 	PhysicsBody other;
 	double massCoef;
-	try {
+	if (collide.b->entity->phys) {
 		other = *collide.b->entity->phys;
 		massCoef = 2 * other.mass / (other.mass + mass);
 	}
-	catch (const std::exception&){
+	else {
 		other = PhysicsBody();
 		other.velocity = Vector();
 		massCoef = 2;

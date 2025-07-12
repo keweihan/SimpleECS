@@ -10,6 +10,8 @@ namespace SimpleECS
 	 * Handler wrapper class for components
 	 * Provides stable pointer semantics for a given component type 
 	 * and associated entity.
+	 * 
+	 * Can be null
 	 */
 	template <typename T>
 	class Handle {

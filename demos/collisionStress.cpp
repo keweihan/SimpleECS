@@ -15,7 +15,7 @@ using namespace std;
 using namespace SimpleECS;
 
 // Run parameters
-const bool RENDER_WINDOW = true;
+const bool RENDER_WINDOW = false;
 
 // Environment parameters
 const int SCREEN_HEIGHT		= 720;
@@ -148,9 +148,9 @@ Entity* createTimeCounter()
 }
 
 // Create ball with initial position and inbuilt randomized velocity
-Entity* createBall(const int& x, const int &y)
+Entity* createBall(const int& x, const int &y, const int num)
 {
-	Entity* newBall = mainScene->createEntity("ball");
+	Entity* newBall = mainScene->createEntity("ball" + to_string(num));
 	newBall->addComponent<RectangleRenderer>(SIDE_LENGTH, SIDE_LENGTH, Color(102, 102, 102, 102));
 	newBall->addComponent<BoxCollider>(SIDE_LENGTH, SIDE_LENGTH);
 	Handle<PhysicsBody> physics = newBall->addComponent<PhysicsBody>();
@@ -218,7 +218,7 @@ int spawnBalls(const int& numRow, const int& numColumn, const int& num)
 	{
 		for (int j = 0; j < numColumn; ++j)
 		{
-			Entity* newBall = createBall(xSpawnPos, ySpawnPos);
+			Entity* newBall = createBall(xSpawnPos, ySpawnPos, i*j + j);
 			xSpawnPos += columnSpacing;
 
 			numSpawned++;
