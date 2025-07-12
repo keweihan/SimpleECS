@@ -82,16 +82,6 @@ bool SimpleECS::ColliderSystem::getCollisionInfo(Collision& collide)
 	// Use visitor pattern to resolve types
 	return collide.b->accept(collide, collide.a); // i.e. CircleCollider
 
-	
-
-	// AABB collision
-    // if (boxA != nullptr && boxB != nullptr)
-    // {
-	// 	return getCollisionBoxBox(collide, boxA, boxB);
-    // }
-	// Other collider types here
-	// else if(sphere-sphere...)
-
     return false;
 }
 

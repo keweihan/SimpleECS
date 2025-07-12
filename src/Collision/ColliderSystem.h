@@ -4,6 +4,9 @@
 #include "ColliderGrid.h"
 #include "Physics/PhysicsBody.h"
 #include "vector"
+#include "CollisionConstants.h"
+
+using namespace SimpleECS::CollisionConstants;
 
 namespace SimpleECS
 {
@@ -32,7 +35,7 @@ namespace SimpleECS
 		void detectResolve();
 
 	private:
-		ColliderSystem() : colliderGrid(ColliderGrid(2, 2)) {
+		ColliderSystem() : colliderGrid(ColliderGrid(COLLIDER_GRID_CELL_WIDTH, COLLIDER_GRID_CELL_HEIGHT)) {
 			auto boxPool = Game::getInstance().getCurrentScene()->getComponents<BoxCollider>();
 			colliderGrid.registerColliders(new ColliderPoolView<BoxCollider>(boxPool));
 		}
