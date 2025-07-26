@@ -7,6 +7,7 @@
 #include <imgui.h>
 #include <imgui_impl_sdl2.h> // conan imgui does not have 2 at end 
 #include <imgui_impl_sdlrenderer2.h>
+#include <imgui_internal.h>
 #include "RobotoMedium.h"
 #include "Physics/PhysicsBody.h"
 
@@ -36,18 +37,58 @@ void GuiManager::init()
 
 void GuiManager::update()
 {
-	ImGui_ImplSDLRenderer2_NewFrame();
-	ImGui_ImplSDL2_NewFrame();
-	ImGui::NewFrame();
-	//ImGui::DockSpaceOverViewport();
+    ImGui_ImplSDLRenderer2_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
 
-	//if(font) { ImGui::PushFont(font); }
+    // Fullscreen host window for dockspace
+    ImGuiViewport* viewport = ImGui::GetMainViewport();
+    ImGui::SetNextWindowPos(viewport->Pos);
+    ImGui::SetNextWindowSize(viewport->Size);
+    ImGui::SetNextWindowViewport(viewport->ID);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
+    ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
+    ImGuiWindowFlags host_window_flags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse |
+                                         ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus |
+                                         ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_NoBackground;
+    ImGui::Begin("MainDockSpaceHost", nullptr, host_window_flags);
+    ImGui::PopStyleVar(2);
 
-	bool showDemo = true;
+    ImGuiID dockspace_id = ImGui::GetID("MainDockSpace");
+    ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_PassthruCentralNode);
 
-	ImGui::DockSpaceOverViewport(ImGui::GetMainViewport());
-	ImGui::ShowDemoWindow(&showDemo);
-	
+    static bool dock_initialized = false;
+    if (!dock_initialized)
+    {
+        dock_initialized = true;
+        ImGui::DockBuilderRemoveNode(dockspace_id); // clear any previous layout
+        ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+        ImGui::DockBuilderSetNodeSize(dockspace_id, viewport->Size);
+
+        // Split the dockspace: left (20%), right (20%), center (60%)
+        ImGuiID dock_id_left, dock_id_right, dock_id_center;
+        dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dock_id_center);
+        dock_id_right = ImGui::DockBuilderSplitNode(dock_id_center, ImGuiDir_Right, 0.25f, nullptr, &dock_id_center);
+
+        // Further split left: Entities (top), Freeze Control and Statistics (bottom)
+        ImGuiID dock_id_left_top, dock_id_left_bottom;
+        dock_id_left_top = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Up, 0.6f, nullptr, &dock_id_left_bottom);
+
+        // Dock windows
+        ImGui::DockBuilderDockWindow("Entities", dock_id_left_top);
+        ImGui::DockBuilderDockWindow("Freeze Control", dock_id_left_bottom);
+        ImGui::DockBuilderDockWindow("Statistics", dock_id_left_bottom);
+        ImGui::DockBuilderDockWindow("Viewport", dock_id_center);
+        ImGui::DockBuilderDockWindow("Inspector", dock_id_right);
+
+        ImGui::DockBuilderFinish(dockspace_id);
+    }
+
+    bool showDemo = true;
+    ImGui::ShowDemoWindow(&showDemo);
+
+    ImGui::End(); // End MainDockSpaceHost
+
 	ImGui::Begin("Viewport", nullptr, ImGuiWindowFlags_HorizontalScrollbar);
 	{
 		float portWidth = static_cast<double>(GameRenderer::SCREEN_WIDTH / 1.5);
