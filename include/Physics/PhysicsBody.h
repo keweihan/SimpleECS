@@ -15,8 +15,6 @@ namespace SimpleECS
 		PhysicsBody() : velocity() {}
 
 		double mass = 1;
-
-		Vector velocity;
 		Vector acceleration;
 
 		void update() override;
@@ -28,8 +26,18 @@ namespace SimpleECS
 		void onCollide(const Collision& collide) override;
 
 		void lateUpdate() override;
+
+		Vector getVelocity() {
+			return velocity;
+		}
+
+		void setVelocity(const Vector& v) {
+			velocity = v;
+			futureVelocity = v;
+		}
 	
 	private:
+		Vector velocity;
 		Vector futureVelocity;
 	};
 }
