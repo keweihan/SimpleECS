@@ -111,8 +111,7 @@ Entity* createSquare(const int& x, const int& y, Vector vel, int side_length, do
 	newBall->transform->position.x = x;
 	newBall->transform->position.y = y;
 
-	physics->velocity.x = vel.x;
-	physics->velocity.y = vel.y;
+	physics->setVelocity(vel);
 	physics->mass = mass;
 
 	return newBall;

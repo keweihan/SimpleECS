@@ -25,8 +25,8 @@ namespace EcsDeleteTests {
 		// Create entity a
 		Entity* a = testScene->createEntity();
 		a->addComponent<PhysicsBody>();
-		a->getComponent<PhysicsBody>()->velocity.x = 1;
-		ASSERT_EQ(a->getComponent<PhysicsBody>()->velocity.x, 1);
+		a->getComponent<PhysicsBody>()->setVelocity(Vector(1, 0));
+		ASSERT_EQ(a->getComponent<PhysicsBody>()->getVelocity().x, 1);
 		
 		// Mark A for deletion
 		testScene->destroyEntity(a->id);
@@ -34,19 +34,19 @@ namespace EcsDeleteTests {
 		// Create entity b
 		Entity* b = testScene->createEntity();
 		b->addComponent<PhysicsBody>();
-		b->getComponent<PhysicsBody>()->velocity.x = 2;
+		b->getComponent<PhysicsBody>()->setVelocity(Vector(2, 0));
 
 		// Entity b and a components should have correct values
-		ASSERT_EQ(b->getComponent<PhysicsBody>()->velocity.x, 2);
-		ASSERT_EQ(a->getComponent<PhysicsBody>()->velocity.x, 1);
+		ASSERT_EQ(b->getComponent<PhysicsBody>()->getVelocity().x, 2);
+		ASSERT_EQ(a->getComponent<PhysicsBody>()->getVelocity().x, 1);
 		
 		// Create entity c and delete a immediately
 		Entity* c = testScene->createEntity();
 		c->addComponent<PhysicsBody>();
-		c->getComponent<PhysicsBody>()->velocity.x = 3;
+		c->getComponent<PhysicsBody>()->setVelocity(Vector(3, 0));
 		testScene->destroyEntityImmediate(a->id);
 
 		// Assert no side effects on b
-		ASSERT_EQ(b->getComponent<PhysicsBody>()->velocity.x, 2);
+		ASSERT_EQ(b->getComponent<PhysicsBody>()->getVelocity().x, 2);
 	}
 }

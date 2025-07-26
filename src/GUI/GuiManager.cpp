@@ -158,12 +158,12 @@ void GuiManager::update()
 			Handle<PhysicsBody> physbd = selectedEntity->phys;
 			if (physbd) {
 				if (ImGui::CollapsingHeader("PhysicsBody", ImGuiTreeNodeFlags_DefaultOpen)) {
-					Vector vel = physbd->velocity;
+					Vector vel = physbd->getVelocity();
 					float vel2f[2] = { static_cast<float>(vel.x), static_cast<float>(vel.y) };
 					ImGui::BeginGroup();
 					ImGui::DragFloat2("Velocity", vel2f);
 					ImGui::EndGroup();
-					physbd->velocity = { vel2f[0], vel2f[1] }; // Reassign to source
+					physbd->setVelocity({ vel2f[0], vel2f[1] }); // Reassign to source
 				}
 			}
 		}

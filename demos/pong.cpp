@@ -103,7 +103,7 @@ public:
 		}
 
 		if (ball) {
-			auto vel = ball->getComponent<PhysicsBody>()->velocity;
+			auto vel = ball->getComponent<PhysicsBody>()->getVelocity();
 			cout << ball->id << "- x: " << vel.x << " y: " << vel.y << endl;
 		}
 	}
@@ -193,8 +193,10 @@ Entity* createBall()
 
 	// Randomize direction and speed
 	int direction = rand() % 2 == 0 ? -1 : 1;
-	physics->velocity.x = X_SPEED * direction;
-	physics->velocity.y = MIN_Y_SPEED + (rand() % static_cast<int>(MAX_Y_SPEED - MIN_Y_SPEED + 1)) * direction;
+	Vector vel;
+	vel.x = X_SPEED * direction;
+	vel.y = MIN_Y_SPEED + (rand() % static_cast<int>(MAX_Y_SPEED - MIN_Y_SPEED + 1)) * direction;
+	physics->setVelocity(vel);
 	return newBall;
 }
 
@@ -263,7 +265,7 @@ void spawnBall()
 	ball = newBall;
 
 	Handle<PhysicsBody> physics = ball->getComponent<PhysicsBody>();
-	cout << "(just spawned) " << ball->id << "- x: " << physics->velocity.x << " y: " << physics->velocity.y << endl;
+	cout << "(just spawned) " << ball->id << "- x: " << physics->getVelocity().x << " y: " << physics->getVelocity().y << endl;
 }
 
 int main() {
