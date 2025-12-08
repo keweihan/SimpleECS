@@ -34,6 +34,6 @@ This framework was made for personal use.
 1. Run installer helper `python3 scripts/build.py install`
 
 ### Build and run
-1. Configure scene in `demos/collisionStress.cpp`
+1. Optionally configure scene in `demos/collisionStress.cpp`
 2. Build executable `python src/build.py build --type release`
 3. Execute runnable in `./build/bin/collisionStress`
